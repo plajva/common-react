@@ -1,0 +1,49 @@
+@import '@styles/globals';
+
+
+@keyframes ripple{
+	from{
+		transform: scale(0);
+		opacity: 1;
+	}
+	to{
+		transform: scale(2);
+		opacity: 0;
+	}
+}
+
+
+span.ripple {
+	// My definitions by default
+	pointer-events: none;
+	position: absolute;
+	border-radius: 50%;
+	
+	// You can define theme based classes in this loop
+	// This will loop through all themes
+	// $ts (Theme Selector)
+	@each $theme in $theme-names-with-empty {
+		$theme-current: $theme !global;
+		$ts: theme-selector(
+			$class: true,
+		);
+		
+		// My component on this theme
+		&#{$ts}{
+			background: rgba(if(is-dark(), #fff, #000), .5);
+		}
+		
+		// This will loop through all color fields in the theme
+		// In case you want to define color based styles
+		// @each $c in get-theme-field(color-names) {
+		// 	// This will get the color based on the name
+		// 	$color: get-color($c);
+			
+		// 	// My component on this theme and color
+		// 	&#{$ts}.#{$c} {
+				
+		// 	}
+		// }
+	}
+	$theme-current: $theme-default;
+}

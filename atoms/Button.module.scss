@@ -1,0 +1,66 @@
+@use 'sass:list';
+@import "@styles/globals";
+
+.button {
+	position: relative;
+	overflow: hidden;
+	transition: background 0.3s;
+	padding: get-space(4);
+	border-radius: get-space(3);
+	background: transparent;
+
+	&:hover {
+		background: get-color(neutral, $alpha: 0.1);
+	}
+
+	svg {
+		// display: block;
+		vertical-align: sub;
+	}
+
+	&.outline {
+		border: 1px solid rgba(#000, 0.2);
+	}
+
+	&.circular {
+		padding: none;
+		border-radius: 9999px;
+		background: transparent;
+		
+		&:hover {
+			background: get-color(neutral, $alpha: 0.1);
+		}
+	}
+	&.icon{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		& > * {
+			flex: 0 1 auto;
+		}
+	}
+	
+
+	@include use-theme using ($ts) {
+		&#{$ts}:disabled {
+			color: rgba(color-text(get-color(background)), 0.7);
+		}
+
+		@include use-color using ($cn, $c) {
+			&#{$ts}.#{$cn} {
+				@include backgound-active-color(rgba($c, 0.05), null, $c);
+				// @include active-color($c);
+				border: 2px solid get-color($cn, get-theme-field(shades, default));
+				&:hover {
+					border: 2px solid get-color($cn, get-theme-field(shades, hover));
+				}
+				&:active {
+					border: 2px solid get-color($cn, get-theme-field(shades, active));
+				}
+			}
+			&#{$ts}.#{$cn}-background {
+				@include backgound-active-color(rgba($c, 0.8));
+			}
+		}
+	}
+}

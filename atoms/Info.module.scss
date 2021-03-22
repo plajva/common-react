@@ -1,0 +1,31 @@
+@import '@styles/_globals.scss';
+
+
+.comp {
+	// My definitions by default
+	
+	@include use-theme using ($ts){
+		&#{$ts}{
+			@include background-color(secondary, 5, $alpha: .4);
+		}
+	}
+	.icon{
+		float:left;
+	}
+	.content{
+		
+	}
+	font-size: .9em;
+	border: 2px solid get-color(secondary);
+	border-radius: get-space(5);
+	padding: get-space(5);
+	margin:get-space(4);
+	
+	
+	// @include use-theme using ($ts){
+	// 	// Theme Iterator
+	// 	@include use-color using ($cn, $c){
+	// 		// Color Iterator
+	// 	}
+	// }
+}

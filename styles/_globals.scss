@@ -1,0 +1,199 @@
+// All variables that the styles
+// ONLY GLOBAL VARIABLES
+// @use 'sass:map';
+
+@use 'sass:list';
+@import "type_check";
+@import "utils";
+
+$debug: true;
+
+// ######## COLORS ############
+$theme-default: default;
+$theme-current: $theme-default;
+@function theme-selector($prefix: false, $class: false) {
+	@return if($theme-current == "", "", if($class, ".", "") + $theme-current + if($prefix, "-", ""));
+}
+
+$themes: (
+	default: (
+		colors: (
+			primary: #0085b0,
+			secondary: #97b62f,
+			warn: rgb(172, 34, 34),
+			background: #f0f0f0,
+			menu: #004961,
+			separator: rgba(#000, 0.2),
+			neutral: rgb(127,127,127),
+			disabled: rgb(101, 101, 101),
+		),
+		shades: (
+			default: 0,
+			hover: -1,
+			active: -2,
+			disabled: -3,
+		),
+		shadows: (
+			default: 0 0 5px 0 rgba(0, 0, 0, 0.2),
+			small: 0 0 10px 0 rgba(0, 0, 0, 0.2),
+			large: 0 0 15px 0 rgba(0, 0, 0, 0.2),
+		),
+		alphas: (
+			default: 0.8,
+		),
+		spaces: (
+			0px,
+			4px,
+		),
+		font-sizes: (
+			0.7em,
+			1em,
+			1.5em,
+			2em,
+		),
+		// ? I'm not using this V
+		media:
+			(
+				xs: 300px,
+				// < Smaller than most phones
+				s: 480px,
+				// < Most phones
+				m: 768px,
+				// < Most tablets
+				l: 1024px,
+				// < Most laptops, desktops
+			),
+		// ? ////////
+		font-size-defaults:
+			(
+				html: calc(17px + .5vmin),
+				h1: 4,
+				h2: 3,
+				h3: 2,
+			),
+	),
+	// ? All dark theme changes is background color
+	dark:
+		(
+			colors: (
+				background: rgb(54, 54, 54),
+			),
+		),
+);
+$theme-names: map-keys(
+	$map: $themes,
+);
+$theme-names-with-empty: list.join("", $theme-names);
+
+// Apply all transformations to the themes defined
+@each $theme_name, $theme in $themes {
+	@each $field, $value in $theme {
+		// APPLY TRANSAFORMATIONS
+		@if $field == spaces {
+			@for $v from 2 through 9 {
+				$value: append($value, nth($value, -1) * 1.6);
+			}
+		}
+		// ######################
+
+		//  Merge field in theme
+		$theme: map-merge($theme, (#{$field}: $value));
+	}
+	// Any values we might add to each theme
+	$theme: map-merge(
+		$theme,
+		(
+			// color-names: map-keys(map-get($theme, colors)),
+			color-names:
+				(primary, secondary, warn)
+		)
+	);
+
+	// Put missing fields from default in all others
+	@if $theme_name != $theme-default {
+		$theme: map-merge-deep(map-get($themes, $theme-default), $theme);
+	}
+
+	//  Merge theme in themes
+	$themes: map-merge($themes, (#{$theme_name}: $theme));
+}
+
+// ######## FONTS #############
+
+// Can be used to get current theme/field/field/field
+@function get-theme-field($field-names...) {
+	$theme: null;
+	@if not map-has-key($map: $themes, $key: $theme-current) {
+		// @warn "Theme `#{$theme-current}` doesnt exist in themes, taking default theme";
+
+		@if not map-has-key($map: $themes, $key: $theme-default) {
+			@error "Default theme `#{$theme-default}` doesn't exist in themes";
+		}
+
+		$theme: map-get($themes, $theme-default);
+	} @else {
+		$theme: map-get($themes, $theme-current);
+	}
+
+	@if (not $field-names) or (length($field-names) == 0) {
+		@return $theme;
+	}
+	@if length($field-names) == 1 {
+		$t: type-of(nth($field-names, 1));
+		@if $t == "arglist" or $t == "list" {
+			$field-names: nth($field-names, 1);
+		}
+	}
+
+	$out: map-recurse($theme, $field-names);
+	// @debug "get-theme-field called with `#{$field-names}`, outputting `#{debug-list($out)}`";
+	@return $out;
+}
+@function get-theme-field-or-return($default, $field-names...) {
+	$tf: get-theme-field($field-names);
+	@return if(is-falsy($tf), $default, $tf);
+}
+
+@function get-shade($shade) {
+	$val: get-theme-field(shades, $shade);
+	@return if($val, $val, $shade);
+}
+
+// @function media-query($size, $type: max-width) {
+// 	$size: get-theme-field-or-return($size, media, $size);
+// 	@return "@media(#{$type}: #{$size})";
+// }
+
+// Theme iterator
+@mixin use-theme {
+	@each $theme-name, $theme in $themes {
+		$theme-current: $theme-name !global;
+		$ts: theme-selector(
+			$class: true,
+		);
+		@content ($ts);
+	}
+	$theme-current: $theme-default !global;
+}
+@mixin use-theme-with-default {
+	@content (null);
+	@each $theme-name, $theme in $themes {
+		$theme-current: $theme-name !global;
+		$ts: theme-selector(
+			$class: true,
+		);
+		@content ($ts);
+	}
+	$theme-current: $theme-default !global;
+}
+// Color iterator
+@mixin use-color {
+	@each $color-name in get-theme-field(color-names) {
+		$color: get-color($color-name);
+		@content ($color-name, $color);
+	}
+}
+
+@import "./01-config/space";
+@import "./01-config/colors";
+@import "./01-config/typography";

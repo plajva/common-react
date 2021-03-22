@@ -1,0 +1,102 @@
+@use 'sass:color';
+@import "../type_check";
+@import 'color-contrast';
+
+@function get-color($color, $shade: false, $alpha: false) {
+	// $name-alias: (primary: c-0, secondary: c-1);
+	// @if map-has-key($map: $name-alias, $key: $name){
+	// 	$name: map-get($map: $name-alias, $key: $name)
+	// }
+	// Add shade to name
+	$color: get-theme-field-or-return($color,colors, $color);
+		
+	
+	@if not is-color($color){@error $color not a color;}
+	
+	@if not is-falsy($shade) {
+		$color: 
+		color.adjust($color, 
+			$lightness: $shade * 5%, 
+			$alpha: $shade * -.025
+		);
+	}
+	@if $alpha {$color:color.change($color,$alpha: $alpha);}
+
+	@return $color;
+}
+
+@function is-dark(){
+	@return if(choose-contrast-color(get-color(background)) == white, true, false);
+}
+
+@function color-text($bg-color, $color-text:null, $alpha:null) {
+	@if (is-color($color-text)) {
+		@return $color-text;
+	}
+	// Mix the background with the elements background
+	// to get an accurate redability value
+	$background: get-color(background);
+	
+	$bg-color: color.mix(
+		$color2: $background,
+		$color1: $bg-color,
+		$weight: color.alpha($bg-color) * 100%,
+	);
+	
+	
+	// Pick a text color based on lightness of the supplied background
+	$tc: choose-contrast-color($bg-color);
+	
+	// If a color text is supplied, do the following
+	
+	@if $tc and $color-text {
+		// color.adjust(
+		// 		$color: $color-text,
+		// 		$lightness: if($tc == white, 35%, -35%),
+		// 	)
+		$tc: color.adjust(
+				$color: $bg-color,
+				$lightness: if($tc == white, 60%, -70%),
+				$saturation: 100%,
+				$alpha: 1,
+			)
+		;
+		@if $alpha {$tc:color.change($tc,$alpha: $alpha);}
+	}
+	@return $tc;
+}
+
+@mixin background-color($color, $shade: false, $color-text: false, $alpha: false) {
+	$c: get-color($color, $shade, $alpha);
+	background-color: $c;
+	color: color-text($c, $color-text);
+}
+
+@mixin backgound-active-color($color, $shade: false, $color-text: false) {
+	@include background-color($color, if($shade, $shade, get-theme-field-or-return(0,shades, default)), $color-text);
+	&:hover {
+		@include background-color($color, if($shade, $shade - 1, get-theme-field-or-return(-1,shades, hover)), $color-text);
+	}
+	&:disabled {
+		@include background-color(disabled, 
+		if($shade, 
+			$shade - 3, 
+			get-theme-field-or-return(-3,shades, disabled)
+		),
+		$color-text, 
+		$alpha: get-theme-field-or-return(.2,alphas, disabled));
+	}
+	// &:active {
+	// 	@include background-color($color, if($shade, $shade, get-theme-field(shades, active)), $color-text);
+	// }
+}
+
+@mixin active-color($color) {
+	color: get-color($color, get-theme-field(shades, default));
+	&:hover {
+		color: get-color($color, get-theme-field(shades, hover));
+	}
+	// &:active {
+	// 	color: get-color($color, get-theme-field(shades, active));
+	// }
+}

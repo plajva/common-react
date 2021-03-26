@@ -3,8 +3,8 @@ import { Link, LinkProps } from 'react-router-dom';
 import Image from '../atoms/Image';
 import s from './Toolbar.module.scss';
 import Button from '../atoms/Button';
-import { ThemeC } from '../../App';
-import { classNameFind } from '../utils';
+import { useTheme } from '@catoms/Theme';
+import { classNameFind } from '@common/utils';
 
 // We want to -> have a chosen theme variable
 
@@ -25,7 +25,7 @@ export interface ToolbarProps {
 
 
 const Toolbar:FunctionComponent<ToolbarProps> = ({left,middle, right, ...props}) => {
-	const theme = useContext(ThemeC);
+	const theme = useTheme().name;
 	// let {className,...others} = props;
 	let className = classNameFind(s, theme, `toolbar`)
 	

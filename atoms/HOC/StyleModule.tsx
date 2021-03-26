@@ -1,5 +1,5 @@
 import React, { ComponentType, FunctionComponent, useContext } from 'react';
-import { classNameFind } from '../../utils';
+import { classNameFind } from '@common/utils';
 
 const StyleModule = <T extends React.HTMLAttributes<HTMLElement>>(Comp: ComponentType<T>, styleModule:object, styles:string[]):FunctionComponent<T> => {
 	return ({style,...props}) => 

@@ -1,7 +1,7 @@
 import React, { FunctionComponent, ReactNode, useContext } from 'react';
 import s from './Info.module.scss';
-import { ThemeC } from '../../App';
-import { classNameFind } from '../utils';
+import { useTheme } from '@catoms/Theme';
+import { classNameFind } from '@common/utils';
 import Icon from './Icon';
 import { FiHelpCircle } from 'react-icons/fi';
 import { IconType } from 'react-icons/lib';
@@ -11,7 +11,7 @@ export interface InfoProps {
 }
 
 const Info: FunctionComponent<InfoProps & React.HTMLAttributes<HTMLDivElement>> = ({ className, children, icon, ...props }) => {
-	const theme = useContext(ThemeC);
+	const theme = useTheme().name;
 	className = classNameFind(s, `comp flex-vcenter`, theme, className);
 
 	return (

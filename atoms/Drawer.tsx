@@ -1,7 +1,7 @@
 import React, { FunctionComponent, ReactNode, MouseEvent, useContext, useRef, useState, useEffect, useLayoutEffect } from 'react';
 import s from './Drawer.module.scss';
-import { ThemeC } from '../../App';
-import { classNameFind, combineState } from '../utils';
+import { useTheme } from '@catoms/Theme';
+import { classNameFind, combineState } from '@common/utils';
 import Collapsible from './Collapsible';
 
 export interface DrawerContentData {
@@ -33,7 +33,7 @@ export interface DrawerToggleProps {
 }
 
 export const DrawerToggle: FunctionComponent<DrawerToggleProps & React.HTMLAttributes<HTMLDivElement>> = ({ className, children, ...props }) => {
-	const theme = useContext(ThemeC);
+	const theme = useTheme().name;
 	className = classNameFind(s, `comp`, theme, className);
 
 	const drawer = useContext(DrawerContext);
@@ -66,7 +66,7 @@ const Drawer: FunctionComponent<DrawerProps & React.HTMLAttributes<HTMLDivElemen
 	const hookContent = useRef<HTMLDivElement>(null);
 	const hookContentData = useRef<DrawerContentData>({});
 
-	const theme = useContext(ThemeC);
+	const theme = useTheme().name;
 	className = classNameFind(s, `comp`, theme, className);
 
 	// Defines what will get drawn

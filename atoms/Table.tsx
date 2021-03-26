@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useContext } from 'react';
 import s from './Table.module.scss';
-import { ThemeC } from '../../App';
-import { classNameFind } from '../utils';
+import { useTheme } from '@catoms/Theme';
+import { classNameFind } from '@common/utils';
 import {TableOptions, HeaderGroup, useTable, Row, Cell, ColumnInstance, Column} from 'react-table';
 
 // Create a default prop getter
@@ -40,7 +40,7 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
 	getCellProps,
 	className, options, children,..._props
 	}) => {
-	const theme = useContext(ThemeC);
+	const theme = useTheme().name;
 	className = classNameFind(s, `comp`, theme, className);
 	
 	const

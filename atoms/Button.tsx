@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext } from 'react';
-import { ThemeC } from '../../App';
-import { classNameFind } from '../utils';
+import { useTheme } from '@catoms/Theme';
+import { classNameFind } from '@common/utils';
 import s from './Button.module.scss';
 
 import Ripple from './HOC/Ripple';
@@ -15,7 +15,7 @@ export interface ButtonProps {
 // We need to set the className and provide aditinal classnames on component call
 
 const Button: FunctionComponent<ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>> = ({button_type, button_size,...props}) => {
-	const theme = useContext(ThemeC);
+	const theme = useTheme().name;
 	let { className, ...others } = props;
 	className = classNameFind(s, `button`, button_type==='icon'?'circular icon':'', 'dup', theme, className)
 	

@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useContext, MouseEvent, ComponentType } from 'react';
 import s from './Ripple.module.scss';
-// import { ThemeC } from '../../App';
-import { classNameFind, combineEvent } from '../../utils';
+// import { useTheme } from '@catoms/Theme';
+import { classNameFind, combineEvent } from '@common/utils';
 
 export interface RippleProps {
 	ripple_type?: 'normal' | 'center',

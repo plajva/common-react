@@ -1,7 +1,7 @@
 import React, { FunctionComponent, ReactNode, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import s from './Stepper.module.scss';
-import { ThemeC } from '../../App';
-import { classNameFind } from '../utils';
+import { useTheme } from '@catoms/Theme';
+import { classNameFind } from '@common/utils';
 import { render } from '@testing-library/react';
 import Button from './Button';
 import Divider from './Divider';
@@ -37,7 +37,7 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
 	const scrollerRef = useRef<HTMLDivElement>(null);
 	const section = useRef<HTMLElement | null>(null);
 	const lastHeight = useRef<number | undefined>(undefined);
-	const theme = useContext(ThemeC);
+	const theme = useTheme().name;
 	let { className, step: propStep, stepSet, animTime, ...others } = props;
 	className = classNameFind(s, `atom`, 'dup', theme, className);
 	const scrollerClass = classNameFind(s, `scroller`, 'dup');

@@ -8,7 +8,6 @@ import Icon from '@common/atoms/Icon';
 import s from './Table.module.scss';
 import { ThemeC } from '../../App';
 import { classNameFind } from '../utils';
-import Loader from '../../components/organisms/Loader';
 
 // Create a default prop getter
 const defaultPropGetter = () => ({});

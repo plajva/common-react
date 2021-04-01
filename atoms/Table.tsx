@@ -12,6 +12,8 @@ import { classNameFind } from '../utils';
 // Create a default prop getter
 const defaultPropGetter = () => ({});
 
+const amountsPerPage = [10, 50, 100];
+
 export const columnsQuick = (cols: string) => {
     const transform = (s: string): Column<{}> | { [index: string]: any } => {
         const a = s.split(',');
@@ -39,6 +41,7 @@ export interface TableProps<D extends {}> {
     getColumnProps?: (s?: HeaderGroup<D> | ColumnInstance<D>) => object;
     getRowProps?: (s?: Row<D>) => object;
     getCellProps?: (s?: Cell<D>) => object;
+    filters?: any;
     fetchData?: Function;
     pageCount?: Number;
 }
@@ -50,11 +53,12 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
     getCellProps,
     className,
     options,
-    children,
-    compact,
-    fetchData,
     emptyMessage,
+    compact,
+    filters,
+    fetchData,
     pageCount: controlledPageCount,
+    children,
     ..._props
 }) => {
     const theme = useContext(ThemeC);
@@ -89,63 +93,73 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
 
     useEffect(() => {
         fetchData && fetchData({ pageIndex, pageSize });
-    }, [fetchData, pageIndex, pageSize]);
+    }, [pageIndex, pageSize]);
+
+    useEffect(() => {
+        if (pageIndex === 0) {
+            fetchData && fetchData({ pageIndex: 0, pageSize });
+        } else {
+            gotoPage && gotoPage(0);
+        }
+    }, [filters]);
 
     // Render the UI for your table
     return (
         <>
-            <table {...getTableProps({ className: className, style: _props.style })}>
-                <thead>
-                    {headerGroups.map((headerGroup: any) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column: any) => (
-                                <th
-                                    {...column.getHeaderProps([
-                                        {
-                                            className: column['className'],
-                                            style: column['style'],
-                                        },
-                                        _getColumnProps(column),
-                                        _getHeaderProps(column),
-                                    ])}
-                                >
-                                    {column.render('Header')}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {page.map((row: any, i: Number) => {
-                        prepareRow(row);
-                        return (
-                            <tr {...row.getRowProps()}>
-                                {row.cells.map((cell: any) => {
-                                    return (
-                                        <td
-                                            {...cell.getCellProps([
-                                                {
-                                                    className: cell['className'],
-                                                    style: cell['style'],
-                                                },
-                                                _getColumnProps(cell.column),
-                                                _getCellProps(cell),
-                                            ])}
-                                        >
-                                            {cell.render('Cell')}
-                                        </td>
-                                    );
-                                })}
+            <div className={classNameFind(s, `responsive`, theme)}>
+                <table {...getTableProps({ className: className, style: _props.style })}>
+                    <thead>
+                        {headerGroups.map((headerGroup: any) => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map((column: any) => (
+                                    <th
+                                        {...column.getHeaderProps([
+                                            {
+                                                className: column['className'],
+                                                style: column['style'],
+                                            },
+                                            _getColumnProps(column),
+                                            _getHeaderProps(column),
+                                        ])}
+                                    >
+                                        {column.render('Header')}
+                                    </th>
+                                ))}
                             </tr>
-                        );
-                    })}
-                    {page.length < 1 && (
-                        <tr>
-                            <td colSpan={6}>{emptyMessage}</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {page.map((row: any, i: Number) => {
+                            prepareRow(row);
+                            return (
+                                <tr {...row.getRowProps()}>
+                                    {row.cells.map((cell: any) => {
+                                        return (
+                                            <td
+                                                {...cell.getCellProps([
+                                                    {
+                                                        className: cell['className'],
+                                                        style: cell['style'],
+                                                    },
+                                                    _getColumnProps(cell.column),
+                                                    _getCellProps(cell),
+                                                ])}
+                                            >
+                                                {cell.render('Cell')}
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            );
+                        })}
+                        {page.length < 1 && (
+                            <tr>
+                                <td colSpan={6}>{emptyMessage}</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex' }}>
                     <Button
@@ -190,7 +204,7 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
                             setPageSize(Number(e.target.value));
                         }}
                     >
-                        {[10, 50, 100].map((pageSize: any) => (
+                        {amountsPerPage.map((pageSize: any) => (
                             <option key={pageSize} value={pageSize}>
                                 {pageSize}
                             </option>

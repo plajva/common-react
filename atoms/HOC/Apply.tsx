@@ -59,7 +59,6 @@ const Apply: FunctionComponent<ApplyProps & React.HTMLAttributes<HTMLDivElement>
         );
     };
 
-    console.log(children);
     return mapChildren(children);
 };
 

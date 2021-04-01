@@ -1,5 +1,11 @@
 @import '@styles/_globals.scss';
 
+@include media('<desktop') {
+    .responsive {
+        overflow-y: scroll;
+    }
+}
+
 .comp {
     // My definitions by default
 

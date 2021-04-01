@@ -1,145 +1,144 @@
 @use 'sass:color';
-@import "../globals";
+@import '../globals';
 
 @if $debug {
-	@debug Font Sizes get-theme-field(font-sizes);
-	@debug Spaces get-theme-field(spaces);
-	@debug Colors get-theme-field(colors);
+    @debug Font Sizes get-theme-field(font-sizes);
+    @debug Spaces get-theme-field(spaces);
+    @debug Colors get-theme-field(colors);
 }
-
-@import "../include-media";
 
 $m: null;
 $sindex: 0;
 // Repeats the index
 @mixin repeat_index($name) {
-	$sindex: 0;
-	@each $space in get-theme-field(spaces) {
-		$n: #{$name}-#{$sindex};
-		$n: if($m, #{$n}-#{$m}, $n);
+    $sindex: 0;
+    @each $space in get-theme-field(spaces) {
+        $n: #{$name}-#{$sindex};
+        $n: if($m, #{$n}-#{$m}, $n);
 
-		#{$n} {
-			@content($space);
-		}
+        #{$n} {
+            @content ($space);
+        }
 
-		$sindex: $sindex + 1;
-	}
+        $sindex: $sindex + 1;
+    }
 }
 
-.col::before, .col::after{
-	display: block;
-	content: " ";
-	clear: both;
+.col::before,
+.col::after {
+    display: block;
+    content: ' ';
+    clear: both;
 }
 
 @mixin repeat_class {
-	@include repeat_index(".margin-bottom") using ($space) {
-		margin-bottom: $space;
-	}
-	@include repeat_index(".margin-h") using ($space) {
-		margin-right: $space;
-		margin-left: $space;
-	}
-	@include repeat_index(".margin-v") using ($space) {
-		margin-top: $space;
-		margin-bottom: $space;
-	}
-	@include repeat_index(".margin") using ($space) {
-		margin: $space;
-	}
-	@include repeat_index(".padding") using ($space) {
-		padding: $space;
-	}
-	@include repeat_index(".padding-h") using ($space) {
-		padding-left: $space;
-		padding-right: $space;
-	}
-	
-	// Define the columns
-	@for $i from 0 through 12{
-		$n: ".col-#{$i}";
-		$n: if($m, #{$n}-#{$m}, $n);
-		
-		#{$n} {
-			float: left;
-			width: 100% / 12 * $i;
-		}
-	}
+    @include repeat_index('.margin-bottom') using ($space) {
+        margin-bottom: $space;
+    }
+    @include repeat_index('.margin-h') using ($space) {
+        margin-right: $space;
+        margin-left: $space;
+    }
+    @include repeat_index('.margin-v') using ($space) {
+        margin-top: $space;
+        margin-bottom: $space;
+    }
+    @include repeat_index('.margin') using ($space) {
+        margin: $space;
+    }
+    @include repeat_index('.padding') using ($space) {
+        padding: $space;
+    }
+    @include repeat_index('.padding-h') using ($space) {
+        padding-left: $space;
+        padding-right: $space;
+    }
 
-	@if ($m == null) {
-		@include repeat_index(".border-radius") using ($space){
-			border-radius: $space;
-		}
-	}
-	
-	// Define show and hide
-	$n: ".show";
-	$n: if($m, #{$n}-#{$m}, $n);
-	#{$n} {
-		display: unset;
-	}
-	$n: ".hide";
-	$n: if($m, #{$n}-#{$m}, $n);
-	#{$n} {
-		display: none;
-	}
+    // Define the columns
+    @for $i from 0 through 12 {
+        $n: '.col-#{$i}';
+        $n: if($m, #{$n}-#{$m}, $n);
+
+        #{$n} {
+            float: left;
+            width: 100% / 12 * $i;
+        }
+    }
+
+    @if ($m == null) {
+        @include repeat_index('.border-radius') using ($space) {
+            border-radius: $space;
+        }
+    }
+
+    // Define show and hide
+    $n: '.show';
+    $n: if($m, #{$n}-#{$m}, $n);
+    #{$n} {
+        display: unset;
+    }
+    $n: '.hide';
+    $n: if($m, #{$n}-#{$m}, $n);
+    #{$n} {
+        display: none;
+    }
 }
 
 @include repeat_class;
 @each $bp_name, $bp_value in $breakpoints {
-	$m:$bp_name;
-	// Loops from smallest to highest pixel size in media
-	// We start from smallest to highest in creating websites, create 
-	@include media(">#{$bp_name}") {
-		@include repeat_class;
-	}
+    $m: $bp_name;
+    // Loops from smallest to highest pixel size in media
+    // We start from smallest to highest in creating websites, create
+    @include media('>#{$bp_name}') {
+        @include repeat_class;
+    }
 }
 
 @include use-theme-with-default using ($ts) {
-	@include use-color using ($cn, $c) {
-		#{$ts}.#{$cn} {
-			color: get-color($cn);
-		}
-		#{$ts}.#{$cn}-active {
-			@include active-color($cn);
-		}
-		#{$ts}.#{$cn}-border {
-			border: 1px solid get-color($cn);
-		}
-		#{$ts}.#{$cn}-active.#{$cn}-border {
-			&:hover {
-				border: 1px solid get-color($cn, get-theme-field(shades, hover));
-			}
-			&:active {
-				border: 1px solid get-color($cn, get-theme-field(shades, active));
-			}
-			&:disabled {
-				border: 1px solid get-color($cn, get-theme-field(shades, disabled));
-			}
-		}
+    @include use-color using ($cn, $c) {
+        #{$ts}.#{$cn} {
+            color: get-color($cn);
+        }
+        #{$ts}.#{$cn}-active {
+            @include active-color($cn);
+        }
+        #{$ts}.#{$cn}-border {
+            border: 1px solid get-color($cn);
+        }
+        #{$ts}.#{$cn}-active.#{$cn}-border {
+            &:hover {
+                border: 1px solid get-color($cn, get-theme-field(shades, hover));
+            }
+            &:active {
+                border: 1px solid get-color($cn, get-theme-field(shades, active));
+            }
+            &:disabled {
+                border: 1px solid get-color($cn, get-theme-field(shades, disabled));
+            }
+        }
 
-		$a: 0.7;
-		$bc: color.change(get-color($cn), $alpha: $a);
-		// WIll set background and text
-		#{$ts}.#{$cn}-background {
-			@include background-color($bc);
-		}
-		// WIll set background and text, also for hover and active
-		#{$ts}.#{$cn}-background-active {
-			@include backgound-active-color($bc);
-		}
-		// WIll set background and text, also for hover and active, but will also set text color
-		#{$ts}.#{$cn}-background-active-text {
-			@include backgound-active-color($bc, $color-text: true);
-		}
-	}
+        $a: 0.7;
+        $bc: color.change(get-color($cn), $alpha: $a);
+        // WIll set background and text
+        #{$ts}.#{$cn}-background {
+            @include background-color($bc);
+        }
+        // WIll set background and text, also for hover and active
+        #{$ts}.#{$cn}-background-active {
+            @include backgound-active-color($bc);
+        }
+        // WIll set background and text, also for hover and active, but will also set text color
+        #{$ts}.#{$cn}-background-active-text {
+            @include backgound-active-color($bc, $color-text: true);
+        }
+    }
 
-	#{$ts}.root {
-		transition: background 0.3s;
-		font-size: get-font-size(html);
-		// line-height: 1.5em;
-		min-height: 100vh;
-		@include background-color(background);
-		// box-sizing: border-box;
-	}
+    #{$ts}.root {
+        transition: background 0.3s;
+        font-size: get-font-size(html);
+        // line-height: 1.5em;
+        min-height: 100vh;
+        @include background-color(background);
+        // box-sizing: border-box;
+    }
 }

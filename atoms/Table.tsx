@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext, useEffect } from 'react';
 import { FaAngleLeft, FaAngleRight, FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
-import { TableOptions, HeaderGroup, useTable, usePagination, Row, Cell, ColumnInstance, Column } from 'react-table';
+import { HeaderGroup, useTable, usePagination, Row, Cell, ColumnInstance, Column } from 'react-table';
 
 import Button from '@common/atoms/Button';
 import Icon from '@common/atoms/Icon';
@@ -66,7 +66,6 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
 
     const _getHeaderProps = getHeaderProps || defaultPropGetter,
         _getColumnProps = getColumnProps || defaultPropGetter,
-        _getRowProps = getRowProps || defaultPropGetter,
         _getCellProps = getCellProps || defaultPropGetter;
 
     const {
@@ -78,7 +77,6 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
         page,
         canPreviousPage,
         canNextPage,
-        pageOptions,
         pageCount,
         gotoPage,
         nextPage,

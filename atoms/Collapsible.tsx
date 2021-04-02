@@ -1,7 +1,7 @@
 import React, { FunctionComponent, ReactNode, MouseEvent, useContext, useRef, useState } from 'react';
 import s from './Collapsible.module.scss';
-import { ThemeC } from '../../App';
-import { classNameFind } from '../utils';
+import { useTheme } from '@catoms/Theme';
+import { classNameFind } from '@common/utils';
 
 export interface CollapsibleProps {
     in?: Boolean;
@@ -15,7 +15,7 @@ const Collapsible: FunctionComponent<CollapsibleProps & React.HTMLAttributes<HTM
     in: isOpen,
     ...props
 }) => {
-    const theme = useContext(ThemeC);
+    const theme = useTheme().name;
     className = classNameFind(s, `comp`, theme, className);
     const content = useRef<HTMLDivElement>(null);
 

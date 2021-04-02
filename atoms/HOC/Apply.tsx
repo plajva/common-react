@@ -1,7 +1,7 @@
 import React, { FunctionComponent, ReactElement, useContext } from 'react';
 import s from './Apply.module.scss';
-import { ThemeC } from '../../../App';
-import { classNameFind } from '../../utils';
+import { useTheme } from '@catoms/Theme';
+import { classNameFind } from '@common/utils';
 
 export interface ApplyProps {
     to?: any;
@@ -19,7 +19,7 @@ const Apply: FunctionComponent<ApplyProps & React.HTMLAttributes<HTMLDivElement>
     depth_max,
     ...props
 }) => {
-    const theme = useContext(ThemeC);
+    const theme = useTheme().name;
     if (typeof depth_max === 'undefined') depth_max = 0;
 
     const mergeProps = (child: ReactElement, depth: any): any => {

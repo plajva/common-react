@@ -1,21 +1,17 @@
 import React, { FunctionComponent, useContext } from 'react';
 import s from './Toggle.module.scss';
-import { ThemeC } from '../../../App';
-import { classNameFind } from '../../utils';
+import { useTheme } from '@catoms/Theme';
+import { classNameFind } from '@common/utils';
 import Button from '../Button';
 
-export interface ToggleProps {
-	
-}
+export interface ToggleProps {}
 
 const Toggle: FunctionComponent<ToggleProps & React.HTMLAttributes<HTMLDivElement>> = (props) => {
-	const theme = useContext(ThemeC);
-	let { className, ...others } = props;
-	className = classNameFind(s, `toggle`, 'dup', theme, className);
+  const theme = useTheme().name;
+  let { className, ...others } = props;
+  className = classNameFind(s, `toggle`, 'dup', theme, className);
 
-	return (
-		<Button></Button>
-	)
-}
+  return <Button></Button>;
+};
 
 export default Toggle;

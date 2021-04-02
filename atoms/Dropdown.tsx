@@ -1,14 +1,14 @@
 import React, { FunctionComponent, ReactNode, useContext } from 'react';
 import s from './Dropdown.module.scss';
-import { ThemeC } from '../../App';
-import { classNameFind } from '../utils';
+import { useTheme } from '@catoms/Theme';
+import { classNameFind } from '@common/utils';
 
 export interface DropdownProps{
 	
 }
 
 const Dropdown: FunctionComponent<DropdownProps & React.HTMLAttributes<HTMLDivElement>> = ({className, children,...props}) => {
-	const theme = useContext(ThemeC);
+	const theme = useTheme().name;
 	className = classNameFind(s, `comp`, theme, className, 'dropdown');
 	
 	const _children = React.Children.toArray(children);

@@ -6,8 +6,8 @@ import Button from '@common/atoms/Button';
 import Icon from '@common/atoms/Icon';
 
 import s from './Table.module.scss';
-import { ThemeC } from '../../App';
-import { classNameFind } from '../utils';
+import { useTheme } from '@catoms/Theme';
+import { classNameFind } from '@common/utils';
 
 // Create a default prop getter
 const defaultPropGetter = () => ({});
@@ -46,6 +46,7 @@ export interface TableProps<D extends {}> {
     pageCount?: Number;
 }
 
+
 const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElement>> = ({
     getHeaderProps,
     getColumnProps,
@@ -61,7 +62,7 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
     children,
     ..._props
 }) => {
-    const theme = useContext(ThemeC);
+    const theme = useTheme().name;
     className = classNameFind(s, compact ? `small` : `comp`, theme, className);
 
     const _getHeaderProps = getHeaderProps || defaultPropGetter,

@@ -9,8 +9,8 @@ import React, {
     useLayoutEffect,
 } from 'react';
 import s from './Drawer.module.scss';
-import { ThemeC } from '../../App';
-import { classNameFind, combineState } from '../utils';
+import { useTheme } from '@catoms/Theme';
+import { classNameFind, combineState } from '@common/utils';
 import Collapsible from './Collapsible';
 
 export interface DrawerContentData {
@@ -30,6 +30,8 @@ export interface DrawerProps extends DrawerContextItems {
 }
 export const DrawerContext = React.createContext<DrawerContextItems>({ open: false });
 
+
+
 export const DrawerToggleFunc = (drawerContext: DrawerProps) => {
     return (e: MouseEvent<HTMLElement>) => {
         if (drawerContext?.setOpen) drawerContext.setOpen(!drawerContext.open);
@@ -43,7 +45,7 @@ export const DrawerToggle: FunctionComponent<DrawerToggleProps & React.HTMLAttri
     children,
     ...props
 }) => {
-    const theme = useContext(ThemeC);
+    const theme = useTheme().name;
     className = classNameFind(s, `comp`, theme, className);
 
     const drawer = useContext(DrawerContext);
@@ -85,8 +87,8 @@ const Drawer: FunctionComponent<DrawerProps & React.HTMLAttributes<HTMLDivElemen
     const hookContent = useRef<HTMLDivElement>(null);
     const hookContentData = useRef<DrawerContentData>({});
 
-    const theme = useContext(ThemeC);
-    className = classNameFind(s, `comp`, theme, className);
+	const theme = useTheme().name;
+	className = classNameFind(s, `comp`, theme, className);
 
     // Defines what will get drawn
     const _children = React.Children.toArray(children);

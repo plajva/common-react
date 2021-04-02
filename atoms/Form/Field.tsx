@@ -1,6 +1,6 @@
 import React, { ComponentType, FunctionComponent, InputHTMLAttributes, ReactNode, useContext } from 'react';
 import s from './Field.module.scss';
-import { classNameFind } from '../../utils';
+import { classNameFind } from '@common/utils';
 import { ErrorMessage, Field as FField, FieldAttributes, useFormikContext } from 'formik';
 import Input from './Input';
 

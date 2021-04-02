@@ -23,7 +23,7 @@ const Modal = (props: PropsWithChildren<ModalProps>) => {
     // get spread props out variables
     const { isOpen, onClose, isLocked, children } = props;
     // Make a reference to the backdrop
-    const backdrop = useRef(null);
+    const backdrop = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         // get dom element from backdrop
@@ -40,7 +40,6 @@ const Modal = (props: PropsWithChildren<ModalProps>) => {
         // and set active state to true
         if (isOpen) {
             window.setTimeout(() => {
-                document.activeElement.blur();
                 setActive(isOpen);
             }, 10);
         }

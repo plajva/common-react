@@ -46,7 +46,6 @@ export interface TableProps<D extends {}> {
     pageCount?: Number;
 }
 
-
 const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElement>> = ({
     getHeaderProps,
     getColumnProps,

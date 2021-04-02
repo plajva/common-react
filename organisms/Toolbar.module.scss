@@ -1,51 +1,51 @@
-@import "@styles/_globals.scss";
+@import '@styles/_globals.scss';
 
 $height: 72px;
 $space: get-space(5);
 
 .toolbar {
-	height: $height;
-	display: flex;
-	flex-flow: row nowrap;
-	align-content: center;
-	align-items: center;
-	justify-content: flex-start;
-	box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.3);
-	position: sticky;
-	top: 0;
-	padding: $space;
-	gap: $space;
-	z-index: 10;
+    height: $height;
+    display: flex;
+    flex-flow: row nowrap;
+    align-content: center;
+    align-items: center;
+    justify-content: flex-start;
+    box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    padding: $space;
+    gap: $space;
+    z-index: 10;
 
-	& > * {
-		flex: 0 1 auto;
-	}
+    & > * {
+        flex: 0 1 auto;
+    }
 
-	& img {
-		max-height: $height;
-		background: radial-gradient(closest-side, rgba(0,0,0,.3), transparent);
-	}
+    & img {
+        max-height: $height;
+        background: radial-gradient(closest-side, rgba(0, 0, 0, 0.3), transparent);
+    }
 
-	@each $theme in $theme_names {
-		$theme-current: $theme !global;
-		$ts: theme-selector(
-			$class: true,
-		);
-		
-		$background: get-color(primary, -3);
-		
-		&#{$ts} {
-			color: color-text($background);
-			background: rgba(get-color($background, -1), 1);
-			// linear-gradient(to right,get-color($background), get-color($background, 3)) ;
-			@supports (backdrop-filter: blur(10px)) {
-				&{
-					background: rgba(get-color($background, -1), if(is-dark(), 0.95, .9));
-					// background: rgba(get-color($background, 4), if(is-dark(), 0.75, .9));
-					// linear-gradient(to right,get-color(rgba($background, if(is-dark(), 0.75, .9))), get-color(rgba($background, if(is-dark(), 0.75, .9)), 3));
-					backdrop-filter: blur(10px);
-				}
-			}
-		}
-	}
+    @each $theme in $theme_names {
+        $theme-current: $theme !global;
+        $ts: theme-selector(
+            $class: true,
+        );
+
+        $background: get-color(primary, -3);
+
+        &#{$ts} {
+            color: color-text($background);
+            background: rgba(get-color($background, -1), 1);
+            // linear-gradient(to right,get-color($background), get-color($background, 3)) ;
+            @supports (backdrop-filter: blur(10px)) {
+                & {
+                    background: rgba(get-color($background, -1), if(is-dark(), 0.95, 0.9));
+                    // background: rgba(get-color($background, 4), if(is-dark(), 0.75, .9));
+                    // linear-gradient(to right,get-color(rgba($background, if(is-dark(), 0.75, .9))), get-color(rgba($background, if(is-dark(), 0.75, .9)), 3));
+                    backdrop-filter: blur(10px);
+                }
+            }
+        }
+    }
 }

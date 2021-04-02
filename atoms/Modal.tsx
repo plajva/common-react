@@ -2,8 +2,8 @@ import { useContext, PropsWithChildren, useState, useRef, useEffect } from 'reac
 import FocusTrap from 'focus-trap-react';
 
 import s from './Modal.module.scss';
-import { ThemeC } from '../../App';
-import { classNameFind } from '../utils';
+import { useTheme } from '@catoms/Theme';
+import { classNameFind } from '@common/utils';
 import Portal from './Portal';
 
 export interface ModalProps {
@@ -13,7 +13,7 @@ export interface ModalProps {
 }
 
 const Modal = (props: PropsWithChildren<ModalProps>) => {
-    const theme = useContext(ThemeC);
+    const theme = useTheme().name;
     const clsBack = classNameFind(s, `atom`, theme);
     const clsActive = classNameFind(s, `active`, theme);
     const clsContent = classNameFind(s, `content`, theme);

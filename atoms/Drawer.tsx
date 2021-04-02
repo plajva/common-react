@@ -30,8 +30,6 @@ export interface DrawerProps extends DrawerContextItems {
 }
 export const DrawerContext = React.createContext<DrawerContextItems>({ open: false });
 
-
-
 export const DrawerToggleFunc = (drawerContext: DrawerProps) => {
     return (e: MouseEvent<HTMLElement>) => {
         if (drawerContext?.setOpen) drawerContext.setOpen(!drawerContext.open);
@@ -87,8 +85,8 @@ const Drawer: FunctionComponent<DrawerProps & React.HTMLAttributes<HTMLDivElemen
     const hookContent = useRef<HTMLDivElement>(null);
     const hookContentData = useRef<DrawerContentData>({});
 
-	const theme = useTheme().name;
-	className = classNameFind(s, `comp`, theme, className);
+    const theme = useTheme().name;
+    className = classNameFind(s, `comp`, theme, className);
 
     // Defines what will get drawn
     const _children = React.Children.toArray(children);

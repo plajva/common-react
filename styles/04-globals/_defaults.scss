@@ -33,20 +33,24 @@ $sindex: 0;
 }
 
 @mixin repeat_class {
-	@include repeat_index(".margin-bottom") using ($space) {
-		margin-bottom: $space;
-	}
-	@include repeat_index(".margin-h") using ($space) {
+	@include repeat_index(".margin") using ($space) {
+		margin: $space;
+  }
+  @include repeat_index(".margin-h") using ($space) {
 		margin-right: $space;
 		margin-left: $space;
 	}
 	@include repeat_index(".margin-v") using ($space) {
 		margin-top: $space;
 		margin-bottom: $space;
-	}
-	@include repeat_index(".margin") using ($space) {
-		margin: $space;
-	}
+  }
+  @include repeat_index(".margin-bottom") using ($space) {
+		margin-bottom: $space;
+  }
+  @include repeat_index(".margin-right") using ($space) {
+		margin-right: $space;
+  }
+  
 	@include repeat_index(".padding") using ($space) {
 		padding: $space;
 	}

@@ -1,10 +1,11 @@
-import { useContext, PropsWithChildren, useState, useRef, useEffect } from 'react';
+import { PropsWithChildren, useState, useRef, useEffect } from 'react';
 import FocusTrap from 'focus-trap-react';
 
 import s from './Modal.module.scss';
 import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
 import Portal from './Portal';
+import Backdrop from './Backdrop';
 
 export interface ModalProps {
     onClose?: Function;
@@ -13,17 +14,15 @@ export interface ModalProps {
 }
 
 const Modal = (props: PropsWithChildren<ModalProps>) => {
-    const theme = useTheme().name;
-    const clsBack = classNameFind(s, `atom`, theme);
-    const clsActive = classNameFind(s, `active`, theme);
-    const clsContent = classNameFind(s, `content`, theme);
-
     // set up active state
     const [active, setActive] = useState(false);
     // get spread props out variables
     const { isOpen, onClose, isLocked, children } = props;
     // Make a reference to the backdrop
     const backdrop = useRef<HTMLDivElement>(null);
+
+    const theme = useTheme().name;
+    const clsContent = classNameFind(s, `atom`, isOpen && active ? 'active' : '', theme);
 
     useEffect(() => {
         // get dom element from backdrop
@@ -50,7 +49,7 @@ const Modal = (props: PropsWithChildren<ModalProps>) => {
                 current.removeEventListener('transitionend', transitionEnd);
             }
         };
-    }, [isOpen, isLocked, onClose]);
+    }, [isOpen, onClose]);
 
     return (
         ((isOpen || active) && (
@@ -58,12 +57,12 @@ const Modal = (props: PropsWithChildren<ModalProps>) => {
                 <FocusTrap
                     focusTrapOptions={{
                         preventScroll: true,
-                        onDeactivate: () => onClose && onClose(),
+                        onDeactivate: () => !isLocked && onClose && onClose(),
                     }}
                 >
-                    <div ref={backdrop} className={clsBack + (active && isOpen ? ' ' + clsActive : '')}>
+                    <Backdrop ref={backdrop} active={isOpen}>
                         <div className={clsContent}>{children}</div>
-                    </div>
+                    </Backdrop>
                 </FocusTrap>
             </Portal>
         )) ||

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext, useEffect } from 'react';
+import React, { FunctionComponent, useContext, useEffect, useMemo } from 'react';
 import { FaAngleLeft, FaAngleRight, FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
 import { HeaderGroup, useTable, usePagination, Row, Cell, ColumnInstance, Column } from 'react-table';
 
@@ -43,7 +43,6 @@ export interface TableProps<D extends {}> {
     getCellProps?: (s?: Cell<D>) => object;
     filters?: any;
     fetchData?: Function;
-    pageCount?: Number;
 }
 
 const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElement>> = ({
@@ -57,7 +56,6 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
     compact,
     filters,
     fetchData,
-    pageCount: controlledPageCount,
     children,
     ..._props
 }) => {
@@ -84,10 +82,7 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
         setPageSize,
         // Get the state from the instance
         state: { pageIndex, pageSize },
-    } = useTable(
-        { ...options, initialState: { pageIndex: 0 }, manualPagination: true, pageCount: controlledPageCount },
-        usePagination
-    ) as any;
+    } = useTable({ ...options }, usePagination) as any;
 
     useEffect(() => {
         fetchData && fetchData({ pageIndex, pageSize });

@@ -10,6 +10,7 @@ const defaultPropGetter = () => ({});
 /**
  * A quick column maker
  * @param cols A string for colums in the form of 'accessor/Header, Header, Cell; ...'
+ * @example columnsQuick('rxcui;name;strength;route;')
  */
 export const columnsQuick = (cols: string) => {
   const transform = (s: string): Column<{}> | { [index: string]: any } => {

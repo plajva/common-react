@@ -1,7 +1,7 @@
 import { SetStateAction, useState } from "react";
 
 
-export type Range=[number|undefined,number|undefined];
+export type Range = [number | undefined, number | undefined];
 
 export interface AtomProps {
 	className?: string;
@@ -54,15 +54,19 @@ export function stringAppend(value?: string, ovalue?: string) {
  * @param mprops All props
  */
 export function combineProps(...mprops: object[]) {
-	
+
 }
 
 /**
  * Combine state
  */
-export const combineState = <T>(useS: [T, React.Dispatch<React.SetStateAction<T>>], state?: T, setState?: React.Dispatch<React.SetStateAction<T>>):[T, React.Dispatch<React.SetStateAction<T>>] => {
+export const combineState = <T>(useS: [T, React.Dispatch<React.SetStateAction<T>>], state?: T, setState?: React.Dispatch<React.SetStateAction<T>>): [T, React.Dispatch<React.SetStateAction<T>>] => {
 	let [s, ss] = useS;
 	if (typeof state !== 'undefined') s = state;
 	if (setState) ss = (v: SetStateAction<T>) => { ss(v); setState(v) };
 	return [s, ss];
+}
+
+export const defineDefault = <T>(v: T, defaults: Partial<T>): T => {
+	return Object.assign(defaults, v);
 }

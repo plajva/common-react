@@ -35,7 +35,7 @@ $sindex: 0;
 @mixin repeat_class {
 	@include repeat_index(".margin") using ($space) {
 		margin: $space;
-  }
+	}
   @include repeat_index(".margin-h") using ($space) {
 		margin-right: $space;
 		margin-left: $space;
@@ -58,6 +58,27 @@ $sindex: 0;
 		padding-left: $space;
 		padding-right: $space;
 	}
+	@include repeat_index(".padding-v") using ($space) {
+		padding-top: $space;
+		padding-bottom: $space;
+	}
+	
+	@include repeat_index(".border-radius-top") using ($space) {
+		border-top-right-radius: $space;
+		border-top-left-radius: $space;
+	}
+	@include repeat_index(".border-radius-right") using ($space) {
+		border-top-right-radius: $space;
+		border-bottom-right-radius: $space;
+	}
+	@include repeat_index(".border-radius-bottom") using ($space) {
+		border-bottom-left-radius: $space;
+		border-bottom-right-radius: $space;
+	}
+	@include repeat_index(".border-radius-left") using ($space) {
+		border-top-left-radius: $space;
+		border-bottom-left-radius: $space;
+  }
 	
 	// Define the columns
 	@for $i from 0 through 12{
@@ -122,11 +143,15 @@ $sindex: 0;
 			}
 		}
 
-		$a: 0.7;
-		$bc: color.change(get-color($cn), $alpha: $a);
+		$bc: get-color($cn, $alpha: 0.7);
 		// WIll set background and text
 		#{$ts}.#{$cn}-background {
 			@include background-color($bc);
+		}
+		@for $i from 1 through 10{
+			#{$ts}.#{$cn}-background-#{$i}{
+				@include background-color(get-color($cn, $alpha: ($i/10)));
+			}
 		}
 		// WIll set background and text, also for hover and active
 		#{$ts}.#{$cn}-background-active {

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext, useEffect, useMemo } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { FaAngleLeft, FaAngleRight, FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
 import { HeaderGroup, useTable, usePagination, Row, Cell, ColumnInstance, Column } from 'react-table';
 
@@ -86,7 +86,7 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
 
     useEffect(() => {
         fetchData && fetchData({ pageIndex, pageSize });
-    }, [pageIndex, pageSize]);
+    }, [pageIndex]);
 
     useEffect(() => {
         if (pageIndex === 0) {
@@ -94,7 +94,7 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
         } else {
             gotoPage && gotoPage(0);
         }
-    }, [filters]);
+    }, [filters, pageSize]);
 
     // Render the UI for your table
     return (

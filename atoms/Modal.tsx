@@ -8,21 +8,22 @@ import Portal from './Portal';
 import Backdrop from './Backdrop';
 
 export interface ModalProps {
-    onClose?: Function;
+    className?: string;
     isOpen: boolean;
     isLocked?: boolean;
+    onClose?: Function;
 }
 
 const Modal = (props: PropsWithChildren<ModalProps>) => {
     // set up active state
     const [active, setActive] = useState(false);
     // get spread props out variables
-    const { isOpen, onClose, isLocked, children } = props;
+    const { isOpen, onClose, isLocked, children, className } = props;
     // Make a reference to the backdrop
     const backdrop = useRef<HTMLDivElement>(null);
 
     const theme = useTheme().name;
-    const clsContent = classNameFind(s, `atom`, isOpen && active ? 'active' : '', theme);
+    const clsContent = classNameFind(s, `atom`, isOpen && active ? 'active' : '', className, theme);
 
     useEffect(() => {
         // get dom element from backdrop
@@ -49,7 +50,7 @@ const Modal = (props: PropsWithChildren<ModalProps>) => {
                 current.removeEventListener('transitionend', transitionEnd);
             }
         };
-    }, [isOpen, onClose]);
+    }, [isOpen]);
 
     return (
         ((isOpen || active) && (
@@ -61,7 +62,9 @@ const Modal = (props: PropsWithChildren<ModalProps>) => {
                     }}
                 >
                     <Backdrop ref={backdrop} active={isOpen}>
-                        <div className={clsContent}>{children}</div>
+                        <div className={clsContent}>
+                            <div className={s.content}>{children}</div>
+                        </div>
                     </Backdrop>
                 </FocusTrap>
             </Portal>

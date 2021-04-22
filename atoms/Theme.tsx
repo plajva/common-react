@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 
-export interface ThemeProps {}
+export interface ThemeProps { }
 
 const themesAvailable = ['default', 'dark'];
 const getTimeTheme = () => {
@@ -19,13 +19,13 @@ interface ThemeI {
     next: () => void;
 }
 
-export const ThemeContext = React.createContext<ThemeI>({ name: getTimeTheme(), set: () => {}, next: () => {} });
+export const ThemeContext = React.createContext<ThemeI>({ name: getTimeTheme(), set: () => { }, next: () => { } });
 
 export function useTheme() {
     return useContext(ThemeContext);
 }
 
-const Theme: FunctionComponent<ThemeProps & React.HTMLAttributes<HTMLDivElement>> = ({ children, ...props }) => {
+const ThemeProvider: FunctionComponent<ThemeProps & React.HTMLAttributes<HTMLDivElement>> = ({ children, ...props }) => {
     const [theme, setTheme] = useState(getTimeTheme());
 
     useEffect(() => {
@@ -49,4 +49,4 @@ const Theme: FunctionComponent<ThemeProps & React.HTMLAttributes<HTMLDivElement>
     );
 };
 
-export default Theme;
+export default ThemeProvider;

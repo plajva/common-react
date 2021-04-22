@@ -16,18 +16,18 @@ export function classNameFind(s: any, ...classNames: (string | undefined)[]) {
   // const filter = (c?:string) => c;
   return classNames?.length
     ? classNames
-        .filter((c) => c)
-        .join(' ')
-        .split(' ')
-        .map((c) => {
-          if (c === 'dup') {
-            dup = !dup;
-            return '';
-          }
-          return s[c] ? s[c] + (dup ? ' ' + c : '') : c;
-        })
-        .filter((c) => c)
-        .join(' ')
+      .filter((c) => c)
+      .join(' ')
+      .split(' ')
+      .map((c) => {
+        if (c === 'dup') {
+          dup = !dup;
+          return '';
+        }
+        return s[c] ? s[c] + (dup ? ' ' + c : '') : c;
+      })
+      .filter((c) => c)
+      .join(' ')
     : '';
 }
 
@@ -58,7 +58,7 @@ export function stringAppend(v?: string, v2?: string) {
  * Combines objects, last
  * @param mprops All props
  */
-export function combineProps(...mprops: object[]) {}
+export function combineProps(...mprops: object[]) { }
 
 /**
  * Combine state
@@ -83,9 +83,9 @@ export const defineDefault = <T>(v: T, defaults: Partial<T>): T => {
 };
 
 /**
- *
+ * Will filter array when an item matches another with the same criteria
  * @param v The array to filter
- * @param criteria A string 'param;name.first;name.last'
+ * @param criteria A string 'property_name;name.first;name.last'
  */
 export const removeDuplicates = <T>(v: T[], criteria: string): T[] => {
   if (!Array.isArray(v)) {
@@ -104,3 +104,4 @@ export const removeDuplicates = <T>(v: T[], criteria: string): T[] => {
     return a;
   }, [] as T[]);
 };
+

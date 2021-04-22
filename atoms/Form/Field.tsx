@@ -29,14 +29,17 @@ export type FieldProps =
 const Field: FunctionComponent<FieldProps> = (props) => {
 	let { className, as, rootProps, name, label, labelPos, children, type, noLabelRoot, ...others } = props;
 
-	// As defaults to 'input'
-	as = as || 'input';
+
+
 	// Changing 'as' based on 'type'
 	let isNotInput = type && ['select', 'textarea'].includes(type);
 	if (!as && type && isNotInput) {
 		as = type;
 		type = undefined;
 	}
+
+	// As defaults to 'input'
+	as = as || 'input';
 
 	// Switching to our custom fields
 	switch (as) {
@@ -100,8 +103,8 @@ const Field: FunctionComponent<FieldProps> = (props) => {
 						{field}
 					</>}
 				<div style={{ clear: 'both' }} />
-				<div style={{color:'red', textAlign:'center'}}><ErrorMessage name={name} /></div>
-				
+				<div style={{ color: 'red', textAlign: 'center' }}><ErrorMessage name={name} /></div>
+
 			</>
 		)
 

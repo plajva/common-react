@@ -89,11 +89,12 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
     }, [pageIndex]);
 
     useEffect(() => {
-        if (pageIndex === 0) {
-            fetchData && fetchData({ pageIndex: 0, pageSize });
-        } else {
-            gotoPage && gotoPage(0);
-        }
+        if (pageCount > 0)
+            if (pageIndex === 0) {
+                fetchData && fetchData({ pageIndex: 0, pageSize });
+            } else {
+                gotoPage && gotoPage(0);
+            }
     }, [filters, pageSize]);
 
     // Render the UI for your table

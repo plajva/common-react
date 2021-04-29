@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useFormikContext } from 'formik';
 import debounce from 'lodash/debounce';
 
@@ -6,6 +6,7 @@ export interface AutoSubmitProps {}
 
 const AutoSubmit = (props: AutoSubmitProps) => {
     const { submitForm, values } = useFormikContext();
+    const [first, setFirts] = useState(true);
 
     const triggerSubmit = useCallback(
         debounce(() => {
@@ -15,7 +16,8 @@ const AutoSubmit = (props: AutoSubmitProps) => {
     );
 
     useEffect(() => {
-        triggerSubmit();
+        !first && triggerSubmit();
+        setFirts(false);
     }, [values]);
 
     return null;

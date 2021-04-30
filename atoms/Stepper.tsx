@@ -1,7 +1,7 @@
 import React, { FunctionComponent, ReactNode, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import s from './Stepper.module.scss';
 import { useTheme } from '@catoms/Theme';
-import { classNameFind } from '@common/utils';
+import { classNameFind, setDefault } from '@common/utils';
 import { render } from '@testing-library/react';
 import Button from './Button';
 import Divider from './Divider';
@@ -20,6 +20,7 @@ import Divider from './Divider';
 export interface StepperProps {
   step?: number;
   setStep?: any;
+  showSteps?: boolean;
   /** Animaiton time, in seconds */
   animTime?: number;
 }
@@ -38,7 +39,8 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
   const section = useRef<HTMLElement | null>(null);
   const lastHeight = useRef<number | undefined>(undefined);
   const theme = useTheme().name;
-  let { className, step, setStep, animTime, ...others } = props;
+  let { className, step, setStep, showSteps: _showSteps, animTime, ...others } = props;
+  const showSteps = setDefault(_showSteps, true);
   className = classNameFind(s, `atom`, 'dup', theme, className);
   const scrollerClass = classNameFind(s, `scroller`, 'dup');
   const nextStep = step ? step : 0;
@@ -166,7 +168,7 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
   return (
     <div className={className} {...others}>
       <table></table>
-      <div className={classNameFind(s, `stepper`)}>
+      {(showSteps && <div className={classNameFind(s, `stepper`)}>
         {steps.map((stepNode, i) => (
           <>
             <div className={classNameFind(s, `item`)} key={i}>
@@ -185,7 +187,7 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
             )}
           </>
         ))}
-      </div>
+      </div>) || ''}
       <div ref={scrollerRef} style={{ transition: `height ${animTime}s` }} className={scrollerClass}>
         {render_array}
       </div>

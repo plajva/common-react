@@ -43,9 +43,15 @@ $sindex: 0;
 	@include repeat_index(".margin-v") using ($space) {
 		margin-top: $space;
 		margin-bottom: $space;
+	}
+	@include repeat_index(".margin-top") using ($space) {
+		margin-top: $space;
   }
   @include repeat_index(".margin-bottom") using ($space) {
 		margin-bottom: $space;
+	}
+	@include repeat_index(".margin-left") using ($space) {
+		margin-left: $space;
   }
   @include repeat_index(".margin-right") using ($space) {
 		margin-right: $space;
@@ -58,9 +64,13 @@ $sindex: 0;
 		padding-left: $space;
 		padding-right: $space;
 	}
+	
 	@include repeat_index(".padding-v") using ($space) {
 		padding-top: $space;
 		padding-bottom: $space;
+	}
+	@include repeat_index(".padding-top") using ($space) {
+		padding-top: $space;
 	}
 	
 	@include repeat_index(".border-radius-top") using ($space) {

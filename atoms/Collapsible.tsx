@@ -1,13 +1,16 @@
 import React, { FunctionComponent, ReactNode, MouseEvent, useContext, useRef, useState } from 'react';
 import s from './Collapsible.module.scss';
 import { useTheme } from '@catoms/Theme';
-import { classNameFind } from '@common/utils';
+import { classNameFind, separateChildren, setDefault } from '@common/utils';
 
-export interface CollapsibleProps {}
+export interface CollapsibleProps {
+  canCollapse?: boolean;
+}
 
 // First child can be function (open)
 
 const Collapsible: FunctionComponent<CollapsibleProps & React.HTMLAttributes<HTMLDivElement>> = ({
+  canCollapse: _canCollapse,
   className,
   children,
   ...props
@@ -16,19 +19,13 @@ const Collapsible: FunctionComponent<CollapsibleProps & React.HTMLAttributes<HTM
   className = classNameFind(s, `comp`, theme, className);
   const [state, setState] = useState({ open: false });
   const content = useRef<HTMLDivElement>(null);
+  // Setting default for canCollapse
+  const canCollapse = setDefault(_canCollapse, true);
 
-  const _children = Array.isArray(children) ? [...children] : [children];
-  let child_first;
-  if (_children.length) {
-    child_first = _children.splice(0, 1);
-  }
-  const child_rest = _children;
-  const renderChild = (child) => {
-    const _render = (v) => (typeof v === 'function' ? v(state, setState) : v);
-    return Array.isArray(child) ? child.map((v) => _render(v)) : _render(child);
-  };
+  const [child_first, child_rest, renderChild] = separateChildren(children, state, setState);
 
   const toggle = (e: MouseEvent<HTMLElement>) => {
+    if (!canCollapse) return;
     setState({ open: !state.open });
     // if(content.current){
     // 	content.current.style.maxHeight = content.current.scrollHeight + 'px';
@@ -37,7 +34,7 @@ const Collapsible: FunctionComponent<CollapsibleProps & React.HTMLAttributes<HTM
 
   return (
     <div className={className} {...props}>
-      <div onClick={toggle} className={classNameFind(s, 'collapsible')}>
+      <div onClick={toggle} className={classNameFind(s, canCollapse ? 'collapsible' : '')}>
         {renderChild(child_first)}
       </div>
       <div

@@ -76,8 +76,9 @@
   @return join((), $result, $separator, $bracketed);
 }
 
-/// rescurse a map
-/// provide a list of keys to go through
+/**
+  Will iterate through $map to find the field you're trying to get to, similar to "map.field_name.field_name"
+ */
 @function map-recurse($map, $field-names: false) {
   // @debug Map-recurse called with if(is-falsy($field-names), "zero" , $field-names);
   @if (not $field-names) or (length($field-names) == 0) {

@@ -105,7 +105,7 @@ $theme-names-with-empty: list.join("", $theme-names);
 		(
 			// color-names: map-keys(map-get($theme, colors)),
 			color-names:
-				(primary, secondary, warn)
+				(primary, secondary, warn, neutral)
 		)
 	);
 
@@ -123,37 +123,41 @@ $theme-names-with-empty: list.join("", $theme-names);
 // Can be used to get current theme/field/field/field
 @function get-theme-field($field-names...) {
 	$theme: null;
+	// Trying to get a valid theme from where to get the value
 	@if not map-has-key($map: $themes, $key: $theme-current) {
 		// @warn "Theme `#{$theme-current}` doesnt exist in themes, taking default theme";
-
 		@if not map-has-key($map: $themes, $key: $theme-default) {
 			@error "Default theme `#{$theme-default}` doesn't exist in themes";
 		}
-
 		$theme: map-get($themes, $theme-default);
 	} @else {
 		$theme: map-get($themes, $theme-current);
 	}
-
+	
+	// Make sure field-names is valid
 	@if (not $field-names) or (length($field-names) == 0) {
 		@return $theme;
 	}
+	// If the first value of field-names is arglist or list, then make that the field-names
 	@if length($field-names) == 1 {
 		$t: type-of(nth($field-names, 1));
 		@if $t == "arglist" or $t == "list" {
 			$field-names: nth($field-names, 1);
 		}
 	}
-
+	
+	// Just recurse/pull the value from the theme and return it
 	$out: map-recurse($theme, $field-names);
 	// @debug "get-theme-field called with `#{$field-names}`, outputting `#{debug-list($out)}`";
 	@return $out;
 }
+// Allows to set a default value if the value requested wasn't found in the theme
 @function get-theme-field-or-return($default, $field-names...) {
 	$tf: get-theme-field($field-names);
 	@return if(is-falsy($tf), $default, $tf);
 }
 
+// Helper function to get a shade
 @function get-shade($shade) {
 	$val: get-theme-field(shades, $shade);
 	@return if($val, $val, $shade);

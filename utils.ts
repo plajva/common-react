@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from 'react';
+import React, { ReactNode, SetStateAction, useState } from 'react';
 
 export type Range = [number | undefined, number | undefined];
 
@@ -16,18 +16,18 @@ export function classNameFind(s: any, ...classNames: (string | undefined)[]) {
   // const filter = (c?:string) => c;
   return classNames?.length
     ? classNames
-      .filter((c) => c)
-      .join(' ')
-      .split(' ')
-      .map((c) => {
-        if (c === 'dup') {
-          dup = !dup;
-          return '';
-        }
-        return s[c] ? s[c] + (dup ? ' ' + c : '') : c;
-      })
-      .filter((c) => c)
-      .join(' ')
+        .filter((c) => c)
+        .join(' ')
+        .split(' ')
+        .map((c) => {
+          if (c === 'dup') {
+            dup = !dup;
+            return '';
+          }
+          return s[c] ? s[c] + (dup ? ' ' + c : '') : c;
+        })
+        .filter((c) => c)
+        .join(' ')
     : '';
 }
 
@@ -58,7 +58,7 @@ export function stringAppend(v?: string, v2?: string) {
  * Combines objects, last
  * @param mprops All props
  */
-export function combineProps(...mprops: object[]) { }
+export function combineProps(...mprops: object[]) {}
 
 /**
  * Combine state
@@ -78,8 +78,46 @@ export const combineState = <T>(
   return [s, ss];
 };
 
-export const defineDefault = <T>(v: T, defaults: Partial<T>): T => {
+/**
+ * For components that separate first children for some things, and the rest, children can be functions that take the state and setState parameters
+ * @param children The children
+ * @param state component state
+ * @param setState component setState
+ */
+export const separateChildren = (
+  children,
+  state = {},
+  setState: any = () => {}
+): [ReactNode, ReactNode, (c: ReactNode) => ReactNode] => {
+  const _children = Array.isArray(children) ? [...children] : [children];
+  let child_first;
+  if (_children.length) {
+    child_first = _children.splice(0, 1);
+  }
+  const child_rest = _children;
+  const renderChild = (child) => {
+    const _render = (v) => (typeof v === 'function' ? v(state, setState) : v);
+    return Array.isArray(child) ? child.map((v) => _render(v)) : _render(child);
+  };
+  return [child_first, child_rest, renderChild];
+};
+
+/**
+ * If you want to set the default values for an object, same as {Object.assign(defaults, v)}
+ * @param v input object
+ * @param defaults set if unset
+ */
+export const setObjectDefault = <T>(v: T, defaults: Partial<T>): T => {
   return Object.assign(defaults, v);
+};
+
+/**
+ * If you want to set the default values for a variable, same as {typeof v === 'undefined' ? d : v}
+ * @param v input object
+ * @param d set if unset
+ */
+export const setDefault = <T>(v: T | undefined, d: T): T => {
+  return typeof v === 'undefined' ? d : v;
 };
 
 /**
@@ -104,4 +142,3 @@ export const removeDuplicates = <T>(v: T[], criteria: string): T[] => {
     return a;
   }, [] as T[]);
 };
-

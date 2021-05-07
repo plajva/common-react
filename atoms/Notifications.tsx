@@ -1,7 +1,7 @@
 import Portal from './Portal';
 import { createContext, useContext, useReducer } from 'react';
-import Notification from './Notification';
 
+import Notification from './Notification';
 import s from './Notifications.module.scss';
 
 interface NotificationProps {

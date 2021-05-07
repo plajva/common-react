@@ -1,11 +1,12 @@
 import Portal from './Portal';
 import { createContext, useContext, useReducer } from 'react';
+import { nanoid } from 'nanoid';
 
 import Notification from './Notification';
 import s from './Notifications.module.scss';
 
 interface NotificationProps {
-    id?: number;
+    id?: string;
     text?: string;
     type?: 'success' | 'warning' | 'error';
     icon?: boolean;
@@ -26,10 +27,10 @@ const reducerFunction = (state: StateNotificationProps, action: ActionNotificati
 
     switch (action.type) {
         case 'add':
-            newState.notifications = [{ ...action.notification, id: Date.now() }, ...newState.notifications];
+            newState.notifications = [{ ...action.notification, id: nanoid(10) }, ...newState.notifications];
             break;
         case 'remove':
-            newState.notifications = state.notifications.filter((notif) => notif.id !== action.notification.id);
+            newState.notifications = newState.notifications.filter((notif) => notif.id !== action.notification.id);
             break;
         case 'clear':
             newState.notifications = [];
@@ -43,7 +44,7 @@ const reducerFunction = (state: StateNotificationProps, action: ActionNotificati
 
 const NotificationContext = createContext({
     addNotification: (notification: NotificationProps) => {},
-    removeNotification: (notificationId: number) => {},
+    removeNotification: (notificationId: string) => {},
 });
 
 const Notifications = (props: any) => {
@@ -52,7 +53,7 @@ const Notifications = (props: any) => {
     const addNotification = (notification: NotificationProps) => {
         dispatch({ type: 'add', notification });
     };
-    const removeNotification = (notificationId: number) => {
+    const removeNotification = (notificationId: string) => {
         dispatch({ type: 'remove', notification: { id: notificationId } });
     };
 
@@ -68,7 +69,7 @@ const Notifications = (props: any) => {
             <Portal id={s.notifications}>
                 {state.notifications.slice(0, 5).map((noty, idx) => (
                     <Notification
-                        key={idx}
+                        key={noty.id}
                         sticky={noty.sticky}
                         id={noty.id}
                         icon={noty.icon}

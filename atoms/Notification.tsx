@@ -14,7 +14,7 @@ const mapIcons = {
 };
 
 export interface NotificationProps {
-    id?: number;
+    id?: string;
     icon?: boolean;
     text: string;
     type: 'error' | 'warning' | 'success';
@@ -35,7 +35,7 @@ const Notification = (props: NotificationProps) => {
     const closeNotification = () => {
         setInNoty(false);
         setTimeout(() => {
-            removeNotification(props.id || 0);
+            removeNotification(props.id || '0');
         }, 300);
     };
 

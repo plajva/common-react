@@ -1,45 +1,45 @@
-@import "type_check";
+@import 'type_check';
 
 /// Prints a map as a CSS rule
 /// @param {Map} $map
 @mixin debug-map($map) {
-  @at-root {
-    __properties__ {
-      @each $key, $value in $map {
-        #{$key}: inspect($value);
-      }
+    @at-root {
+        __properties__ {
+            @each $key, $value in $map {
+                #{$key}: inspect($value);
+            }
+        }
     }
-  }
 }
 
 @function debug-list($list) {
-  // We open the bracket
-  $result: "[ ";
+    // We open the bracket
+    $result: '[ ';
 
-  // For each item in list
-  @each $item in $list {
-    // We test its length
-    // If it’s more than one item long
-    @if length($item) > 1 {
-      // We deal with a nested list
-      $result: $result + debug-list($item);
-    }
-    // Else we append the item to $result
-    @else {
-      $result: $result + $item;
+    // For each item in list
+    @each $item in $list {
+        // We test its length
+        // If it’s more than one item long
+        @if length($item) > 1 {
+            // We deal with a nested list
+            $result: $result + debug-list($item);
+        }
+        // Else we append the item to $result
+        @else {
+            $result: $result + $item;
+        }
+
+        // If we are not dealing with the last item of the list
+        // We add a comma and a space
+        @if index($list, $item) != length($list) {
+            $result: $result + ', ';
+        }
     }
 
-    // If we are not dealing with the last item of the list
-    // We add a comma and a space
-    @if index($list, $item) != length($list) {
-      $result: $result + ", ";
-    }
-  }
-
-  // We close the bracket
-  // And return the string
-  $result: $result + " ]";
-  @return quote($result);
+    // We close the bracket
+    // And return the string
+    $result: $result + ' ]';
+    @return quote($result);
 }
 
 /// list-remove
@@ -49,13 +49,13 @@
 /// @returns A SASS list
 /// @author Jake Wilson <jake.e.wilson@gmail.com>
 @function list-remove($list, $index) {
-  $newList: ();
-  @for $i from 1 through length($list) {
-    @if $i != $index {
-      $newList: append($newList, nth($list, $i));
+    $newList: ();
+    @for $i from 1 through length($list) {
+        @if $i != $index {
+            $newList: append($newList, nth($list, $i));
+        }
     }
-  }
-  @return $newList;
+    @return $newList;
 }
 
 /// list-remove
@@ -64,48 +64,44 @@
 /// @param $n - The nth value index to remove
 /// @returns A SASS list
 @function nth-delete($list, $n) {
-  $result: ();
-  $n: if($n < 0, length($list) + $n + 1, $n);
-  $bracketed: is-bracketed($list);
-  $separator: list-separator($list);
-  @for $i from 1 through length($list) {
-    @if $i != $n {
-      $result: append($result, nth($list, $i));
+    $result: ();
+    $n: if($n < 0, length($list) + $n + 1, $n);
+    $bracketed: is-bracketed($list);
+    $separator: list-separator($list);
+    @for $i from 1 through length($list) {
+        @if $i != $n {
+            $result: append($result, nth($list, $i));
+        }
     }
-  }
-  @return join((), $result, $separator, $bracketed);
+    @return join((), $result, $separator, $bracketed);
 }
 
 /**
   Will iterate through $map to find the field you're trying to get to, similar to "map.field_name.field_name"
  */
 @function map-recurse($map, $field-names: false) {
-  // @debug Map-recurse called with if(is-falsy($field-names), "zero" , $field-names);
-  @if (not $field-names) or (length($field-names) == 0) {
-    @return $map;
-  }
-  $field-name: nth($field-names, 1);
+    // @debug Map-recurse called with if(is-falsy($field-names), "zero" , $field-names);
+    @if (not $field-names) or (length($field-names) == 0) {
+        @return $map;
+    }
+    $field-name: nth($field-names, 1);
 
-  @if not map-has-key($map, $field-name) {
-    // @warn "#{$field-name} field doesnt exist in #{debug-list($map)} variable";
-    @return "";
-  }
+    @if not map-has-key($map, $field-name) {
+        // @warn "#{$field-name} field doesnt exist in #{debug-list($map)} variable";
+        @return '';
+    }
 
-  @return map-recurse(map-get($map, $field-name), list-remove($field-names, 1));
+    @return map-recurse(map-get($map, $field-name), list-remove($field-names, 1));
 }
 
 // Deep merge, given a nested map1 and map2, will merge map2 into map1.
 @function map-merge-deep($map1, $map2) {
-  @each $field, $value in $map2 {
-    @if
-    type-of($value) == "map" and 
-    map-has-key($map1, $field) and
-    type-of(map-get($map1, $field)) == "map"
-    {
-      $map1: map-merge($map1, (#{$field}: map-merge-deep(map-get($map1, $field), $value)));
-    } @else {
-      $map1: map-merge($map1, (#{$field}: $value));
+    @each $field, $value in $map2 {
+        @if type-of($value) == 'map' and map-has-key($map1, $field) and type-of(map-get($map1, $field)) == 'map' {
+            $map1: map-merge($map1, (#{$field}: map-merge-deep(map-get($map1, $field), $value)));
+        } @else {
+            $map1: map-merge($map1, (#{$field}: $value));
+        }
     }
-  }
-  @return $map1;
+    @return $map1;
 }

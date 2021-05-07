@@ -9,9 +9,9 @@ import { classNameFind } from '@common/utils';
 // We want to -> have a chosen theme variable
 
 export interface ToolbarProps {
-	left?: ReactNode,
-	middle?: ReactNode,
-	right?:ReactNode,
+    left?: ReactNode;
+    middle?: ReactNode;
+    right?: ReactNode;
 }
 
 // const Link: FunctionComponent<LinkProps> = (props) => {
@@ -22,24 +22,21 @@ export interface ToolbarProps {
 // 	)
 // }
 
+const Toolbar: FunctionComponent<ToolbarProps> = ({ left, middle, right, ...props }) => {
+    const theme = useTheme().name;
+    // let {className,...others} = props;
+    let className = classNameFind(s, theme, `toolbar`);
 
-
-const Toolbar:FunctionComponent<ToolbarProps> = ({left,middle, right, ...props}) => {
-	const theme = useTheme().name;
-	// let {className,...others} = props;
-	let className = classNameFind(s, theme, `toolbar`)
-	
-	return (
-		<div className={className}>
-			{left}
-			<div style={{flexGrow: 4}}></div>
-			{middle}
-			<div style={{flexGrow: 4}}></div>
-			{right}
-			{props.children}
-			
-		</div>
-	);
-}
+    return (
+        <div className={className}>
+            {left}
+            <div style={{ flexGrow: 4 }}></div>
+            {middle}
+            <div style={{ flexGrow: 4 }}></div>
+            {right}
+            {props.children}
+        </div>
+    );
+};
 
 export default Toolbar;

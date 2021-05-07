@@ -18,11 +18,11 @@ import Divider from './Divider';
  */
 
 export interface StepperProps {
-  step?: number;
-  setStep?: any;
-  showSteps?: boolean;
-  /** Animaiton time, in seconds */
-  animTime?: number;
+    step?: number;
+    setStep?: any;
+    showSteps?: boolean;
+    /** Animaiton time, in seconds */
+    animTime?: number;
 }
 
 /**
@@ -33,166 +33,177 @@ export interface StepperProps {
  * @param props
  */
 const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElement>> = (props) => {
-  const [_step, _setStep] = useState(props.step ? props.step : 0);
-  // const [height, setHeight] = useState(0);
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const section = useRef<HTMLElement | null>(null);
-  const lastHeight = useRef<number | undefined>(undefined);
-  const theme = useTheme().name;
-  let { className, step, setStep, showSteps: _showSteps, animTime, ...others } = props;
-  const showSteps = setDefault(_showSteps, true);
-  className = classNameFind(s, `atom`, 'dup', theme, className);
-  const scrollerClass = classNameFind(s, `scroller`, 'dup');
-  const nextStep = step ? step : 0;
-  animTime = animTime || animTime === 0 ? animTime : 1;
+    const [_step, _setStep] = useState(props.step ? props.step : 0);
+    // const [height, setHeight] = useState(0);
+    const scrollerRef = useRef<HTMLDivElement>(null);
+    const section = useRef<HTMLElement | null>(null);
+    const lastHeight = useRef<number | undefined>(undefined);
+    const theme = useTheme().name;
+    let { className, step, setStep, showSteps: _showSteps, animTime, ...others } = props;
+    const showSteps = setDefault(_showSteps, true);
+    className = classNameFind(s, `atom`, 'dup', theme, className);
+    const scrollerClass = classNameFind(s, `scroller`, 'dup');
+    const nextStep = step ? step : 0;
+    animTime = animTime || animTime === 0 ? animTime : 1;
 
-  // Effects run after Render of the component
-  // If nextStep != step, mount nextStep
-  useEffect(() => {
-    // The timeout to remove from DOM
-    if (nextStep === _step) return; // Prevent calling timeout
+    // Effects run after Render of the component
+    // If nextStep != step, mount nextStep
+    useEffect(() => {
+        // The timeout to remove from DOM
+        if (nextStep === _step) return; // Prevent calling timeout
 
-    let tid = 0;
-    if (animTime) {
-      tid = (setTimeout(() => {
-        _setStep(nextStep);
-      }, (animTime || 1) * 1000) as any) as number;
-    } else _setStep(nextStep);
+        let tid = 0;
+        if (animTime) {
+            tid = (setTimeout(() => {
+                _setStep(nextStep);
+            }, (animTime || 1) * 1000) as any) as number;
+        } else _setStep(nextStep);
 
-    const handleResize = () => {
-      // console.log(`Handled resize ${section?.current}`)
-      if (_step === nextStep) {
-        setHeight(0);
-      } else if (section.current) {
-        setHeight(section.current.scrollHeight);
-      }
-    };
-    // if(section.current)setHeight(section.current.offsetHeight);
-    window.addEventListener('resize', handleResize);
-    // if(lastHeight.current)setHeight(lastHeight.current)
+        const handleResize = () => {
+            // console.log(`Handled resize ${section?.current}`)
+            if (_step === nextStep) {
+                setHeight(0);
+            } else if (section.current) {
+                setHeight(section.current.scrollHeight);
+            }
+        };
+        // if(section.current)setHeight(section.current.offsetHeight);
+        window.addEventListener('resize', handleResize);
+        // if(lastHeight.current)setHeight(lastHeight.current)
 
-    handleResize();
+        handleResize();
 
-    return () => {
-      if (tid) clearTimeout(tid);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [animTime, nextStep, _step]);
+        return () => {
+            if (tid) clearTimeout(tid);
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [animTime, nextStep, _step]);
 
-  // Sets scroller height
-  const setHeight = (height: number) => {
-    if (scrollerRef.current) {
-      if (height) {
-        scrollerRef.current.style.height = `${height}px`;
-        lastHeight.current = height;
-      } else scrollerRef.current.style.height = '';
-    }
-  };
-
-  // useLayoutEffect(() => {
-  // 	return () => {
-  // 	};
-  // })
-
-  const nextRefCallback = (ref: HTMLElement) => {
-    // console.log(`Ref called: ${ref?.offsetHeight}`);
-    if (ref) {
-      section.current = ref;
-    }
-  };
-
-  // console.log(props.children);
-  let children = React.Children.toArray(props.children);
-  let render_array = children.reduce<ReactNode[]>((arr, child, i) => {
-    let right = nextStep > _step;
-    let dirAndTiming = right ? 'normal ease-out' : 'reverse ease-in';
-    let done = _step === nextStep;
-    let out_anim = done ? '' : `${s.out} ${animTime}s ${dirAndTiming} forwards`,
-      in_anim = done ? '' : `${s.in} ${animTime}s ${dirAndTiming} forwards `;
-    if (i === nextStep || i === _step) {
-      if (React.isValidElement(child)) {
-        if (nextStep === _step) {
-          arr.push(
-            React.cloneElement(child, {
-              ref: nextRefCallback,
-              style: { ...child.props.style, position: 'relative' },
-              key: i,
-            })
-          );
-          return arr;
+    // Sets scroller height
+    const setHeight = (height: number) => {
+        if (scrollerRef.current) {
+            if (height) {
+                scrollerRef.current.style.height = `${height}px`;
+                lastHeight.current = height;
+            } else scrollerRef.current.style.height = '';
         }
-        if (i === nextStep)
-          arr.push(
-            React.cloneElement(child, {
-              style: { ...child.props.style, animation: right ? in_anim : out_anim, transform: 'translateZ(0)' },
-              ref: nextRefCallback,
-              key: i,
-            })
-          );
-        else {
-          arr.push(
-            React.cloneElement(child, {
-              style: { ...child.props.style, animation: right ? out_anim : in_anim, transform: 'translateZ(0)' },
-              key: i,
-            })
-          );
+    };
+
+    // useLayoutEffect(() => {
+    // 	return () => {
+    // 	};
+    // })
+
+    const nextRefCallback = (ref: HTMLElement) => {
+        // console.log(`Ref called: ${ref?.offsetHeight}`);
+        if (ref) {
+            section.current = ref;
         }
-      }
-    }
-    // else{
-    // 	if (React.isValidElement(child))arr.push(React.cloneElement(child, { style: {display:'none'}}))
+    };
+
+    // console.log(props.children);
+    let children = React.Children.toArray(props.children);
+    let render_array = children.reduce<ReactNode[]>((arr, child, i) => {
+        let right = nextStep > _step;
+        let dirAndTiming = right ? 'normal ease-out' : 'reverse ease-in';
+        let done = _step === nextStep;
+        let out_anim = done ? '' : `${s.out} ${animTime}s ${dirAndTiming} forwards`,
+            in_anim = done ? '' : `${s.in} ${animTime}s ${dirAndTiming} forwards `;
+        if (i === nextStep || i === _step) {
+            if (React.isValidElement(child)) {
+                if (nextStep === _step) {
+                    arr.push(
+                        React.cloneElement(child, {
+                            ref: nextRefCallback,
+                            style: { ...child.props.style, position: 'relative' },
+                            key: i,
+                        })
+                    );
+                    return arr;
+                }
+                if (i === nextStep)
+                    arr.push(
+                        React.cloneElement(child, {
+                            style: {
+                                ...child.props.style,
+                                animation: right ? in_anim : out_anim,
+                                transform: 'translateZ(0)',
+                            },
+                            ref: nextRefCallback,
+                            key: i,
+                        })
+                    );
+                else {
+                    arr.push(
+                        React.cloneElement(child, {
+                            style: {
+                                ...child.props.style,
+                                animation: right ? out_anim : in_anim,
+                                transform: 'translateZ(0)',
+                            },
+                            key: i,
+                        })
+                    );
+                }
+            }
+        }
+        // else{
+        // 	if (React.isValidElement(child))arr.push(React.cloneElement(child, { style: {display:'none'}}))
+        // }
+        return arr;
+    }, []);
+
+    const steps = children.reduce<ReactNode[]>((arr, child, i) => {
+        arr.push((React.isValidElement(child) && child.props.step) || i + 1);
+        return arr;
+    }, []);
+
+    // if ( !child){
+    // 	arr.push(<>
+    // 		Step {step}<br />
+    // 		<Button onClick={() => { setStep(step - 1)}}>Previous</Button>
+    // 		<Button onClick={() => { setStep(step + 1)}}>Next</Button>
+    // 	</>)
     // }
-    return arr;
-  }, []);
 
-  const steps = children.reduce<ReactNode[]>((arr, child, i) => {
-    arr.push((React.isValidElement(child) && child.props.step) || i + 1);
-    return arr;
-  }, []);
+    // Updating to last height when transitioning, so there's no jump in scrolling
+    if (_step != nextStep) {
+        if (lastHeight.current) setHeight(lastHeight.current);
+    } else {
+        setHeight(0);
+    }
 
-  // if ( !child){
-  // 	arr.push(<>
-  // 		Step {step}<br />
-  // 		<Button onClick={() => { setStep(step - 1)}}>Previous</Button>
-  // 		<Button onClick={() => { setStep(step + 1)}}>Next</Button>
-  // 	</>)
-  // }
-
-  // Updating to last height when transitioning, so there's no jump in scrolling
-  if (_step != nextStep) {
-    if (lastHeight.current) setHeight(lastHeight.current);
-  } else {
-    setHeight(0);
-  }
-
-  return (
-    <div className={className} {...others}>
-      <table></table>
-      {(showSteps && <div className={classNameFind(s, `stepper`)}>
-        {steps.map((stepNode, i) => (
-          <>
-            <div className={classNameFind(s, `item`)} key={i}>
-              <Button
-                ripple_type='center'
-                className={`circular ${step === i && 'primary-background'}`}
-                onClick={() => {
-                  if (setStep) setStep(i);
-                }}
-              >
-                {stepNode}
-              </Button>
+    return (
+        <div className={className} {...others}>
+            <table></table>
+            {(showSteps && (
+                <div className={classNameFind(s, `stepper`)}>
+                    {steps.map((stepNode, i) => (
+                        <>
+                            <div className={classNameFind(s, `item`)} key={i}>
+                                <Button
+                                    ripple_type='center'
+                                    className={`circular ${step === i && 'primary-background'}`}
+                                    onClick={() => {
+                                        if (setStep) setStep(i);
+                                    }}
+                                >
+                                    {stepNode}
+                                </Button>
+                            </div>
+                            {i !== steps.length - 1 && (
+                                <Divider className={classNameFind(s, `thinner item divider grow`)} key={i + 100} />
+                            )}
+                        </>
+                    ))}
+                </div>
+            )) ||
+                ''}
+            <div ref={scrollerRef} style={{ transition: `height ${animTime}s` }} className={scrollerClass}>
+                {render_array}
             </div>
-            {i !== steps.length - 1 && (
-              <Divider className={classNameFind(s, `thinner item divider grow`)} key={i + 100} />
-            )}
-          </>
-        ))}
-      </div>) || ''}
-      <div ref={scrollerRef} style={{ transition: `height ${animTime}s` }} className={scrollerClass}>
-        {render_array}
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default Stepper;

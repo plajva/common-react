@@ -3,7 +3,7 @@ import React, { ReactNode, SetStateAction, useState } from 'react';
 export type Range = [number | undefined, number | undefined];
 
 export interface AtomProps {
-  className?: string;
+    className?: string;
 }
 
 /**
@@ -12,31 +12,31 @@ export interface AtomProps {
  * @param classNames All the classnames to parse, pass 'dup' to toggle duplication, starts disabled false
  */
 export function classNameFind(s: any, ...classNames: (string | undefined)[]) {
-  let dup = false;
-  // const filter = (c?:string) => c;
-  return classNames?.length
-    ? classNames
-        .filter((c) => c)
-        .join(' ')
-        .split(' ')
-        .map((c) => {
-          if (c === 'dup') {
-            dup = !dup;
-            return '';
-          }
-          return s[c] ? s[c] + (dup ? ' ' + c : '') : c;
-        })
-        .filter((c) => c)
-        .join(' ')
-    : '';
+    let dup = false;
+    // const filter = (c?:string) => c;
+    return classNames?.length
+        ? classNames
+              .filter((c) => c)
+              .join(' ')
+              .split(' ')
+              .map((c) => {
+                  if (c === 'dup') {
+                      dup = !dup;
+                      return '';
+                  }
+                  return s[c] ? s[c] + (dup ? ' ' + c : '') : c;
+              })
+              .filter((c) => c)
+              .join(' ')
+        : '';
 }
 
 export function combineEvent(...functions: any[]) {
-  return (...e) => {
-    functions.forEach((f) => {
-      if (typeof f === 'function') f(...e);
-    });
-  };
+    return (...e) => {
+        functions.forEach((f) => {
+            if (typeof f === 'function') f(...e);
+        });
+    };
 }
 
 // function debounce(fn, ms) {
@@ -51,7 +51,7 @@ export function combineEvent(...functions: any[]) {
 // }
 
 export function stringAppend(v?: string, v2?: string) {
-  return (v ? v : '') + (v2 ? v2 : '');
+    return (v ? v : '') + (v2 ? v2 : '');
 }
 
 /**
@@ -64,18 +64,18 @@ export function combineProps(...mprops: object[]) {}
  * Combine state
  */
 export const combineState = <T>(
-  useS: [T, React.Dispatch<React.SetStateAction<T>>],
-  state?: T,
-  setState?: React.Dispatch<React.SetStateAction<T>>
+    useS: [T, React.Dispatch<React.SetStateAction<T>>],
+    state?: T,
+    setState?: React.Dispatch<React.SetStateAction<T>>
 ): [T, React.Dispatch<React.SetStateAction<T>>] => {
-  let [s, ss] = useS;
-  if (typeof state !== 'undefined') s = state;
-  if (setState)
-    ss = (v: SetStateAction<T>) => {
-      ss(v);
-      setState(v);
-    };
-  return [s, ss];
+    let [s, ss] = useS;
+    if (typeof state !== 'undefined') s = state;
+    if (setState)
+        ss = (v: SetStateAction<T>) => {
+            ss(v);
+            setState(v);
+        };
+    return [s, ss];
 };
 
 /**
@@ -85,21 +85,21 @@ export const combineState = <T>(
  * @param setState component setState
  */
 export const separateChildren = (
-  children,
-  state = {},
-  setState: any = () => {}
+    children,
+    state = {},
+    setState: any = () => {}
 ): [ReactNode, ReactNode, (c: ReactNode) => ReactNode] => {
-  const _children = Array.isArray(children) ? [...children] : [children];
-  let child_first;
-  if (_children.length) {
-    child_first = _children.splice(0, 1);
-  }
-  const child_rest = _children;
-  const renderChild = (child) => {
-    const _render = (v) => (typeof v === 'function' ? v(state, setState) : v);
-    return Array.isArray(child) ? child.map((v) => _render(v)) : _render(child);
-  };
-  return [child_first, child_rest, renderChild];
+    const _children = Array.isArray(children) ? [...children] : [children];
+    let child_first;
+    if (_children.length) {
+        child_first = _children.splice(0, 1);
+    }
+    const child_rest = _children;
+    const renderChild = (child) => {
+        const _render = (v) => (typeof v === 'function' ? v(state, setState) : v);
+        return Array.isArray(child) ? child.map((v) => _render(v)) : _render(child);
+    };
+    return [child_first, child_rest, renderChild];
 };
 
 /**
@@ -108,7 +108,7 @@ export const separateChildren = (
  * @param defaults set if unset
  */
 export const setObjectDefault = <T>(v: T, defaults: Partial<T>): T => {
-  return Object.assign(defaults, v);
+    return Object.assign(defaults, v);
 };
 
 /**
@@ -117,7 +117,7 @@ export const setObjectDefault = <T>(v: T, defaults: Partial<T>): T => {
  * @param d set if unset
  */
 export const setDefault = <T>(v: T | undefined, d: T): T => {
-  return typeof v === 'undefined' ? d : v;
+    return typeof v === 'undefined' ? d : v;
 };
 
 /**
@@ -126,32 +126,32 @@ export const setDefault = <T>(v: T | undefined, d: T): T => {
  * @param criteria A string 'property_name;name.first;name.last'
  */
 export const removeDuplicates = <T>(v: T[], criteria: string): T[] => {
-  if (!Array.isArray(v)) {
-    console.warn(`V is not array: '${v}'`);
-    return v;
-  }
-  return v.reduce((a, v) => {
-    if (
-      !criteria.split(';').every((p) => {
-        const pa = p.split('.').map((p) => p.trim()); // Resolve dots in params
-        const paf = (v) => pa.reduce((a, v) => (a ? a[v] : a), v);
-        return a.find((av) => paf(av) === paf(v));
-      })
-    )
-      a.push(v);
-    return a;
-  }, [] as T[]);
+    if (!Array.isArray(v)) {
+        console.warn(`V is not array: '${v}'`);
+        return v;
+    }
+    return v.reduce((a, v) => {
+        if (
+            !criteria.split(';').every((p) => {
+                const pa = p.split('.').map((p) => p.trim()); // Resolve dots in params
+                const paf = (v) => pa.reduce((a, v) => (a ? a[v] : a), v);
+                return a.find((av) => paf(av) === paf(v));
+            })
+        )
+            a.push(v);
+        return a;
+    }, [] as T[]);
 };
 
 export const debounceCreator = <T extends Function>(callback: T, wait: number = 0) => {
-  let timeout: NodeJS.Timeout;
-  return (...args) => {
-    const context = this;
-    clearTimeout(timeout);
-    if (wait > 0) {
-      timeout = setTimeout(() => callback.apply(context, args), wait);
-    } else {
-      callback.apply(context, args);
-    }
-  };
+    let timeout: NodeJS.Timeout;
+    return (...args) => {
+        const context = this;
+        clearTimeout(timeout);
+        if (wait > 0) {
+            timeout = setTimeout(() => callback.apply(context, args), wait);
+        } else {
+            callback.apply(context, args);
+        }
+    };
 };

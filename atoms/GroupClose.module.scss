@@ -1,63 +1,61 @@
 @import '@styles/_globals.scss';
 
-
 .atom {
-	// My definitions by default
-	
-	display: flex;
-	flex-flow: row nowrap;
-	justify-content: center;
-	align-items: stretch;
-	// height: max-content;
-	
-	&>*{
-		flex: 1 1 auto;
-		// height: 100%;
-		// box-sizing: border-box;
-		margin: 0;
-		border-right: 0;
-		&:not(:first-child){
-			border-left: 0 !important;
-		}
-		&:not(:first-child):not(:last-child){
-			border-radius: 0;
-		}
-		&:first-child{
-			border-top-right-radius: 0;
-			border-bottom-right-radius: 0;
-		}
-		&:last-child{
-			border-top-left-radius: 0;
-			border-bottom-left-radius: 0;
-		}
-	}
-	
-	
-	// // You can define theme based classes in this loop
-	// // This will loop through all themes
-	// // $ts (Theme Selector)
-	// @each $theme in $theme-names-with-empty {
-	// 	$theme-current: $theme !global;
-	// 	$ts: theme-selector(
-	// 		$class: true,
-	// 	);
-		
-	// 	// My component on this theme
-	// 	&#{$ts}{
-			
-	// 	}
-		
-	// 	// This will loop through all color fields in the theme
-	// 	// In case you want to define color based styles
-	// 	@each $c in get-theme-field(color-names) {
-	// 		// This will get the color based on the name
-	// 		$color: get-color($c);
-			
-	// 		// My component on this theme and color
-	// 		&#{$ts}.#{$c} {
-				
-	// 		}
-	// 	}
-	// }
-	// $theme-current: $theme-default;
+    // My definitions by default
+
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: stretch;
+    // height: max-content;
+
+    & > * {
+        flex: 1 1 auto;
+        // height: 100%;
+        // box-sizing: border-box;
+        margin: 0;
+        border-right: 0;
+        &:not(:first-child) {
+            border-left: 0 !important;
+        }
+        &:not(:first-child):not(:last-child) {
+            border-radius: 0;
+        }
+        &:first-child {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        &:last-child {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    }
+
+    // // You can define theme based classes in this loop
+    // // This will loop through all themes
+    // // $ts (Theme Selector)
+    // @each $theme in $theme-names-with-empty {
+    // 	$theme-current: $theme !global;
+    // 	$ts: theme-selector(
+    // 		$class: true,
+    // 	);
+
+    // 	// My component on this theme
+    // 	&#{$ts}{
+
+    // 	}
+
+    // 	// This will loop through all color fields in the theme
+    // 	// In case you want to define color based styles
+    // 	@each $c in get-theme-field(color-names) {
+    // 		// This will get the color based on the name
+    // 		$color: get-color($c);
+
+    // 		// My component on this theme and color
+    // 		&#{$ts}.#{$c} {
+
+    // 		}
+    // 	}
+    // }
+    // $theme-current: $theme-default;
 }

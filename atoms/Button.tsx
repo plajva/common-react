@@ -8,33 +8,33 @@ import Ripple from './HOC/Ripple';
 console.log(s);
 
 export interface ButtonProps {
-  button_type?: 'normal' | 'icon';
-  button_size?: string | number;
+    button_type?: 'normal' | 'icon';
+    button_size?: string | number;
 }
 // We need to set the className and provide aditinal classnames on component call
 
 const Button: FunctionComponent<ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
-  button_type,
-  button_size,
-  ...props
+    button_type,
+    button_size,
+    ...props
 }) => {
-  const theme = useTheme().name;
-  let { className, ...others } = props;
-  className = classNameFind(s, `button`, button_type === 'icon' ? 'circular icon' : '', 'dup', theme, className);
+    const theme = useTheme().name;
+    let { className, ...others } = props;
+    className = classNameFind(s, `button`, button_type === 'icon' ? 'circular icon' : '', 'dup', theme, className);
 
-  return (
-    <button
-      className={className}
-      style={{
-        width: button_size ? button_size : undefined,
-        height: button_size ? button_size : undefined,
-        ...props.style,
-      }}
-      {...others}
-    >
-      {props.children}
-    </button>
-  );
+    return (
+        <button
+            className={className}
+            style={{
+                width: button_size ? button_size : undefined,
+                height: button_size ? button_size : undefined,
+                ...props.style,
+            }}
+            {...others}
+        >
+            {props.children}
+        </button>
+    );
 };
 
 // class Button extends React.Component<ButtonProps & AtomProps>{

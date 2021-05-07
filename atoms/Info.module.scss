@@ -7,16 +7,18 @@
 	@include use-theme using ($ts){
 		&#{$ts}{
 			@include background-color(secondary, 5, $alpha: .4);
+			border: 2px solid get-color(secondary);
+		}
+		&.error#{$ts}{
+			@include background-color(warn, 5, $alpha: .4);
+			border: 2px solid get-color(warn);
 		}
 	}
 	.icon{
 		float:left;
 	}
-	.content{
-		
-	}
+	
 	font-size: .9em;
-	border: 2px solid get-color(secondary);
 	border-radius: get-space(5);
 	padding: get-space(5);
 	margin:get-space(4);

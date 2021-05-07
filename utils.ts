@@ -142,3 +142,16 @@ export const removeDuplicates = <T>(v: T[], criteria: string): T[] => {
     return a;
   }, [] as T[]);
 };
+
+export const debounceCreator = <T extends Function>(callback: T, wait: number = 0) => {
+  let timeout: NodeJS.Timeout;
+  return (...args) => {
+    const context = this;
+    clearTimeout(timeout);
+    if (wait > 0) {
+      timeout = setTimeout(() => callback.apply(context, args), wait);
+    } else {
+      callback.apply(context, args);
+    }
+  };
+};

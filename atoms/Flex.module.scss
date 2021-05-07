@@ -1,6 +1,13 @@
 @import '@styles/_globals.scss';
 
 .atom {
+    @include use-theme using ($ts) {
+        &#{$ts} {
+            $color: color-text(get-color(background));
+            color: $color;
+            background-color: get-color(background, 1, 1);
+        }
+    }
     // My definitions by default
 
     // // You can define theme based classes in this loop

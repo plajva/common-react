@@ -79,10 +79,10 @@ const allTypes = (Component: any) => {
 
 class Demo extends React.Component<DemoProps> {
     render() {
-        const FieldFunc = (props) => {
+        const FieldFunc = (props: any) => {
             return <Field name='name' label='Name' {...props}></Field>;
         };
-        const MyIcon = (props) => <Icon style={{ margin: '5px auto 8px' }} icon={props.icon} />;
+        const MyIcon = (props: any) => <Icon style={{ margin: '5px auto 8px' }} icon={props.icon} />;
         return (
             <div style={{ textAlign: 'center', padding: '56px 5%' }}>
                 <h1>Atoms</h1>

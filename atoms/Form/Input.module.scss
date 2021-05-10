@@ -3,7 +3,8 @@
 .atom {
     // My definitions by default
 
-    padding: get-space(5);
+    padding: get-space(4);
+    line-height: 2;
     &[type='range'] {
         padding: 0;
     }

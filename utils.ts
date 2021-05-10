@@ -32,7 +32,7 @@ export function classNameFind(s: any, ...classNames: (string | undefined)[]) {
 }
 
 export function combineEvent(...functions: any[]) {
-    return (...e) => {
+    return (...e: any[]) => {
         functions.forEach((f) => {
             if (typeof f === 'function') f(...e);
         });
@@ -50,30 +50,57 @@ export function combineEvent(...functions: any[]) {
 //   };
 // }
 
-export function stringAppend(v?: string, v2?: string) {
-    return (v ? v : '') + (v2 ? v2 : '');
+export function stringAppend(value?: string, ovalue?: string) {
+    return (value ? value : '') + (ovalue ? ovalue : '');
 }
 
 /**
  * Combines objects, last
  * @param mprops All props
  */
-export function combineProps(...mprops: object[]) {}
+export function deepMerge(target: any, ...sources: any[]) {
+    if (!sources?.length) return target;
+    const source = sources.shift();
+    const isObject = (v) => {
+        return v && typeof v === 'object' && !Array.isArray(v);
+    };
+
+    if (isObject(target) && isObject(source)) {
+        // So both of them must be objects at this point
+        for (const key in source) {
+            if (isObject(source[key])) {
+                // Create object in a if
+                if (!target[key]) Object.assign(target, { [key]: {} });
+                deepMerge(target[key], source[key]);
+            } else {
+                Object.assign(target, { [key]: source[key] });
+            }
+        }
+    }
+    return deepMerge(target, ...sources);
+}
 
 /**
- * Combine state
+ * Combine incoming state into new state.
+ * This helper function takes in incoming state from
+ * component props and tries to handle upwards state change
+ * by modifyfing setState to set both local and upwards setState
+ * @param defaultState The default state if no incoming state
  */
-export const combineState = <T>(
-    useS: [T, React.Dispatch<React.SetStateAction<T>>],
-    state?: T,
-    setState?: React.Dispatch<React.SetStateAction<T>>
+export const useStateCombine = <T>(
+    defaultState: T,
+    upState?: T,
+    upSetState?: React.Dispatch<React.SetStateAction<T>>
 ): [T, React.Dispatch<React.SetStateAction<T>>] => {
-    let [s, ss] = useS;
-    if (typeof state !== 'undefined') s = state;
-    if (setState)
+    // If state is object then deep merge object, else then either take upState or default state
+    let [s, ss] = useState(
+        typeof defaultState === 'object' ? deepMerge(defaultState, upState) : upState ? upState : defaultState
+    );
+    // Call both setState functions
+    if (upSetState)
         ss = (v: SetStateAction<T>) => {
             ss(v);
-            setState(v);
+            upSetState(v);
         };
     return [s, ss];
 };
@@ -154,4 +181,8 @@ export const debounceCreator = <T extends Function>(callback: T, wait: number = 
             callback.apply(context, args);
         }
     };
+};
+
+export type RecursivePartial<T> = {
+    [P in keyof T]?: RecursivePartial<T[P]>;
 };

@@ -1,9 +1,18 @@
 @import '@styles/_globals.scss';
+@import '@styles/include-media';
+
+@include media('<tablet') {
+    .atom {
+        width: 100%;
+    }
+}
 
 .atom {
     // My definitions by default
     display: inline-block;
     overflow: hidden;
+    // min-width: 300px;
+    // margin: 0.2em;
 
     &.radio {
         cursor: pointer;
@@ -11,6 +20,10 @@
     .label {
         padding-left: 5px;
         margin-bottom: 5px;
+    }
+    .label-left,
+    .label-right {
+        padding: get-space(5);
     }
     .field {
         width: 100%;

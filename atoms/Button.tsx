@@ -5,8 +5,6 @@ import s from './Button.module.scss';
 
 import Ripple from './HOC/Ripple';
 
-console.log(s);
-
 export interface ButtonProps {
     button_type?: 'normal' | 'icon';
     button_size?: string | number;

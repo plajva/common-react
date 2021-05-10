@@ -22,13 +22,13 @@ const Apply: FunctionComponent<ApplyProps & React.HTMLAttributes<HTMLDivElement>
     const theme = useTheme().name;
     if (typeof depth_max === 'undefined') depth_max = 0;
 
-    const mergeProps = (child: ReactElement, depth): any => {
+    const mergeProps = (child: ReactElement, depth: any): any => {
         const p = child.props;
         if (to && child.type !== to) return p;
         // if(typeof depth_max !== 'undefined')if(depth_max < depth)return p;
 
         let a = Object();
-        const m = (k, b, a) => {
+        const m = (k: any, b: any, a: any) => {
             switch (k) {
                 case 'className':
                     return b + ' ' + a;
@@ -46,7 +46,7 @@ const Apply: FunctionComponent<ApplyProps & React.HTMLAttributes<HTMLDivElement>
         return a;
     };
 
-    const mapChildren = (c, depth = 0) => {
+    const mapChildren = (c: any, depth = 0): any => {
         if (typeof depth_max !== 'undefined' && depth_max >= 0) if (depth_max < depth) return c;
         if (!c) return undefined;
         return React.Children.toArray(c).map((child) =>
@@ -59,7 +59,6 @@ const Apply: FunctionComponent<ApplyProps & React.HTMLAttributes<HTMLDivElement>
         );
     };
 
-    console.log(children);
     return mapChildren(children);
 };
 

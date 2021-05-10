@@ -1,4 +1,11 @@
 @import '@styles/_globals.scss';
+@import '@styles/include-media';
+
+@include media('<desktop') {
+    .responsive {
+        overflow-y: scroll;
+    }
+}
 
 .comp {
     // My definitions by default
@@ -6,6 +13,12 @@
     td,
     th {
         padding: 10px;
+    }
+    .small {
+        td,
+        th {
+            padding: 5px;
+        }
     }
 
     // @include use-theme using ($ts){

@@ -4,7 +4,7 @@ import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
 
 export interface FlexProps {
-    gap;
+    gap: any;
 }
 
 const Flex: FunctionComponent<FlexProps & React.HTMLAttributes<HTMLElement>> = (props) => {

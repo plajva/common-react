@@ -78,7 +78,7 @@ const Field: FunctionComponent<FieldProps> = (props) => {
     // Defining label
     const labelText = (label || children) && (
         <div
-            className={classNameFind(s, `label`)}
+            className={classNameFind(s, `label`, `label-${labelPos}`)}
             style={t_or_b ? {} : { width: radio_or_check ? 'calc(100% - 40px)' : '50%', float: labelPos }}
         >
             <div style={children ? { marginBottom: '10px' } : {}}>{label}</div>

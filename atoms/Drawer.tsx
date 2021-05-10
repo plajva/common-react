@@ -10,7 +10,7 @@ import React, {
 } from 'react';
 import s from './Drawer.module.scss';
 import { useTheme } from '@catoms/Theme';
-import { classNameFind, combineState } from '@common/utils';
+import { classNameFind, useStateCombine } from '@common/utils';
 import Collapsible from './Collapsible';
 
 export interface DrawerContentData {
@@ -26,6 +26,7 @@ export interface DrawerProps extends DrawerContextItems {
     animTime?: number;
     maxWidth?: any;
     fixed?: boolean;
+    right?: boolean;
 }
 export const DrawerContext = React.createContext<DrawerContextItems>({ open: false });
 
@@ -33,6 +34,10 @@ export const DrawerToggleFunc = (drawerContext: DrawerProps) => {
     return (e: MouseEvent<HTMLElement>) => {
         if (drawerContext?.setOpen) drawerContext.setOpen(!drawerContext.open);
     };
+};
+
+export const useDrawerContext = () => {
+    return useContext(DrawerContext);
 };
 
 export interface DrawerToggleProps {}
@@ -61,6 +66,7 @@ export const DrawerToggle: FunctionComponent<DrawerToggleProps & React.HTMLAttri
  * @param param0
  */
 const Drawer: FunctionComponent<DrawerProps & React.HTMLAttributes<HTMLDivElement>> = ({
+    right,
     className,
     children,
     open: _open,
@@ -71,7 +77,7 @@ const Drawer: FunctionComponent<DrawerProps & React.HTMLAttributes<HTMLDivElemen
     ...props
 }) => {
     // True if opening/open, False if closing/closed
-    const [open, setOpen] = combineState(useState(_open ? _open : false), _open, _setOpen);
+    const [open, setOpen] = useStateCombine(false, _open, _setOpen);
     // True when open, False if closed
     const [is_open, setIsOpen] = useState(false);
     const is_open_timer = useRef(0);
@@ -110,9 +116,13 @@ const Drawer: FunctionComponent<DrawerProps & React.HTMLAttributes<HTMLDivElemen
         }
         if (menu.current) {
             if (open) {
-                menu.current.style.animation = `${s.left_in} ${animTime}s normal ease-out forwards`;
+                menu.current.style.animation = `${
+                    right ? s.right_in : s.left_in
+                } ${animTime}s normal ease-out forwards`;
             } else {
-                menu.current.style.animation = `${s.left_out} ${animTime}s normal ease-out forwards`;
+                menu.current.style.animation = `${
+                    right ? s.right_out : s.left_out
+                } ${animTime}s normal ease-out forwards`;
             }
         }
 
@@ -149,7 +159,11 @@ const Drawer: FunctionComponent<DrawerProps & React.HTMLAttributes<HTMLDivElemen
                         ></div>
                         {/* The drawer */}
                         <div
-                            className={classNameFind(s, `menu`, fixed ? 'fixed' : '')}
+                            className={classNameFind(
+                                s,
+                                `menu ${right ? 'menu-right' : 'menu-left'}`,
+                                fixed ? 'fixed' : ''
+                            )}
                             ref={menu}
                             style={{ maxWidth: maxWidth }}
                         >

@@ -16,6 +16,22 @@
         transform: translateX(-100%);
     }
 }
+@keyframes right_in {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+@keyframes right_out {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(100%);
+    }
+}
 
 .comp {
     // My definitions by default
@@ -34,6 +50,13 @@
             max-height: 100%;
         }
     }
+    .menu-right {
+        right: 0;
+    }
+    .menu-left {
+        left: 0;
+    }
+
     .hook-header {
         font-size: 1.1em;
         font-weight: bold;
@@ -51,6 +74,11 @@
     .menu {
         @include background-color(primary, -4);
         transform: translateX(-100%);
+        max-width: 300px;
+    }
+    .menu-right {
+        @include background-color(primary, -4);
+        transform: translateX(100%);
         max-width: 300px;
     }
 

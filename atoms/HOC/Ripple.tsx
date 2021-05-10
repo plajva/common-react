@@ -55,7 +55,10 @@ const Ripple = <T extends React.HTMLAttributes<HTMLElement>>(
         }, rprops.ripple_time);
     };
     const ripple = ({ onClick, ...props }: T) => (
-        <Comp {...(props as T)} onClick={combineEvent((e) => createRipple(e, { ...rprops_d, ...props }), onClick)} />
+        <Comp
+            {...(props as T)}
+            onClick={combineEvent((e: any) => createRipple(e, { ...rprops_d, ...props }), onClick)}
+        />
     );
     return ripple;
 };

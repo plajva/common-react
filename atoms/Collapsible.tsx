@@ -1,9 +1,16 @@
 import React, { FunctionComponent, ReactNode, MouseEvent, useContext, useRef, useState } from 'react';
 import s from './Collapsible.module.scss';
 import { useTheme } from '@catoms/Theme';
-import { classNameFind, separateChildren, setDefault } from '@common/utils';
+import { classNameFind, useStateCombine, separateChildren, setDefault } from '@common/utils';
+
+export interface CollapsibleState {
+    open: boolean;
+}
 
 export interface CollapsibleProps {
+    state?: CollapsibleState;
+    setState?: React.Dispatch<React.SetStateAction<CollapsibleState>>;
+
     canCollapse?: boolean;
 }
 
@@ -13,11 +20,13 @@ const Collapsible: FunctionComponent<CollapsibleProps & React.HTMLAttributes<HTM
     canCollapse: _canCollapse,
     className,
     children,
+    state: _state,
+    setState: _setState,
     ...props
 }) => {
     const theme = useTheme().name;
     className = classNameFind(s, `comp`, theme, className);
-    const [state, setState] = useState({ open: false });
+    const [state, setState] = useStateCombine({ open: false }, _state, _setState);
     const content = useRef<HTMLDivElement>(null);
     // Setting default for canCollapse
     const canCollapse = setDefault(_canCollapse, true);

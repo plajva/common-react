@@ -1,4 +1,11 @@
-import React, { ComponentType, FunctionComponent, InputHTMLAttributes, ReactNode, useContext } from 'react';
+import React, {
+    ComponentType,
+    FunctionComponent,
+    HTMLAttributes,
+    InputHTMLAttributes,
+    ReactNode,
+    useContext,
+} from 'react';
 import s from './Field.module.scss';
 import { classNameFind } from '@common/utils';
 import { ErrorMessage, Field as FField, FieldAttributes, useFormikContext } from 'formik';
@@ -17,17 +24,19 @@ export type FieldProps = (
     | React.SelectHTMLAttributes<HTMLElement>
     | React.TextareaHTMLAttributes<HTMLElement>
 ) &
-    FieldAttributes<any> & {
+    FieldAttributes<{
         label?: ReactNode;
         noLabelRoot?: boolean;
         // labelFirst?:boolean,
         labelPos?: 'top' | 'right' | 'bottom' | 'left';
-        type?: 'checkbox' | 'email' | 'number' | 'text' | 'radio' | 'range' | 'select' | 'textarea';
+        type?: 'password' | 'checkbox' | 'email' | 'number' | 'text' | 'radio' | 'range' | 'select' | 'textarea';
         rootProps?: React.LabelHTMLAttributes<HTMLElement>;
-    };
+        labelErrorProps?: HTMLAttributes<{}>;
+    }>;
 
 const Field: FunctionComponent<FieldProps> = (props) => {
-    let { className, as, rootProps, name, label, labelPos, children, type, noLabelRoot, ...others } = props;
+    let { className, as, rootProps, name, label, labelPos, children, type, noLabelRoot, labelErrorProps, ...others } =
+        props;
 
     // Changing 'as' based on 'type'
     let isNotInput = type && ['select', 'textarea'].includes(type);
@@ -47,7 +56,7 @@ const Field: FunctionComponent<FieldProps> = (props) => {
     }
 
     // Defining position
-    const radio_or_check = ['radio', 'checkbox'].includes(type);
+    const radio_or_check = ['radio', 'checkbox'].includes(type ?? '');
     labelPos = labelPos || (radio_or_check && 'right') || 'top';
 
     const t_or_b = ['top', 'bottom'].includes(labelPos);
@@ -79,7 +88,11 @@ const Field: FunctionComponent<FieldProps> = (props) => {
     const labelText = (label || children) && (
         <div
             className={classNameFind(s, `label`, `label-${labelPos}`)}
-            style={t_or_b ? {} : { width: radio_or_check ? 'calc(100% - 40px)' : '50%', float: labelPos }}
+            style={
+                t_or_b
+                    ? {}
+                    : { width: radio_or_check ? 'calc(100% - 40px)' : '50%', float: radio_or_check ? 'right' : 'unset' }
+            }
         >
             <div style={children ? { marginBottom: '10px' } : {}}>{label}</div>
             {children}
@@ -105,7 +118,7 @@ const Field: FunctionComponent<FieldProps> = (props) => {
                 </>
             )}
             <div style={{ clear: 'both' }} />
-            <div style={{ color: 'red', textAlign: 'center' }}>
+            <div style={{ color: 'red', textAlign: 'center' }} {...labelErrorProps}>
                 <ErrorMessage name={name} />
             </div>
         </>

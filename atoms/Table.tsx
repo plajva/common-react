@@ -24,7 +24,7 @@ export const columnsQuick = (cols: string) => {
         let col = {
             accessor: a[0],
             Header: a[1] || a[0],
-        };
+        } as any;
         if (a[2]) col['Cell'] = a[2];
         return col;
     };

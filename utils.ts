@@ -58,10 +58,10 @@ export function stringAppend(value?: string, ovalue?: string) {
  * Combines objects, last
  * @param mprops All props
  */
-export function deepMerge(target: any, ...sources: any[]) {
+export function deepMerge(target: any, ...sources: any[]): any {
     if (!sources?.length) return target;
     const source = sources.shift();
-    const isObject = (v) => {
+    const isObject = (v: any) => {
         return v && typeof v === 'object' && !Array.isArray(v);
     };
 
@@ -112,7 +112,7 @@ export const useStateCombine = <T>(
  * @param setState component setState
  */
 export const separateChildren = (
-    children,
+    children: any,
     state = {},
     setState: any = () => {}
 ): [ReactNode, ReactNode, (c: ReactNode) => ReactNode] => {
@@ -122,8 +122,8 @@ export const separateChildren = (
         child_first = _children.splice(0, 1);
     }
     const child_rest = _children;
-    const renderChild = (child) => {
-        const _render = (v) => (typeof v === 'function' ? v(state, setState) : v);
+    const renderChild = (child: any) => {
+        const _render = (v: any) => (typeof v === 'function' ? v(state, setState) : v);
         return Array.isArray(child) ? child.map((v) => _render(v)) : _render(child);
     };
     return [child_first, child_rest, renderChild];
@@ -161,7 +161,7 @@ export const removeDuplicates = <T>(v: T[], criteria: string): T[] => {
         if (
             !criteria.split(';').every((p) => {
                 const pa = p.split('.').map((p) => p.trim()); // Resolve dots in params
-                const paf = (v) => pa.reduce((a, v) => (a ? a[v] : a), v);
+                const paf = (v: any) => pa.reduce((a, v) => (a ? a[v] : a), v);
                 return a.find((av) => paf(av) === paf(v));
             })
         )
@@ -172,7 +172,7 @@ export const removeDuplicates = <T>(v: T[], criteria: string): T[] => {
 
 export const debounceCreator = <T extends Function>(callback: T, wait: number = 0) => {
     let timeout: NodeJS.Timeout;
-    return (...args) => {
+    return (...args: any) => {
         const context = this;
         clearTimeout(timeout);
         if (wait > 0) {

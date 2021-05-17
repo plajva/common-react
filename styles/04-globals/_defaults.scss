@@ -35,60 +35,60 @@ $sindex: 0;
 
 @mixin repeat_class {
     @include repeat_index('.margin') using ($space) {
-        margin: $space;
+        margin: $space !important;
     }
     @include repeat_index('.margin-h') using ($space) {
-        margin-right: $space;
-        margin-left: $space;
+        margin-right: $space !important;
+        margin-left: $space !important;
     }
     @include repeat_index('.margin-v') using ($space) {
-        margin-top: $space;
-        margin-bottom: $space;
+        margin-top: $space !important;
+        margin-bottom: $space !important;
     }
     @include repeat_index('.margin-top') using ($space) {
-        margin-top: $space;
+        margin-top: $space !important;
     }
     @include repeat_index('.margin-bottom') using ($space) {
-        margin-bottom: $space;
+        margin-bottom: $space !important;
     }
     @include repeat_index('.margin-left') using ($space) {
-        margin-left: $space;
+        margin-left: $space !important;
     }
     @include repeat_index('.margin-right') using ($space) {
-        margin-right: $space;
+        margin-right: $space !important;
     }
 
     @include repeat_index('.padding') using ($space) {
-        padding: $space;
+        padding: $space !important;
     }
     @include repeat_index('.padding-h') using ($space) {
-        padding-left: $space;
-        padding-right: $space;
+        padding-left: $space !important;
+        padding-right: $space !important;
     }
 
     @include repeat_index('.padding-v') using ($space) {
-        padding-top: $space;
-        padding-bottom: $space;
+        padding-top: $space !important;
+        padding-bottom: $space !important;
     }
     @include repeat_index('.padding-top') using ($space) {
-        padding-top: $space;
+        padding-top: $space !important;
     }
 
     @include repeat_index('.border-radius-top') using ($space) {
-        border-top-right-radius: $space;
-        border-top-left-radius: $space;
+        border-top-right-radius: $space !important;
+        border-top-left-radius: $space !important;
     }
     @include repeat_index('.border-radius-right') using ($space) {
-        border-top-right-radius: $space;
-        border-bottom-right-radius: $space;
+        border-top-right-radius: $space !important;
+        border-bottom-right-radius: $space !important;
     }
     @include repeat_index('.border-radius-bottom') using ($space) {
-        border-bottom-left-radius: $space;
-        border-bottom-right-radius: $space;
+        border-bottom-left-radius: $space !important;
+        border-bottom-right-radius: $space !important;
     }
     @include repeat_index('.border-radius-left') using ($space) {
-        border-top-left-radius: $space;
-        border-bottom-left-radius: $space;
+        border-top-left-radius: $space !important;
+        border-bottom-left-radius: $space !important;
     }
 
     // Define the columns

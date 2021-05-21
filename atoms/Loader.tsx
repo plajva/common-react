@@ -2,16 +2,17 @@ import Backdrop from '@common/atoms/Backdrop';
 import LoaderReact from 'react-loader-spinner';
 
 export interface LoaderOption {
-    isLoading: Boolean;
+    isLoading: boolean;
 }
 
 const Loader = (props: LoaderOption) => {
     return (
-        props.isLoading && (
+        (props.isLoading && (
             <Backdrop active={true}>
-                <LoaderReact type='TailSpin' color='#00BFFF' height={100} width={100} secondaryColor='#FF0000' />
+                <LoaderReact type='TailSpin' height={100} width={100} />
             </Backdrop>
-        )
+        )) ||
+        null
     );
 };
 

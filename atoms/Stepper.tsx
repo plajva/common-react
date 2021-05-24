@@ -178,24 +178,23 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
             <table></table>
             {(showSteps && (
                 <div className={classNameFind(s, `stepper`)}>
-                    {steps.map((stepNode, i) => (
-                        <>
-                            <div className={classNameFind(s, `item`)} key={i}>
-                                <Button
-                                    ripple_type='center'
-                                    className={`circular ${step === i && 'primary-background'}`}
-                                    onClick={() => {
-                                        if (setStep) setStep(i);
-                                    }}
-                                >
-                                    {stepNode}
-                                </Button>
-                            </div>
-                            {i !== steps.length - 1 && (
-                                <Divider className={classNameFind(s, `thinner item divider grow`)} key={i + 100} />
-                            )}
-                        </>
-                    ))}
+                    {steps.reduce<ReactNode[]>((a, stepNode, i) => {
+                        a.push(<div className={classNameFind(s, `item`)} key={i}>
+                            <Button
+                                ripple_type='center'
+                                className={`circular ${step === i && 'primary-background'}`}
+                                onClick={() => {
+                                    if (setStep) setStep(i);
+                                }}
+                            >
+                                {stepNode}
+                            </Button>
+                        </div>)
+                        if (i < steps.length - 1)
+                            a.push(<Divider className={classNameFind(s, `thinner item divider grow`)} key={(-i) - 1} />);
+                        return a;
+                    }, [])
+                    }
                 </div>
             )) ||
                 ''}

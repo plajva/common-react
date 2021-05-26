@@ -1,10 +1,9 @@
-import React, { FunctionComponent, ReactNode, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import s from './Stepper.module.scss';
 import { useTheme } from '@catoms/Theme';
 import { classNameFind, setDefault } from '@common/utils';
-import { render } from '@testing-library/react';
+import React, { FunctionComponent, ReactNode, useEffect, useRef, useState } from 'react';
 import Button from './Button';
 import Divider from './Divider';
+import s from './Stepper.module.scss';
 
 /**
  * The stepper works by switching between two modes
@@ -179,22 +178,23 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
             {(showSteps && (
                 <div className={classNameFind(s, `stepper`)}>
                     {steps.reduce<ReactNode[]>((a, stepNode, i) => {
-                        a.push(<div className={classNameFind(s, `item`)} key={i}>
-                            <Button
-                                ripple_type='center'
-                                className={`circular ${step === i && 'primary-background'}`}
-                                onClick={() => {
-                                    if (setStep) setStep(i);
-                                }}
-                            >
-                                {stepNode}
-                            </Button>
-                        </div>)
+                        a.push(
+                            <div className={classNameFind(s, `item`)} key={i}>
+                                <Button
+                                    ripple_type='center'
+                                    className={`circular ${step === i && 'primary-background'}`}
+                                    onClick={() => {
+                                        if (setStep) setStep(i);
+                                    }}
+                                >
+                                    {stepNode}
+                                </Button>
+                            </div>
+                        );
                         if (i < steps.length - 1)
-                            a.push(<Divider className={classNameFind(s, `thinner item divider grow`)} key={(-i) - 1} />);
+                            a.push(<Divider className={classNameFind(s, `thinner item divider grow`)} key={-i - 1} />);
                         return a;
-                    }, [])
-                    }
+                    }, [])}
                 </div>
             )) ||
                 ''}

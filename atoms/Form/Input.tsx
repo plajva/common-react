@@ -1,7 +1,7 @@
-import React, { FunctionComponent, useContext } from 'react';
-import s from './Input.module.scss';
 import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
+import React from 'react';
+import s from './Input.module.scss';
 
 export interface InputProps {
     // value?: any,

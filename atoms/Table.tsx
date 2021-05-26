@@ -1,13 +1,11 @@
-import React, { FunctionComponent, useEffect } from 'react';
-import { FaAngleLeft, FaAngleRight, FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
-import { HeaderGroup, useTable, usePagination, Row, Cell, ColumnInstance, Column } from 'react-table';
-
+import { useTheme } from '@catoms/Theme';
 import Button from '@common/atoms/Button';
 import Icon from '@common/atoms/Icon';
-
-import s from './Table.module.scss';
-import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
+import React, { FunctionComponent, useEffect } from 'react';
+import { FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import { Cell, Column, ColumnInstance, HeaderGroup, Row, usePagination, useTable } from 'react-table';
+import s from './Table.module.scss';
 
 // Create a default prop getter
 const defaultPropGetter = () => ({});

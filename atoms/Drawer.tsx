@@ -1,17 +1,7 @@
-import React, {
-    FunctionComponent,
-    ReactNode,
-    MouseEvent,
-    useContext,
-    useRef,
-    useState,
-    useEffect,
-    useLayoutEffect,
-} from 'react';
-import s from './Drawer.module.scss';
 import { useTheme } from '@catoms/Theme';
 import { classNameFind, useStateCombine } from '@common/utils';
-import Collapsible from './Collapsible';
+import React, { FunctionComponent, MouseEvent, ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import s from './Drawer.module.scss';
 
 export interface DrawerContentData {
     [key: string]: { header?: ReactNode; content?: ReactNode };
@@ -86,7 +76,7 @@ const Drawer: FunctionComponent<DrawerProps & React.HTMLAttributes<HTMLDivElemen
     // const [open, setOpen] = useState(_open ? _open : false);
     const back = useRef<HTMLDivElement>(null);
     const menu = useRef<HTMLDivElement>(null);
-    const hookContent = useRef<HTMLDivElement>(null);
+    // const hookContent = useRef<HTMLDivElement>(null);
     const hookContentData = useRef<DrawerContentData>({});
 
     const theme = useTheme().name;

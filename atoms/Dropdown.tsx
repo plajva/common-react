@@ -1,7 +1,7 @@
-import React, { FunctionComponent, ReactNode, useContext, useState } from 'react';
-import s from './Dropdown.module.scss';
 import { useTheme } from '@catoms/Theme';
 import { classNameFind, separateChildren, setDefault } from '@common/utils';
+import React, { FunctionComponent, useState } from 'react';
+import s from './Dropdown.module.scss';
 
 export interface DropdownProps {
     /**Wether to use css hover or javascript, true for javascript*/

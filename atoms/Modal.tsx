@@ -1,11 +1,10 @@
-import { PropsWithChildren, useState, useRef, useEffect } from 'react';
-import FocusTrap from 'focus-trap-react';
-
-import s from './Modal.module.scss';
 import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
-import Portal from './Portal';
+import FocusTrap from 'focus-trap-react';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import Backdrop from './Backdrop';
+import s from './Modal.module.scss';
+import Portal from './Portal';
 
 export interface ModalProps {
     className?: string;

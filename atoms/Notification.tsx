@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { FaExclamation, FaCheck, FaBomb, FaTimes } from 'react-icons/fa';
-
-import { useTheme } from './Theme';
+import { FaBomb, FaCheck, FaExclamation, FaTimes } from 'react-icons/fa';
 import { classNameFind } from '../utils';
-import { useNotifications } from './Notifications';
 import Icon from './Icon';
 import s from './Notification.module.scss';
+import { useNotifications } from './Notifications';
+import { useTheme } from './Theme';
 
 const mapIcons = {
     error: <FaBomb />,

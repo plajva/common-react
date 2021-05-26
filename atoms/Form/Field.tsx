@@ -1,7 +1,7 @@
-import React, { ComponentType, FunctionComponent, InputHTMLAttributes, ReactNode, useContext } from 'react';
-import s from './Field.module.scss';
 import { classNameFind } from '@common/utils';
 import { ErrorMessage, Field as FField, FieldAttributes, useFormikContext } from 'formik';
+import React, { FunctionComponent, ReactNode } from 'react';
+import s from './Field.module.scss';
 import Input from './Input';
 
 // function getCompType(type:string){

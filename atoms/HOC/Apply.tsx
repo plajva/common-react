@@ -1,7 +1,5 @@
-import React, { FunctionComponent, ReactElement, useContext } from 'react';
-import s from './Apply.module.scss';
 import { useTheme } from '@catoms/Theme';
-import { classNameFind } from '@common/utils';
+import React, { FunctionComponent, ReactElement } from 'react';
 
 export interface ApplyProps {
     to?: any;

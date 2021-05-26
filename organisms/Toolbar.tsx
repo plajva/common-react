@@ -1,10 +1,7 @@
-import React, { FunctionComponent, ReactNode, useContext } from 'react';
-import { Link, LinkProps } from 'react-router-dom';
-import Image from '../atoms/Image';
-import s from './Toolbar.module.scss';
-import Button from '../atoms/Button';
 import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
+import React, { FunctionComponent, ReactNode } from 'react';
+import s from './Toolbar.module.scss';
 
 // We want to -> have a chosen theme variable
 

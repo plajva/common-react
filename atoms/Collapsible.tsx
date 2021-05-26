@@ -1,7 +1,7 @@
-import React, { FunctionComponent, ReactNode, MouseEvent, useContext, useRef, useState } from 'react';
-import s from './Collapsible.module.scss';
 import { useTheme } from '@catoms/Theme';
-import { classNameFind, useStateCombine, separateChildren, setDefault } from '@common/utils';
+import { classNameFind, separateChildren, setDefault, useStateCombine } from '@common/utils';
+import React, { FunctionComponent, MouseEvent, useRef } from 'react';
+import s from './Collapsible.module.scss';
 
 export interface CollapsibleState {
     open: boolean;

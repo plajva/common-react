@@ -73,6 +73,15 @@ $sindex: 0;
     @include repeat_index('.padding-top') using ($space) {
         padding-top: $space;
     }
+    @include repeat_index('.padding-bottom') using ($space) {
+        padding-bottom: $space;
+    }
+    @include repeat_index('.padding-left') using ($space) {
+        padding-left: $space;
+    }
+    @include repeat_index('.padding-right') using ($space) {
+        padding-right: $space;
+    }
 
     @include repeat_index('.border-radius-top') using ($space) {
         border-top-right-radius: $space;

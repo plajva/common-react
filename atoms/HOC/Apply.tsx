@@ -5,7 +5,8 @@ import { classNameFind } from '@common/utils';
 
 export interface ApplyProps {
     to?: any;
-    depth_max?: number; //
+    /** If depth_max=-1, will affect all underneath, if depth_max=0, will only affect directly underneath, and so on.. */
+    depth_max?: number;
 }
 
 /**
@@ -47,7 +48,7 @@ const Apply: FunctionComponent<ApplyProps & React.HTMLAttributes<HTMLDivElement>
     };
 
     const mapChildren = (c: any, depth = 0): any => {
-        if (typeof depth_max !== 'undefined' && depth_max >= 0) if (depth_max < depth) return c;
+        if (typeof depth_max !== 'undefined' && depth_max >= 0) if (depth > depth_max) return c;
         if (!c) return undefined;
         return React.Children.toArray(c).map((child) =>
             React.isValidElement(child)

@@ -20,6 +20,8 @@ export type FieldProps = (
     FieldAttributes<any> & {
         label?: ReactNode;
         noLabelRoot?: boolean;
+        /** If true there will be no FormikField, just whatever is in 'as' */
+        noField?: boolean;
         // labelFirst?:boolean,
         labelPos?: 'top' | 'right' | 'bottom' | 'left';
         type?: 'checkbox' | 'email' | 'number' | 'text' | 'radio' | 'range' | 'select' | 'textarea';
@@ -27,7 +29,7 @@ export type FieldProps = (
     };
 
 const Field: FunctionComponent<FieldProps> = (props) => {
-    let { className, as, rootProps, name, label, labelPos, children, type, noLabelRoot, ...others } = props;
+    let { className, as, rootProps, noField, name, label, labelPos, children, type, noLabelRoot, ...others } = props;
 
     // Changing 'as' based on 'type'
     let isNotInput = type && ['select', 'textarea'].includes(type);
@@ -59,7 +61,9 @@ const Field: FunctionComponent<FieldProps> = (props) => {
         children = undefined;
     }
     let formik = useFormikContext();
-    const field = (
+    const field = noField ? (
+        as
+    ) : (
         <FField
             style={
                 t_or_b

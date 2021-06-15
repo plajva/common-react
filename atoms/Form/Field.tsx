@@ -6,9 +6,12 @@ import React, {
     ReactNode,
     useContext,
 } from 'react';
-import s from './Field.module.scss';
-import { classNameFind } from '@common/utils';
 import { ErrorMessage, Field as FField, FieldAttributes, useFormikContext } from 'formik';
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+
+import { classNameFind } from '@common/utils';
+
+import s from './Field.module.scss';
 import Input from './Input';
 
 // function getCompType(type:string){
@@ -29,7 +32,17 @@ export type FieldProps = (
         noLabelRoot?: boolean;
         // labelFirst?:boolean,
         labelPos?: 'top' | 'right' | 'bottom' | 'left';
-        type?: 'password' | 'checkbox' | 'email' | 'number' | 'text' | 'radio' | 'range' | 'select' | 'textarea';
+        type?:
+            | 'password'
+            | 'date'
+            | 'checkbox'
+            | 'email'
+            | 'number'
+            | 'text'
+            | 'radio'
+            | 'range'
+            | 'select'
+            | 'textarea';
         rootProps?: React.LabelHTMLAttributes<HTMLElement>;
         labelErrorProps?: HTMLAttributes<{}>;
     }>;
@@ -53,6 +66,8 @@ const Field: FunctionComponent<FieldProps> = (props) => {
         case 'input':
             as = Input;
             break;
+        case 'date':
+            as = DayPickerInput;
     }
 
     // Defining position

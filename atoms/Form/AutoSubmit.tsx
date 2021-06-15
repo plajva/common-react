@@ -18,7 +18,7 @@ const AutoSubmit = (props: AutoSubmitProps) => {
     useEffect(() => {
         !first && triggerSubmit();
         setFirts(false);
-    }, [values]);
+    }, [values, first, triggerSubmit]);
 
     return null;
 };

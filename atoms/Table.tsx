@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { FaAngleLeft, FaAngleRight, FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
 import { HeaderGroup, useTable, usePagination, Row, Cell, ColumnInstance, Column } from 'react-table';
 
@@ -67,6 +67,7 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
 }) => {
     const theme = useTheme().name;
     className = classNameFind(s, `comp`, compact ? `small` : '', theme, className);
+    const [init, setInit] = useState(false);
 
     const _getHeaderProps = getHeaderProps || defaultPropGetter,
         _getColumnProps = getColumnProps || defaultPropGetter,
@@ -93,10 +94,11 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
 
     useEffect(() => {
         fetchData && fetchData({ pageIndex, pageSize });
+        !init && setInit(true);
     }, [pageIndex]);
 
     useEffect(() => {
-        if (pageCount > 0)
+        if (init)
             if (pageIndex === 0) {
                 fetchData && fetchData({ pageIndex: 0, pageSize });
             } else {

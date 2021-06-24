@@ -165,20 +165,20 @@ $sindex: 0;
 
         $bc: get-color($cn, $alpha: 0.7);
         // WIll set background and text
-        #{$ts}.#{$cn}-background {
+        #{$ts} .#{$cn}-background {
             @include background-color($bc);
         }
         @for $i from 1 through 10 {
-            #{$ts}.#{$cn}-background-#{$i} {
+            #{$ts} .#{$cn}-background-#{$i} {
                 @include background-color(get-color($cn, $alpha: ($i/10)));
             }
         }
         // WIll set background and text, also for hover and active
-        #{$ts}.#{$cn}-background-active {
+        #{$ts} .#{$cn}-background-active {
             @include backgound-active-color($bc);
         }
         // WIll set background and text, also for hover and active, but will also set text color
-        #{$ts}.#{$cn}-background-active-text {
+        #{$ts} .#{$cn}-background-active-text {
             @include backgound-active-color($bc, $color-text: true);
         }
     }

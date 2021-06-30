@@ -1,7 +1,7 @@
 import { classNameFind } from '@common/utils';
 import { ErrorMessage, Field as FField, FieldAttributes, useFormikContext } from 'formik';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
-import React, { FunctionComponent, ReactNode } from 'react';
+import React, { FunctionComponent, HTMLAttributes, ReactNode } from 'react';
 import s from './Field.module.scss';
 import Input from './Input';
 
@@ -38,11 +38,23 @@ export type FieldProps = (
             | 'textarea';
         rootProps?: React.LabelHTMLAttributes<HTMLElement>;
         labelErrorProps?: HTMLAttributes<{}>;
-    }>;
+    };
 
 const Field: FunctionComponent<FieldProps> = (props) => {
-    let { className, as, rootProps, noField, name, label, labelPos, children, type, noLabelRoot, labelErrorProps, ...others } =
-        props;
+    let {
+        className,
+        as,
+        rootProps,
+        noField,
+        name,
+        label,
+        labelPos,
+        children,
+        type,
+        noLabelRoot,
+        labelErrorProps,
+        ...others
+    } = props;
 
     // Changing 'as' based on 'type'
     let isNotInput = type && ['select', 'textarea'].includes(type);

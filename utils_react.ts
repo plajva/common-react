@@ -45,7 +45,7 @@ export const useStateObject = <T extends object>(
  * @param setState component setState
  */
 export const separateChildren = (
-    children,
+    children: any,
     state = {},
     setState: any = () => {}
 ): [ReactNode, ReactNode, (c: ReactNode) => ReactNode] => {
@@ -55,8 +55,8 @@ export const separateChildren = (
         child_first = _children.splice(0, 1);
     }
     const child_rest = _children;
-    const renderChild = (child) => {
-        const _render = (v) => (typeof v === 'function' ? v(state, setState) : v);
+    const renderChild = (child: any) => {
+        const _render = (v: any) => (typeof v === 'function' ? v(state, setState) : v);
         return Array.isArray(child) ? child.map((v) => _render(v)) : _render(child);
     };
     return [child_first, child_rest, renderChild];

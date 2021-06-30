@@ -114,20 +114,25 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
                     <thead>
                         {headerGroups.map((headerGroup: any) => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map((column: any) => (
-                                    <th
-                                        {...column.getHeaderProps([
-                                            {
-                                                className: column['className'],
-                                                style: column['style'],
-                                            },
-                                            _getColumnProps(column),
-                                            _getHeaderProps(column),
-                                        ])}
-                                    >
-                                        {column.render('Header')}
-                                    </th>
-                                ))}
+                                {headerGroup.headers.map((column: any) => {
+                                    let cls = column['className'] ?? '';
+                                    if (!!column.sticky)
+                                        cls += ' ' + classNameFind(s, 'sticky', `sticky-${column.sticky}`, theme);
+                                    return (
+                                        <th
+                                            {...column.getHeaderProps([
+                                                {
+                                                    className: cls,
+                                                    style: column['style'],
+                                                },
+                                                _getColumnProps(column),
+                                                _getHeaderProps(column),
+                                            ])}
+                                        >
+                                            {column.render('Header')}
+                                        </th>
+                                    );
+                                })}
                             </tr>
                         ))}
                     </thead>
@@ -137,11 +142,17 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
                             return (
                                 <tr {...row.getRowProps()}>
                                     {row.cells.map((cell: any) => {
+                                        let cls = cell['className'] ?? '';
+                                        if (!!cell.column.sticky) {
+                                            cls +=
+                                                ' ' + classNameFind(s, 'sticky', `sticky-${cell.column.sticky}`, theme);
+                                        }
+
                                         return (
                                             <td
                                                 {...cell.getCellProps([
                                                     {
-                                                        className: cell['className'],
+                                                        className: cls,
                                                         style: cell['style'],
                                                     },
                                                     _getColumnProps(cell.column),
@@ -157,7 +168,7 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
                         })}
                         {page.length < 1 && (
                             <tr>
-                                <td colSpan={6}>{emptyMessage}</td>
+                                <td colSpan={headerGroups.length}>{emptyMessage}</td>
                             </tr>
                         )}
                     </tbody>

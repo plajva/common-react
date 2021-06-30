@@ -1,10 +1,9 @@
-import React, { FunctionComponent, ReactNode, useContext } from 'react';
-import s from './Info.module.scss';
 import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
-import Icon from './Icon';
-import { FiHelpCircle } from 'react-icons/fi';
+import React, { FunctionComponent } from 'react';
 import { IconType } from 'react-icons/lib';
+import Icon from './Icon';
+import s from './Info.module.scss';
 
 export interface InfoProps {
     icon?: IconType;

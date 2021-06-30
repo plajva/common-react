@@ -1,16 +1,7 @@
-import React, {
-    ComponentType,
-    FunctionComponent,
-    HTMLAttributes,
-    InputHTMLAttributes,
-    ReactNode,
-    useContext,
-} from 'react';
+import { classNameFind } from '@common/utils';
 import { ErrorMessage, Field as FField, FieldAttributes, useFormikContext } from 'formik';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
-
-import { classNameFind } from '@common/utils';
-
+import React, { FunctionComponent, ReactNode } from 'react';
 import s from './Field.module.scss';
 import Input from './Input';
 
@@ -27,9 +18,11 @@ export type FieldProps = (
     | React.SelectHTMLAttributes<HTMLElement>
     | React.TextareaHTMLAttributes<HTMLElement>
 ) &
-    FieldAttributes<{
+    FieldAttributes<any> & {
         label?: ReactNode;
         noLabelRoot?: boolean;
+        /** If true there will be no FormikField, just whatever is in 'as' */
+        noField?: boolean;
         // labelFirst?:boolean,
         labelPos?: 'top' | 'right' | 'bottom' | 'left';
         type?:
@@ -48,7 +41,7 @@ export type FieldProps = (
     }>;
 
 const Field: FunctionComponent<FieldProps> = (props) => {
-    let { className, as, rootProps, name, label, labelPos, children, type, noLabelRoot, labelErrorProps, ...others } =
+    let { className, as, rootProps, noField, name, label, labelPos, children, type, noLabelRoot, labelErrorProps, ...others } =
         props;
 
     // Changing 'as' based on 'type'
@@ -83,7 +76,9 @@ const Field: FunctionComponent<FieldProps> = (props) => {
         children = undefined;
     }
     let formik = useFormikContext();
-    const field = (
+    const field = noField ? (
+        as
+    ) : (
         <FField
             style={
                 t_or_b
@@ -103,11 +98,7 @@ const Field: FunctionComponent<FieldProps> = (props) => {
     const labelText = (label || children) && (
         <div
             className={classNameFind(s, `label`, `label-${labelPos}`)}
-            style={
-                t_or_b
-                    ? {}
-                    : { width: radio_or_check ? 'calc(100% - 40px)' : '50%', float: radio_or_check ? 'right' : 'unset' }
-            }
+            style={t_or_b ? {} : { width: radio_or_check ? 'calc(100% - 40px)' : '50%', float: labelPos }}
         >
             <div style={children ? { marginBottom: '10px' } : {}}>{label}</div>
             {children}

@@ -1,8 +1,7 @@
-import React, { FunctionComponent, useContext } from 'react';
 import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
+import React, { FunctionComponent } from 'react';
 import s from './Button.module.scss';
-
 import Ripple from './HOC/Ripple';
 
 export interface ButtonProps {

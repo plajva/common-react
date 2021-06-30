@@ -1,7 +1,7 @@
-import React, { FunctionComponent, ImgHTMLAttributes, useContext } from 'react';
-import s from './Image.module.scss';
 import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
+import React, { FunctionComponent } from 'react';
+import s from './Image.module.scss';
 
 export interface ImageProps {}
 

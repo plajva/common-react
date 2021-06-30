@@ -1,28 +1,27 @@
-import React from 'react';
-import Divider from '../atoms/Divider';
-import Banner from '../atoms/Banner';
-import Button from '../atoms/Button';
-import s from './Demo.module.scss';
-import Input from '../atoms/Form/Input';
-import Field from '../atoms/Form/Field';
 import { Formik } from 'formik';
+import React from 'react';
 import {
-    FaHeart,
-    FaHeartbeat,
-    FaBriefcaseMedical,
-    FaBookMedical,
     FaBaby,
     FaBandAid,
+    FaBookMedical,
+    FaBriefcaseMedical,
     FaCapsules,
-    FaPlusSquare,
+    FaHeart,
+    FaHeartbeat,
     FaPlusCircle,
+    FaPlusSquare,
 } from 'react-icons/fa';
-import { GiHealthNormal, GiHealthIncrease, GiHealthDecrease } from 'react-icons/gi';
+import { GiHealthDecrease, GiHealthIncrease, GiHealthNormal } from 'react-icons/gi';
 import { ImLab } from 'react-icons/im';
-import Icon from '../atoms/Icon';
-import Drawer, { DrawerToggle } from '../atoms/Drawer';
+import Banner from '../atoms/Banner';
+import Button from '../atoms/Button';
 import Collapsible from '../atoms/Collapsible';
+import Divider from '../atoms/Divider';
+import Drawer, { DrawerToggle } from '../atoms/Drawer';
 import Dropdown from '../atoms/Dropdown';
+import Field from '../atoms/Form/Field';
+import Input from '../atoms/Form/Input';
+import Icon from '../atoms/Icon';
 
 export interface DemoProps {
     // sections?:

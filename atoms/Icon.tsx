@@ -1,9 +1,9 @@
-import React, { FunctionComponent, ReactElement, useContext } from 'react';
-import s from './Icon.module.scss';
 import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
+import React, { FunctionComponent } from 'react';
 import { IconType } from 'react-icons';
 import { IconBaseProps } from 'react-icons/lib';
+import s from './Icon.module.scss';
 
 export interface IconProps {
     icon: IconType;

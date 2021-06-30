@@ -1,6 +1,5 @@
-import React, { ReactNode, SetStateAction, useState } from 'react';
-
 export type Range = [number | undefined, number | undefined];
+export * from './utils_react';
 
 export interface AtomProps {
     className?: string;
@@ -81,55 +80,6 @@ export function deepMerge(target: any, ...sources: any[]): any {
 }
 
 /**
- * Combine incoming state into new state.
- * This helper function takes in incoming state from
- * component props and tries to handle upwards state change
- * by modifyfing setState to set both local and upwards setState
- * @param defaultState The default state if no incoming state
- */
-export const useStateCombine = <T>(
-    defaultState: T,
-    upState?: T,
-    upSetState?: React.Dispatch<React.SetStateAction<T>>
-): [T, React.Dispatch<React.SetStateAction<T>>] => {
-    // If state is object then deep merge object, else then either take upState or default state
-    let [s, ss] = useState(
-        typeof defaultState === 'object' ? deepMerge(defaultState, upState) : upState ? upState : defaultState
-    );
-    // Call both setState functions
-    if (upSetState)
-        ss = (v: SetStateAction<T>) => {
-            ss(v);
-            upSetState(v);
-        };
-    return [s, ss];
-};
-
-/**
- * For components that separate first children for some things, and the rest, children can be functions that take the state and setState parameters
- * @param children The children
- * @param state component state
- * @param setState component setState
- */
-export const separateChildren = (
-    children: any,
-    state = {},
-    setState: any = () => {}
-): [ReactNode, ReactNode, (c: ReactNode) => ReactNode] => {
-    const _children = Array.isArray(children) ? [...children] : [children];
-    let child_first;
-    if (_children.length) {
-        child_first = _children.splice(0, 1);
-    }
-    const child_rest = _children;
-    const renderChild = (child: any) => {
-        const _render = (v: any) => (typeof v === 'function' ? v(state, setState) : v);
-        return Array.isArray(child) ? child.map((v) => _render(v)) : _render(child);
-    };
-    return [child_first, child_rest, renderChild];
-};
-
-/**
  * If you want to set the default values for an object, same as {Object.assign(defaults, v)}
  * @param v input object
  * @param defaults set if unset
@@ -149,20 +99,36 @@ export const setDefault = <T>(v: T | undefined, d: T): T => {
 
 /**
  * Will filter array when an item matches another with the same criteria
+ * Ex "criteria:'name;name.first'" compares a.name===b.name and a.name.first===b.name.first
  * @param v The array to filter
  * @param criteria A string 'property_name;name.first;name.last'
+ * @param any If true, removes duplicate if any of criteria is met
+ * @param crossCompare If true, compares criteria to one another
  */
-export const removeDuplicates = <T>(v: T[], criteria: string): T[] => {
+export const removeDuplicates = <T extends {}>(v: T[], criteria: string, any = false, crossCompare = false): T[] => {
     if (!Array.isArray(v)) {
         console.warn(`V is not array: '${v}'`);
         return v;
     }
+    // Converts string to [['name'], ['name','first']]
+    const criterias = criteria.split(';').map((s) => s.split('.').map((p) => p.trim()));
+    const getFields = (v: any, fields: string[]) => fields.reduce((a, v) => (a ? a[v] : a), v);
+    const someOrMany = any ? Array.prototype.some : Array.prototype.every;
+    const same = (a: any, b: any) => typeof a !== 'undefined' && typeof b !== 'undefined' && a === b;
+    // Reduces array while comparing
     return v.reduce((a, v) => {
+        // If not every criteria is met, push to the new array
         if (
-            !criteria.split(';').every((p) => {
-                const pa = p.split('.').map((p) => p.trim()); // Resolve dots in params
-                const paf = (v: any) => pa.reduce((a, v) => (a ? a[v] : a), v);
-                return a.find((av) => paf(av) === paf(v));
+            // If couldnt find duplicate, push the new object
+            !a.find((av) => {
+                return someOrMany.call(criterias, (c1) => {
+                    const r = crossCompare
+                        ? someOrMany.call(criterias, (c2) => {
+                              return same(getFields(av, c1), getFields(v, c2));
+                          })
+                        : same(getFields(av, c1), getFields(v, c1));
+                    return r;
+                });
             })
         )
             a.push(v);
@@ -170,9 +136,15 @@ export const removeDuplicates = <T>(v: T[], criteria: string): T[] => {
     }, [] as T[]);
 };
 
+/**
+ * Returns a function that sets up a timeout to call itself only when debounce done
+ * @param callback
+ * @param wait in ms
+ * @returns
+ */
 export const debounceCreator = <T extends Function>(callback: T, wait: number = 0) => {
     let timeout: NodeJS.Timeout;
-    return (...args: any) => {
+    return (...args: any[]) => {
         const context = this;
         clearTimeout(timeout);
         if (wait > 0) {

@@ -1,8 +1,8 @@
-import React, { FunctionComponent, useContext } from 'react';
-import s from './Toggle.module.scss';
 import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
+import React, { FunctionComponent } from 'react';
 import Button from '../Button';
+import s from './Toggle.module.scss';
 
 export interface ToggleProps {}
 

@@ -60,7 +60,7 @@ const Modal = (props: PropsWithChildren<ModalProps>) => {
                         onDeactivate: () => !isLocked && onClose && onClose(),
                     }}
                 >
-                    <Backdrop ref={backdrop} active={isOpen}>
+                    <Backdrop ref={backdrop} active={isOpen} fixed={true}>
                         <div className={clsContent}>
                             <div className={s.content}>{children}</div>
                         </div>

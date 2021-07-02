@@ -4,6 +4,7 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 import React, { FunctionComponent, HTMLAttributes, ReactNode } from 'react';
 import s from './Field.module.scss';
 import Input from './Input';
+import { useTheme } from '../Theme';
 
 // function getCompType(type:string){
 // 	switch(type){
@@ -19,6 +20,7 @@ export type FieldProps = (
     | React.TextareaHTMLAttributes<HTMLElement>
 ) &
     FieldAttributes<any> & {
+        classNameComponent?: string;
         label?: ReactNode;
         noLabelRoot?: boolean;
         /** If true there will be no FormikField, just whatever is in 'as' */
@@ -43,6 +45,7 @@ export type FieldProps = (
 const Field: FunctionComponent<FieldProps> = (props) => {
     let {
         className,
+        classNameComponent,
         as,
         rootProps,
         noField,
@@ -55,6 +58,7 @@ const Field: FunctionComponent<FieldProps> = (props) => {
         labelErrorProps,
         ...others
     } = props;
+    const theme = useTheme().name;
 
     // Changing 'as' based on 'type'
     let isNotInput = type && ['select', 'textarea'].includes(type);
@@ -97,7 +101,7 @@ const Field: FunctionComponent<FieldProps> = (props) => {
                     ? { marginLeft: 'auto', marginRight: 'auto', display: 'block' }
                     : { width: radio_or_check ? 30 : '50%', height: radio_or_check ? 'auto' : undefined }
             }
-            className={classNameFind(s, `field`)}
+            className={classNameFind(s, `field`, as === 'select' ? 'field-select' : '', theme)}
             name={name}
             as={as}
             type={type}

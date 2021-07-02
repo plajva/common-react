@@ -168,7 +168,7 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
                         })}
                         {page.length < 1 && (
                             <tr>
-                                <td colSpan={headerGroups.length}>{emptyMessage}</td>
+                                <td colSpan={100}>{emptyMessage}</td>
                             </tr>
                         )}
                     </tbody>
@@ -218,7 +218,8 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
                     </div>
                     <div style={{ float: 'right' }}>
                         <select
-                            style={{ height: '2em', marginRight: '1em' }}
+                            className={classNameFind(s, 'per-page', theme)}
+                            style={{ height: '2em', marginRight: '1em', width: 'auto' }}
                             value={pageSize}
                             onChange={(e) => {
                                 setPageSize(Number(e.target.value));

@@ -48,3 +48,23 @@
     // 	}
     // }
 }
+
+.per-page {
+    border: solid 1px transparent;
+    outline: none;
+
+    @include use-theme using ($ts) {
+        &#{$ts} {
+            &:focus,
+            &:active {
+                border-color: color-text(get-color(background));
+            }
+
+            option {
+                $color: color-text(get-color(background));
+                color: $color;
+                background-color: get-color(background, 1, 1);
+            }
+        }
+    }
+}

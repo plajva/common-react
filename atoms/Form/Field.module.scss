@@ -12,6 +12,11 @@
     display: inline-block;
     overflow: hidden;
     width: 100%;
+    
+    // display: flex;
+    // &>*{
+    //     flex: 0 0 auto;
+    // }
     // min-width: 300px;
     // margin: 0.2em;
 
@@ -19,8 +24,8 @@
         cursor: pointer;
     }
     .label {
-        padding-left: 5px;
-        margin-bottom: 5px;
+        // padding-left: 5px;
+        // margin-bottom: 5px;
     }
     .label-left,
     .label-right {

@@ -49,7 +49,7 @@ const ThemeProvider: FunctionComponent<ThemeProviderProps & React.HTMLAttributes
 
     return (
         <ThemeContext.Provider value={{ name: theme, set: nextTheme, next: nextTheme }}>
-            {children}
+            <div className={`${theme} root`}>{children}</div>
         </ThemeContext.Provider>
     );
 };

@@ -3,7 +3,7 @@
 
 @include media('<desktop') {
     .responsive {
-        overflow-y: scroll;
+        overflow-y: auto;
     }
 }
 

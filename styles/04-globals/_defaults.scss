@@ -141,6 +141,12 @@ $sindex: 0;
 }
 
 @include use-theme-with-default using ($ts) {
+    #{$ts} .shadow{
+        box-shadow: 0 0 10px 0 #{color.change(invert(get-color(background)), $alpha: .2)};
+    }
+    #{$ts} .shadow-small{
+        box-shadow: 0 0 7px 0 #{color.change(invert(get-color(background)), $alpha: .15)};
+    }
     @include use-color using ($cn, $c) {
         #{$ts}.#{$cn} {
             color: get-color($cn);
@@ -164,6 +170,7 @@ $sindex: 0;
         }
 
         $bc: get-color($cn, $alpha: 0.7);
+        
         // WIll set background and text
         #{$ts} .#{$cn}-background {
             @include background-color($bc);

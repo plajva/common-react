@@ -37,10 +37,15 @@ export const columnsQuick = (cols: string) => {
     // }, [cols])
 };
 
+interface PaginationProps {
+    pageCount: number;
+    recordCount: number;
+}
+
 export interface TableProps<D extends {}> {
     options: any;
     emptyMessage?: React.ReactNode | String;
-    pagination?: boolean;
+    pagination?: PaginationProps;
     compact?: Boolean;
     getHeaderProps?: (s?: HeaderGroup<D>) => object;
     getColumnProps?: (s?: HeaderGroup<D> | ColumnInstance<D>) => object;
@@ -177,14 +182,23 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
             {pagination && (
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex' }}>
-                        <Button
+                        {/* <Button
                             className='outline'
                             button_type='icon'
                             onClick={() => gotoPage(0)}
                             disabled={!(pageIndex !== 0)}
                         >
                             <Icon icon={FaAngleDoubleLeft} />
-                        </Button>
+                        </Button> */}
+                        <div style={{ lineHeight: '2em', margin: 'auto 0.5em' }}>
+                            <em>
+                                {page.length === 0 ? 0 : pageIndex * pageSize + 1}
+                                {' - '}
+                                {page.length + pageIndex * pageSize}
+                                {' of '}
+                                {pagination.recordCount}
+                            </em>
+                        </div>
                         <Button
                             className='outline'
                             button_type='icon'
@@ -193,12 +207,6 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
                         >
                             <Icon icon={FaAngleLeft} />
                         </Button>
-                        <div style={{ lineHeight: '2em', margin: 'auto 0.5em' }}>
-                            Page{' '}
-                            <em>
-                                {pageCount > 0 ? pageIndex + 1 : 0} of {pageCount}
-                            </em>
-                        </div>
                         <Button
                             className='outline'
                             button_type='icon'
@@ -207,14 +215,14 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
                         >
                             <Icon icon={FaAngleRight} />
                         </Button>
-                        <Button
+                        {/* <Button
                             className='outline'
                             button_type='icon'
-                            onClick={() => gotoPage(pageCount - 1)}
-                            disabled={!(pageIndex !== pageCount - 1 && pageCount > 0)}
+                            onClick={() => gotoPage(pagination.pageCount - 1)}
+                            disabled={!(pageIndex !== pagination.pageCount - 1 && pagination.pageCount > 0)}
                         >
                             <Icon icon={FaAngleDoubleRight} />
-                        </Button>
+                        </Button> */}
                     </div>
                     <div style={{ float: 'right' }}>
                         <select

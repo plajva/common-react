@@ -37,6 +37,7 @@ export const columnsQuick = (cols: string) => {
     // }, [cols])
 };
 
+// Pagination Props
 interface PaginationProps {
     pageCount: number;
     recordCount: number;

@@ -101,7 +101,7 @@ const Field: FunctionComponent<FieldProps> = (props) => {
                     ? { marginLeft: 'auto', marginRight: 'auto', display: 'block' }
                     : { width: radio_or_check ? 30 : '50%', height: radio_or_check ? 'auto' : undefined }
             }
-            className={classNameFind(s, `field`, as === 'select' ? 'field-select' : '', theme)}
+            className={classNameFind(s, `field`, as === 'select' ? 'field-select' : '', classNameComponent, theme)}
             name={name}
             as={as}
             type={type}
@@ -109,6 +109,7 @@ const Field: FunctionComponent<FieldProps> = (props) => {
             children={fieldChildren}
         />
     );
+    console.log('field :>> ', field, noField, as);
 
     // Defining label
     const labelText = (label || children) && (

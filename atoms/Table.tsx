@@ -181,7 +181,7 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
                 </table>
             </div>
             {pagination && (
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div className='margin-top-2' style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex' }}>
                         {/* <Button
                             className='outline'

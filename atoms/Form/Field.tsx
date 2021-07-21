@@ -1,9 +1,9 @@
 import { classNameFind } from '@common/utils';
 import { ErrorMessage, Field as FField, FieldAttributes, useFormikContext } from 'formik';
-import DayPickerInput from 'react-day-picker/DayPickerInput';
 import React, { FunctionComponent, HTMLAttributes, ReactNode } from 'react';
 import s from './Field.module.scss';
 import Input from './Input';
+import InputDate from './InputDate';
 import { useTheme } from '../Theme';
 
 // function getCompType(type:string){
@@ -76,7 +76,7 @@ const Field: FunctionComponent<FieldProps> = (props) => {
             as = Input;
             break;
         case 'date':
-            as = DayPickerInput;
+            as = InputDate;
     }
 
     // Defining position

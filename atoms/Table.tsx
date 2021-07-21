@@ -37,10 +37,16 @@ export const columnsQuick = (cols: string) => {
     // }, [cols])
 };
 
+export interface OnChangePaginationProps {
+    pageSize: number;
+    pageNumber: number;
+}
+
 // Pagination Props
-interface PaginationProps {
+export interface PaginationProps {
     pageCount: number;
     recordCount: number;
+    onChange?: (changes: OnChangePaginationProps) => void;
 }
 
 export interface TableProps<D extends {}> {
@@ -110,6 +116,9 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
             } else {
                 gotoPage && gotoPage(0);
             }
+        if (pagination?.onChange) {
+            pagination.onChange({ pageNumber: pageIndex + 1, pageSize });
+        }
     }, [filters, pageSize]);
 
     // Render the UI for your table

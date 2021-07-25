@@ -2,7 +2,8 @@
 
 $transition: 0.3s;
 $size: .8em;
-$gutter: 0.12em;
+$border-radius: .1em;
+$gutter: .12em;
 $padding: .5em;
 
 .control {
@@ -14,11 +15,13 @@ $padding: .5em;
 	padding: $padding;
 
 	position: relative;
-	&:before,&:after{
+	
+	&:before,
+	&:after{
 		display: block;
 		box-sizing: border-box;
 		transition: $transition;
-		border-radius: 50%;
+		border-radius: $border-radius;
 		position: absolute;
 		content: "";
 	}
@@ -33,7 +36,6 @@ $padding: .5em;
 		height: $size - $gutter * 2;
 		top:  $gutter + $padding;
 		left: $gutter + $padding;
-
 		opacity: 0;
 	}
 }

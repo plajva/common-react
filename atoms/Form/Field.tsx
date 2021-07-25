@@ -8,6 +8,7 @@ import s from "./Field.module.scss";
 import { useTheme } from "../Theme";
 import { classNameFind } from "src/common/utils";
 import Radio from "./Radio";
+import Checkbox from "./Checkbox";
 
 interface FieldProps extends _FieldProps {}
 export interface _FieldProps {
@@ -36,6 +37,8 @@ export const Field = ({ children, label, className, type, ...props }: FieldProps
 			? Toggle
 			: type === "select"
 			? Select
+			: type === "checkbox"
+			? Checkbox
 			: type === "radio"
 			? Radio
 			: select_or_textarea

@@ -1,14 +1,18 @@
 @import '@styles/_globals.scss';
 
-$margin-top: .8em;
-$line-height: 1.5em;
+$label-top-size: .7em;
+$label-size: 1em;
+$margin-top: $label-top-size + .2em;
+$line-height: 1.5;
 $padding: .2em;
 .comp {
 	display: inline-flex;
+	// overflow: hidden;
 	
 	.label-container{
 		display: flex;
-		align-content: center;
+		align-items: center;
+		position: relative;
 	}
 	.label{
 		transform: translate($padding, #{$margin-top + $padding});
@@ -17,6 +21,8 @@ $padding: .2em;
 		transition: transform .4s;
 		transform-origin: top left;
 		position: absolute;
+		top:0;
+		left: 0;
 		// display: inline;
 		pointer-events: none;
 	}
@@ -30,7 +36,7 @@ $padding: .2em;
 	.input[data-value]:not([data-value=""]) + .label,
 	.input[type="date"] + .label
 	{
-		transform: translate($padding - .05em ,0) scale(.7);
+		transform: translate($padding - .05em ,0) scale(strip-unit($label-top-size / $label-size));
 		opacity: 1;
 	}
 	.input{

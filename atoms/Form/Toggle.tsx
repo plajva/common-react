@@ -1,17 +1,29 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind } from '@common/utils';
-import React, { FunctionComponent } from 'react';
-import Button from '../Button';
-import s from './Toggle.module.scss';
+import { useTheme } from "@catoms/Theme";
+import { classNameFind as classFind } from "@common/utils";
+import React, { forwardRef } from "react";
+import { FieldCommon } from "./Field";
+import { FormFieldHOC, useFormField } from "./Form";
+import s from "./Toggle.module.scss";
 
-export interface ToggleProps {}
+export interface ToggleProps extends FieldCommon {}
 
-const Toggle: FunctionComponent<ToggleProps & React.HTMLAttributes<HTMLDivElement>> = (props) => {
-    const theme = useTheme().name;
-    let { className, ...others } = props;
-    className = classNameFind(s, `toggle`, 'dup', theme, className);
+/**
+ * ! Currently can only be used inside Field Component
+ */
+const Toggle = forwardRef<HTMLInputElement, ToggleProps & React.InputHTMLAttributes<HTMLElement>>(
+	({ className, children, ..._props }, ref) => {
+		const theme = useTheme().name;
+		className = classFind(s, `input`, className, "dup", theme);
 
-    return <Button></Button>;
-};
+		const props = useFormField(_props, {valueName:'checked'});
+
+		return (
+			<>
+				<input {...props} ref={ref} type='checkbox' hidden className={className} />
+				<div className={classFind(s, "control")}></div>
+			</>
+		);
+	}
+);
 
 export default Toggle;

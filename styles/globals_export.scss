@@ -1,11 +1,13 @@
 @import 'globals';
 
-// :export {
-// 	themes: debug-list($themes);
-// }
+
+:export {
+	themes: $themes;
+    // themes: debug-list($themes);
+}
 
 // @debug debug-list($themes);
 
-hr {
-    border-bottom: none;
-}
+// hr {
+//     border-bottom: none;
+// }

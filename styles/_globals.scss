@@ -18,8 +18,8 @@ $theme-current: $theme-default;
 $themes: (
     default: (
         colors: (
-            primary: #0085b0,
-            secondary: #97b62f,
+            primary: #4adb7a,
+            secondary: #3fc2c7,
             warn: rgb(172, 34, 34),
             background: #f8f8f8,
             menu: #004961,
@@ -43,7 +43,7 @@ $themes: (
         ),
         spaces: (
             0px,
-            4px,
+            .3em,
         ),
         font-sizes: (
             0.7em,

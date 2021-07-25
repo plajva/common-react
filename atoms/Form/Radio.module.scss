@@ -1,0 +1,70 @@
+@import "@styles/_globals.scss";
+
+$color_checkbox_default: #8e8e93;
+$transition: 0.3s;
+$size: 1em;
+$gutter: 0.2em;
+$padding: .5em;
+
+.control {
+	transition: $transition;
+	width: $size;
+	height: $size;
+	box-sizing: content-box;
+	border-radius: $size;
+	padding: $padding;
+
+	position: relative;
+	&:before,&:after{
+		display: block;
+		box-sizing: border-box;
+		transition: $transition;
+		border-radius: 50%;
+		position: absolute;
+		content: "";
+	}
+	&:before{
+		width: $size;
+		height: $size;
+		border: 1px solid get-color(neutral);
+	}
+	&:after {
+		background: get-color(primary);
+		width: $size - $gutter * 2;
+		height: $size - $gutter * 2;
+		top:  $gutter + $padding;
+		left: $gutter + $padding;
+
+		opacity: 0;
+	}
+}
+
+.input:checked + .control:after {
+	opacity: 1;
+}
+
+// @include use-theme using ($ts) {
+// 	// Theme Iterator
+// 	#{$ts}.input + .control {
+// 		// border: 2px solid get-color(neutral, -2, 0.8);
+// 		// background-color: get-color(neutral, 0, 0.7);
+// 		&::after {
+// 			background: get-color(neutral, if(is-dark(), 2, -2));
+// 		}
+// 	}
+// 	#{$ts}.input:checked + .control {
+// 		border-color: get-color(neutral, -3, 0.9);
+// 		background-color: get-color(primary, 0);
+// 	}
+
+// 	@include use-color using ($cn, $c) {
+// 		// Color Iterator
+// 		#{$ts}.#{$cn}.input:checked + .control {
+// 			// border-color: get-color(neutral, -3, 0.9);
+// 			// background-color: get-color($cn, 0);
+// 			&::after {
+				
+// 			}
+// 		}
+// 	}
+// }

@@ -1,6 +1,7 @@
 import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
 import React from 'react';
+import { FormFieldHOC } from './Form';
 import s from './Input.module.scss';
 
 export interface InputProps {
@@ -15,7 +16,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps & React.InputHTMLAtt
         let { className, children, ...others } = props;
         className = classNameFind(s, `atom`, 'dup', theme, className);
 
-        return <input ref={ref} className={className} {...others} />;
+        return FormFieldHOC(<input ref={ref} className={className} {...others} />);
     }
 );
 

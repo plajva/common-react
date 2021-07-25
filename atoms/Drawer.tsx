@@ -1,184 +1,214 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind, useStateCombine } from '@common/utils';
-import React, { FunctionComponent, MouseEvent, ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import s from './Drawer.module.scss';
+import { useTheme } from "@catoms/Theme";
+import { classNameFind, combineEvent, setDefault, useStateCombine } from "@common/utils";
+import React, {
+	FunctionComponent,
+	MouseEvent,
+	ReactElement,
+	ReactNode,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
+
+import s from "./Drawer.module.scss";
 
 export interface DrawerContentData {
-    [key: string]: { header?: ReactNode; content?: ReactNode };
+	[key: string]: { header?: ReactNode; content?: ReactNode };
 }
 export interface DrawerContextItems {
-    open?: boolean;
-    setOpen?: any;
-    setContent?: any;
+	open?: boolean;
+	setOpen?: any;
+	setContent?: any;
 }
 
 export interface DrawerProps extends DrawerContextItems {
-    animTime?: number;
-    maxWidth?: any;
-    fixed?: boolean;
-    right?: boolean;
+	// Animation time in seconds
+	animTime?: number;
+	maxWidth?: any;
+	drawer: ReactNode;
+	fixed?: boolean;
+	sticky?: boolean;
+	right?: boolean;
 }
 export const DrawerContext = React.createContext<DrawerContextItems>({ open: false });
 
-export const DrawerToggleFunc = (drawerContext: DrawerProps) => {
-    return (e: MouseEvent<HTMLElement>) => {
-        if (drawerContext?.setOpen) drawerContext.setOpen(!drawerContext.open);
-    };
+export const DrawerToggleFunc = (drawerContext: DrawerContextItems) => {
+	return (e: MouseEvent<HTMLElement>) => {
+		if (drawerContext?.setOpen) drawerContext.setOpen(!drawerContext.open);
+	};
 };
 
-export const useDrawerContext = () => {
-    return useContext(DrawerContext);
+export const useDrawer = () => {
+	return useContext(DrawerContext);
 };
 
-export interface DrawerToggleProps {}
+export interface DrawerToggleProps {
+	// Type ReactElement allows type checking to only have 1 valid element inside tags
+	children: ReactElement;
+}
 
-export const DrawerToggle: FunctionComponent<DrawerToggleProps & React.HTMLAttributes<HTMLDivElement>> = ({
-    className,
-    children,
-    ...props
+export const DrawerToggle = ({ children }: DrawerToggleProps) => {
+	const drawer = useDrawer();
+	// We do this bc children will be an array always
+	const child = Array.isArray(children) ? children[0] : children;
+	return React.isValidElement<any>(child) ? (
+		React.cloneElement(child, { onClick: combineEvent(DrawerToggleFunc(drawer), child.props?.onClick) })
+	) : (
+		<span style={{ color: "red" }}>Drawer Toggle child not element?</span>
+	);
+};
+
+const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => ReactElement = ({
+	right,
+	className,
+	children,
+	drawer,
+	open: _open,
+	setOpen: _setOpen,
+	animTime: _animTime,
+	fixed,
+	sticky,
+	maxWidth,
+	...props
 }) => {
-    const theme = useTheme().name;
-    className = classNameFind(s, `comp`, theme, className);
+	// True if opening/open, False if closing/closed
+	const [open, setOpen] = useStateCombine(false, _open, _setOpen);
+	// True when open, False if closed
+	const [isOpen, setIsOpen] = useState(false);
+	const isOpenTimer = useRef(0);
 
-    const drawer = useContext(DrawerContext);
+	const animTime = setDefault(_animTime, 0.4);
 
-    return (
-        <div className={className} onClick={DrawerToggleFunc(drawer)} {...props}>
-            {children}
-        </div>
-    );
-};
+	const back = useRef<HTMLDivElement>(null);
+	const menu = useRef<HTMLDivElement>(null);
+	const hookContentData = useRef<DrawerContentData>({});
 
-/**
- * |--Drawer---|-----------|
- * |1st Child  |all others |
- * |-----------|-----------|
- * @param param0
- */
-const Drawer: FunctionComponent<DrawerProps & React.HTMLAttributes<HTMLDivElement>> = ({
-    right,
-    className,
-    children,
-    open: _open,
-    setOpen: _setOpen,
-    animTime: _animTime,
-    fixed,
-    maxWidth,
-    ...props
-}) => {
-    // True if opening/open, False if closing/closed
-    const [open, setOpen] = useStateCombine(false, _open, _setOpen);
-    // True when open, False if closed
-    const [is_open, setIsOpen] = useState(false);
-    const is_open_timer = useRef(0);
+	const theme = useTheme().name;
+	className = classNameFind(s, `comp`, theme, className);
 
-    const animTime = typeof _animTime !== 'undefined' ? _animTime : 1;
-    // const [open, setOpen] = useState(_open ? _open : false);
-    const back = useRef<HTMLDivElement>(null);
-    const menu = useRef<HTMLDivElement>(null);
-    // const hookContent = useRef<HTMLDivElement>(null);
-    const hookContentData = useRef<DrawerContentData>({});
+	const setContent = (o: DrawerContentData) => {
+		hookContentData.current = { ...hookContentData.current, ...o };
+	};
 
-    const theme = useTheme().name;
-    className = classNameFind(s, `comp`, theme, className);
+	// useEffect(() => {
+	// 	const onEvent = (event: "open" | "closed" | "opening" | "closing") => {
+	// 		// console.log(event)
+	// 		switch (event) {
+	// 			case "open":
+	// 				// if (back.current) back.current.style.opacity = "1";
+	// 				// if (menu.current){
+	// 				// 	menu.current.style.animation = `${right ? s.right : s.left} ${animTime}s normal ease-out forwards`;
 
-    // Defines what will get drawn
-    const _children = React.Children.toArray(children);
-    let child_first: ReactNode;
-    if (_children.length) {
-        child_first = _children.splice(0, 1);
-    }
-    const child_rest = _children;
+	// 				// }
 
-    const setContent = (o: DrawerContentData) => {
-        // if(Object.entries(o).some(([k,v]) => typeof v !== typeof hookContentData[k]))
-        // 	setHookContentData(o)
-        hookContentData.current = { ...hookContentData.current, ...o };
-    };
+	// 				break;
+	// 			case "closed":
+	// 				// if (back.current) back.current.style.opacity = "0";
+	// 				// if (menu.current) {
+	// 				// 	menu.current.style.animation = `${right ? s.right : s.left} ${animTime}s reverse ease-out forwards`;
+	// 				// 	// menu.current.style.opacity = "0";
+	// 				// }
+	// 				break;
+	// 			case "opening":
+	// 				// if (menu.current) menu.current.style.opacity = "1";
+	// 				break;
+	// 			case "closing":
+	// 				break;
+	// 		}
+	// 	};
 
-    useEffect(() => {
-        if (back.current) {
-            if (open) {
-                back.current.style.opacity = '1';
-            } else {
-                back.current.style.opacity = '0';
-            }
-        }
-        if (menu.current) {
-            if (open) {
-                menu.current.style.animation = `${
-                    right ? s.right_in : s.left_in
-                } ${animTime}s normal ease-out forwards`;
-            } else {
-                menu.current.style.animation = `${
-                    right ? s.right_out : s.left_out
-                } ${animTime}s normal ease-out forwards`;
-            }
-        }
+	// 	if (isOpen && open) onEvent("open");
+	// 	if (!isOpen && !open) onEvent("closed");
+	// 	if ((isOpen && !open) || (!isOpen && open)) {
+	// 		if (open) {
+	// 			onEvent("opening");
+	// 		} else {
+	// 			onEvent("closing");
+	// 		}
+	// 		isOpenTimer.current = setTimeout(() => {
+	// 			setIsOpen(open);
+	// 			clearTimeout(isOpenTimer.current);
+	// 			isOpenTimer.current = 0;
+	// 		}, animTime * 1000) as any as number;
+	// 	}
+	// 	return () => {
+	// 		clearTimeout(isOpenTimer.current);
+	// 		isOpenTimer.current = 0;
+	// 	};
+	// });
 
-        // Timeout for opening animation
-        if ((is_open && !open) || (!is_open && open)) {
-            is_open_timer.current = (setTimeout(() => {
-                setIsOpen(open);
-                clearTimeout(is_open_timer.current);
-                is_open_timer.current = 0;
-            }, animTime * 1000) as any) as number;
-        }
-        return () => {
-            // hookContentData.current = {};
+	const mb_className = fixed
+		? "fixed"
+		// sticky ? "sticky" :
+		: "";
+	const mb_styles = {
+		transition: `${animTime}s, opacity cubic-bezier(.01,.79,.57,1) ${animTime}s`,
+	};
 
-            clearTimeout(is_open_timer.current);
-            is_open_timer.current = 0;
-        };
-    });
-    // useLayoutEffect(() => {hookContentData.current = {};})
-
-    return (
-        <DrawerContext.Provider value={{ open: open, setOpen: setOpen, setContent: setContent }}>
-            <div className={className} {...props}>
-                {(is_open || open) && (
-                    <>
-                        {/* The shaded back panel, if clicked will close the drawer */}
-                        <div
-                            className={classNameFind(s, `back`, fixed ? 'fixed' : '')}
-                            style={{ opacity: '0', transition: `opacity ${animTime}s` }}
-                            ref={back}
-                            onClick={() => {
-                                setOpen(false);
-                            }}
-                        ></div>
-                        {/* The drawer */}
-                        <div
-                            className={classNameFind(
-                                s,
-                                `menu ${right ? 'menu-right' : 'menu-left'}`,
-                                fixed ? 'fixed' : ''
-                            )}
-                            ref={menu}
-                            style={{ maxWidth: maxWidth }}
-                        >
-                            {child_first}
-                            {hookContentData &&
-                                Object.entries(hookContentData.current).map(
-                                    ([k, v], i) =>
-                                        v && (
-                                            <div>
-                                                <div
-                                                    className={classNameFind(s, 'hook-header', 'margin-2 margin-top-4')}
-                                                >
-                                                    {v.header}
-                                                </div>
-                                                <div>{v.content}</div>
-                                            </div>
-                                        )
-                                )}
-                        </div>
-                    </>
-                )}
-                <div className={classNameFind(s, `content`)}>{child_rest}</div>
-            </div>
-        </DrawerContext.Provider>
-    );
+	return (
+		<DrawerContext.Provider value={{ open: open, setOpen: setOpen, setContent: setContent }}>
+			{/* <div className={classNameFind(s, "parent")}> */}
+			<div className={className} {...props}>
+				{
+					// (isOpen || open) &&
+					<>
+						{/* The shaded back panel, if clicked will close the drawer */}
+						<div
+							className={classNameFind(s, `back`, mb_className)}
+							style={{
+								opacity: open ? 1 : 0,
+								// transition: `opacity ${animTime}s`,
+								pointerEvents: !open ? "none" : undefined,
+								...mb_styles,
+							}}
+							ref={back}
+							onClick={() => {
+								setOpen(false);
+							}}
+						></div>
+						{/* The drawer */}
+						<div
+							className={classNameFind(
+								s,
+								"menu",
+								// `${right ? "menu-right" : "menu-left"}`,
+								mb_className
+							)}
+							ref={menu}
+							style={{
+								maxWidth: maxWidth,
+								...(open
+									? {
+											transform: `translateX(${!right ? "0" : "100%"})`,
+											opacity: 1,
+									  }
+									: {
+											transform: `translateX(${!right ? "-100%" : "0"})`,
+											opacity: 0,
+									  }),
+								...mb_styles,
+							}}
+						>
+							{drawer}
+							{hookContentData &&
+								Object.entries(hookContentData.current).map(
+									([k, v], i) =>
+										v && (
+											<div>
+												<div className={classNameFind(s, "hook-header", "margin-2 margin-top-4")}>{v.header}</div>
+												<div>{v.content}</div>
+											</div>
+										)
+								)}
+						</div>
+					</>
+				}
+				<div className={classNameFind(s, `content`)}>{children}</div>
+			</div>
+			{/* </div> */}
+		</DrawerContext.Provider>
+	);
 };
 
 export default Drawer;

@@ -43,10 +43,10 @@
     @include use-theme using ($ts) {
         &#{$ts} {
             // @include background-color(get-color(neutral, $alpha: 0.05));
-            background: get-color(neutral, $alpha: 0.05);
+            background: get-color(neutral, -4, $alpha: 0.1);
             &:hover {
                 // @include background-color(get-color(neutral, $alpha: 0.1));
-                background: get-color(neutral, $alpha: 0.1);
+                background: get-color(neutral, $alpha: 0.13);
             }
         }
         &#{$ts}:disabled {

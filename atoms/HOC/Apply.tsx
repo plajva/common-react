@@ -10,7 +10,7 @@ export interface ApplyProps {
 /**
  * Clones all elements in children while merging props
  * @param to: Which component type to apply the changes to.
- * @param depth_max: Max depth of modifier, -1 means all, 0 means direct children.
+ * @param depth_max: Max depth of modifier, -1 means all, 0 (default) means direct children.
  */
 const Apply: FunctionComponent<ApplyProps & React.HTMLAttributes<HTMLDivElement>> = ({
     children,

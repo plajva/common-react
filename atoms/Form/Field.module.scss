@@ -1,46 +1,57 @@
 @import '@styles/_globals.scss';
-@import '@styles/include-media';
 
-@include media('<tablet') {
-    .atom {
-        width: 100%;
-    }
-}
-
-.atom {
-    // My definitions by default
-    display: inline-block;
-    overflow: hidden;
-    width: 100%;
-    
-    // display: flex;
-    // &>*{
-    //     flex: 0 0 auto;
-    // }
-    // min-width: 300px;
-    // margin: 0.2em;
-
-    &.radio {
-        cursor: pointer;
-    }
-    .label {
-        // padding-left: 5px;
-        // margin-bottom: 5px;
-    }
-    .label-left,
-    .label-right {
-        padding: get-space(5);
-    }
-    .field {
-        width: 100%;
-        // height: 100%;
-        // border-radius: 0;
-    }
-
-    // @include use-theme using ($ts){
-    // 	// Theme Iterator
-    // 	@include use-color using ($cn, $c){
-    // 		// Color Iterator
-    // 	}
-    // }
+$margin-top: .8em;
+$line-height: 1.5em;
+$padding: .2em;
+.comp {
+	display: inline-flex;
+	
+	.label-container{
+		display: flex;
+		align-content: center;
+	}
+	.label{
+		transform: translate($padding, #{$margin-top + $padding});
+		opacity: .7;
+		line-height: $line-height;
+		transition: transform .4s;
+		transform-origin: top left;
+		position: absolute;
+		// display: inline;
+		pointer-events: none;
+	}
+	.label-persistent{
+		pointer-events: auto;
+		display: block;
+		// position: fixed;
+	}
+	// If value="jk" or defaultValue
+	.input[value]:not([value=""]) + .label,
+	.input[data-value]:not([data-value=""]) + .label,
+	.input[type="date"] + .label
+	{
+		transform: translate($padding - .05em ,0) scale(.7);
+		opacity: 1;
+	}
+	.input{
+		border-radius: 0;
+		// flex: 1 1 auto;
+		line-height: $line-height;
+		margin-top: $margin-top;
+		padding: $padding;
+		padding-inline: none;
+	}
+	&::after{
+		content: "";
+		border-bottom: 1px solid get-color(neutral);
+	}
+	
+	// @include use-theme using ($ts){
+	// 	// Theme Iterator
+	//  &#{$ts}{}
+	// 	@include use-color using ($cn, $c){
+	// 		// Color Iterator
+	//		&#{$ts}.#{$cn}{}
+	// 	}
+	// }
 }

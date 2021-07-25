@@ -1,6 +1,6 @@
 import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
-import FocusTrap from 'focus-trap-react';
+// import FocusTrap from 'focus-trap-react';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import Backdrop from './Backdrop';
 import s from './Modal.module.scss';
@@ -54,18 +54,18 @@ const Modal = (props: PropsWithChildren<ModalProps>) => {
     return (
         ((isOpen || active) && (
             <Portal id='modals'>
-                <FocusTrap
+                {/* <FocusTrap
                     focusTrapOptions={{
                         preventScroll: true,
                         onDeactivate: () => !isLocked && onClose && onClose(),
                     }}
-                >
+                > */}
                     <Backdrop ref={backdrop} active={isOpen}>
                         <div className={clsContent}>
                             <div className={s.content}>{children}</div>
                         </div>
                     </Backdrop>
-                </FocusTrap>
+                {/* </FocusTrap> */}
             </Portal>
         )) ||
         null

@@ -1,4 +1,4 @@
-import { useTheme, ThemeI } from '@common/atoms/ThemePrefers';
+import { useTheme, ThemeI } from '@common/atoms/Theme';
 import { useDebugValue, useEffect, useState } from 'react';
 
 interface QueryInputProps {

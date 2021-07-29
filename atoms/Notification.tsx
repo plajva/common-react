@@ -26,7 +26,7 @@ const Notification = (props: NotificationProps) => {
     const [inNoty, setInNoty] = useState(false);
 
     const cls = classNameFind(s, 'atom', icon ? 'atom-icon' : '', inNoty ? 'in' : '', type, theme);
-    const contentCls = classNameFind(s, 'content', !icon ? 'hasIcon' : '', theme);
+    const contentCls = classNameFind(s, 'content', !!icon ? 'hasIcon' : '', theme);
     const iconCls = classNameFind(s, 'close-icon');
 
     const { removeNotification } = useNotifications();
@@ -57,7 +57,7 @@ const Notification = (props: NotificationProps) => {
 
     return (
         <div className={cls}>
-            {!icon && <div className={s.icon}>{mapIcons[type]}</div>}
+            {!!icon && <div className={s.icon}>{mapIcons[type]}</div>}
             <div className={contentCls}>
                 <p>{text}</p>
             </div>

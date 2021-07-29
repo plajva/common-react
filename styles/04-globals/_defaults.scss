@@ -184,7 +184,6 @@ $sindex: 0;
         }
 
         $bc: get-color($cn, $alpha: 0.7);
-
         // WIll set background and text
         #{$ts}.#{$cn}-background {
             @include background-color($bc);

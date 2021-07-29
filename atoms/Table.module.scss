@@ -1,9 +1,11 @@
-@import '../styles/globals';
-@import '../styles/include-media';
+@import '@styles/_globals.scss';
+@import '@styles/include-media';
 
 @include media('<desktop') {
     .responsive {
-        overflow-y: auto;
+        overflow: auto;
+	position: relative;
+    	white-space: nowrap;
     }
 }
 
@@ -21,6 +23,24 @@
         }
     }
 
+    .sticky {
+        position: -webkit-sticky;
+        position: sticky;
+
+        @include use-theme using ($ts) {
+            &#{$ts} {
+                background-color: get-color(background);
+            }
+        }
+
+        &.sticky-left {
+            left: 0;
+        }
+        &.sticky-right {
+            right: 0;
+        }
+    }
+
     // @include use-theme using ($ts){
     // 	// Theme Iterator
     //  &#{$ts}{}
@@ -29,4 +49,24 @@
     //		&#{$ts}.#{$cn}{}
     // 	}
     // }
+}
+
+.per-page {
+    border: solid 1px transparent;
+    outline: none;
+
+    @include use-theme using ($ts) {
+        &#{$ts} {
+            &:focus,
+            &:active {
+                border-color: color-text(get-color(background));
+            }
+
+            option {
+                $color: color-text(get-color(background));
+                color: $color;
+                background-color: get-color(background, 1, 1);
+            }
+        }
+    }
 }

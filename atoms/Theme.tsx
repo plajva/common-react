@@ -14,7 +14,7 @@ const getTimeTheme = () => {
     }
 };
 
-interface ThemeI {
+export interface ThemeI {
     name: string;
     set: () => void;
     next: () => void;

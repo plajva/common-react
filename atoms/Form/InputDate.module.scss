@@ -1,0 +1,37 @@
+@import '@styles/_globals.scss';
+
+.atom {
+    @include use-theme using ($ts) {
+        &#{$ts} {
+            $color: color-text(get-color(background));
+
+            &::placeholder {
+                color: $color;
+            }
+        }
+    }
+}
+
+@include use-theme using ($ts) {
+    #{$ts} {
+        $color: color-text(get-color(background));
+
+        .overlay {
+            color: $color;
+            background-color: get-color(background, 1, 1);
+
+            div[role='gridcell'] {
+                &[aria-selected='false'] {
+                    &:hover {
+                        background-color: get-color(background, 0, 1) !important;
+                        color: color-text(get-color(background, 0.1, 0.1)) !important;
+                    }
+                }
+                &[aria-selected='true'] {
+                    background-color: darken(get-color(background, 0, 1), 20) !important;
+                    color: color-text(get-color(background, 0.1, 0.1)) !important;
+                }
+            }
+        }
+    }
+}

@@ -1,5 +1,5 @@
 .atom {
-    position: fixed;
+    position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
@@ -19,5 +19,9 @@
         transition-duration: 250ms;
         transition-delay: 0ms;
         opacity: 1;
+    }
+
+    &.fixed {
+        position: fixed;
     }
 }

@@ -73,13 +73,15 @@ $padding: 0.2em;
         opacity: 1;
     }
     .input {
-        border-radius: 0;
+        // border-radius: 0;
         // flex: 1 1 auto;
         line-height: $line-height;
 
         // margin-bottom: $margin-bottom;
         padding: $padding;
         padding-inline: none;
+        border: 1px solid transparent;
+        outline: transparent;
     }
     &::after {
         content: '';
@@ -116,10 +118,10 @@ $padding: 0.2em;
             }
             .input {
                 &:focus-visible {
-                    outline: 1px solid color-text(background);
+                    border: 1px solid color-text(background);
                 }
                 @if (is-dark()) {
-                    outline: 1px solid color.change(color-text(background), $alpha: 0.3);
+                    border: 1px solid color.change(color-text(background), $alpha: 0.3);
                 }
             }
         }

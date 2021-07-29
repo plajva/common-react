@@ -4,13 +4,14 @@ import React, { FunctionComponent } from 'react';
 import s from './Button.module.scss';
 import Ripple from './HOC/Ripple';
 
-export interface ButtonProps {
+export interface ButtonCompProps {
     button_type?: 'normal' | 'icon';
     button_size?: string | number;
 }
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & ButtonCompProps
 // We need to set the className and provide aditinal classnames on component call
 
-const Button: FunctionComponent<ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
+const Button: FunctionComponent<ButtonProps> = ({
     button_type,
     button_size,
     ...props

@@ -95,6 +95,10 @@ $sindex: 0;
         border-top-right-radius: $space;
         border-top-left-radius: $space;
     }
+    @include repeat_space('.border-radius-top-right') using ($space) {
+        border-top-right-radius: $space;
+        // border-top-left-radius: $space;
+    }
     @include repeat_space('.border-radius-right') using ($space) {
         border-top-right-radius: $space;
         border-bottom-right-radius: $space;
@@ -151,6 +155,7 @@ $sindex: 0;
 }
 
 @include use-theme-with-default using ($ts) {
+    
     #{$ts}.shadow{
         box-shadow: 0 0 10px 0 #{color.change(invert(get-color(background)), $alpha: .2)};
     }
@@ -205,9 +210,14 @@ $sindex: 0;
         font-size: get-font-size(html);
         // line-height: 1.5em;
         min-height: 100vh;
+        // overflow: hidden;
         @include background-color(background);
-        // box-sizing: border-box;
+        // To make styling of themes more effective
+        .root-background-color,option{
+            @include background-color(background);
+        }
     }
+    
 }
 
 

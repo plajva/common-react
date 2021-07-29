@@ -5,12 +5,15 @@
     position: relative;
     overflow: hidden;
     transition: background 0.3s;
-    padding: get-space(4);
-    border-radius: get-space(3);
+    padding: get-space(3);
+    border-radius: get-space(2);
     background: transparent;
 
     &:hover {
         background: get-color(neutral, $alpha: 0.1);
+    }
+    &:focus-visible{
+        outline: 1px solid color-text(background);
     }
 
     svg {
@@ -26,6 +29,7 @@
         padding: none;
         border-radius: 9999px;
         background: transparent;
+        padding: get-space(3);
 
         &:hover {
             background: get-color(neutral, $alpha: 0.1);
@@ -47,6 +51,9 @@
             &:hover {
                 // @include background-color(get-color(neutral, $alpha: 0.1));
                 background: get-color(neutral, $alpha: 0.13);
+            }
+            &:focus-visible{
+                outline: 1px solid color-text(background);
             }
         }
         &#{$ts}:disabled {

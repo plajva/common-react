@@ -1,22 +1,24 @@
 import { useTheme } from '@catoms/Theme';
 import { classNameFind } from '@common/utils';
 import React from 'react';
-import { FormFieldHOC } from './Form';
+import { FieldCommon } from './Field';
+import { FormFieldHOC, useFormField } from './Form';
 import s from './Input.module.scss';
 
-export interface InputProps {
+export interface InputProps extends FieldCommon {
     // value?: any,
     // type?: string,
     // onClick?: any,
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps & React.InputHTMLAttributes<HTMLInputElement>>(
-    (props, ref) => {
+    ({className, children, ..._props}, ref) => {
         const theme = useTheme().name;
-        let { className, children, ...others } = props;
         className = classNameFind(s, `atom`, 'dup', theme, className);
-
-        return FormFieldHOC(<input ref={ref} className={className} {...others} />);
+        // if(_props.name==='household.size')console.log(_props.name)
+        const props = useFormField(_props);
+        
+        return <input ref={ref}  className={className} {...props} />;
     }
 );
 

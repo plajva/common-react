@@ -23,15 +23,17 @@ const Select = ({ className, children, ..._props }: SelectPropsF, ref) => {
 		<select
 			data-value={value || ""}
 			className={className}
+			value={value}
 			{...props}
 			ref={typeof ref === "object" && !Object.keys(ref).length ? null : ref}
 		>
 			<option></option>
 			{/* Making sure selected element is the one with selected attribute */}
-			{Children.map(
+			{/* {Children.map(
 				children,
 				(child) => isValidElement(child) && cloneElement(child, child.props.value === value ? { selected: true } : {})
-			)}
+			)} */}
+			{children}
 		</select>
 	);
 };

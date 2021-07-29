@@ -8,14 +8,14 @@ import s from "./Toggle.module.scss";
 export interface ToggleProps extends FieldCommon {}
 
 /**
- * ! Currently can only be used inside Field Component
+ * ! Currently can only be used inside Field Component, or label tag
  */
 const Toggle = forwardRef<HTMLInputElement, ToggleProps & React.InputHTMLAttributes<HTMLElement>>(
 	({ className, children, ..._props }, ref) => {
 		const theme = useTheme().name;
 		className = classFind(s, `input`, className, "dup", theme);
 
-		const props = useFormField(_props, {valueName:'checked'});
+		const props = useFormField({ valueName: "checked", ..._props });
 
 		return (
 			<>

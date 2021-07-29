@@ -28,8 +28,10 @@ export interface DrawerProps extends DrawerContextItems {
 	maxWidth?: any;
 	drawer: ReactNode;
 	fixed?: boolean;
+	floating?:boolean,
 	sticky?: boolean;
 	right?: boolean;
+	contentProps?:React.HTMLAttributes<HTMLDivElement>;
 }
 export const DrawerContext = React.createContext<DrawerContextItems>({ open: false });
 
@@ -67,9 +69,11 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 	open: _open,
 	setOpen: _setOpen,
 	animTime: _animTime,
+	floating,
 	fixed,
 	sticky,
 	maxWidth,
+	contentProps,
 	...props
 }) => {
 	// True if opening/open, False if closing/closed
@@ -90,53 +94,6 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 	const setContent = (o: DrawerContentData) => {
 		hookContentData.current = { ...hookContentData.current, ...o };
 	};
-
-	// useEffect(() => {
-	// 	const onEvent = (event: "open" | "closed" | "opening" | "closing") => {
-	// 		// console.log(event)
-	// 		switch (event) {
-	// 			case "open":
-	// 				// if (back.current) back.current.style.opacity = "1";
-	// 				// if (menu.current){
-	// 				// 	menu.current.style.animation = `${right ? s.right : s.left} ${animTime}s normal ease-out forwards`;
-
-	// 				// }
-
-	// 				break;
-	// 			case "closed":
-	// 				// if (back.current) back.current.style.opacity = "0";
-	// 				// if (menu.current) {
-	// 				// 	menu.current.style.animation = `${right ? s.right : s.left} ${animTime}s reverse ease-out forwards`;
-	// 				// 	// menu.current.style.opacity = "0";
-	// 				// }
-	// 				break;
-	// 			case "opening":
-	// 				// if (menu.current) menu.current.style.opacity = "1";
-	// 				break;
-	// 			case "closing":
-	// 				break;
-	// 		}
-	// 	};
-
-	// 	if (isOpen && open) onEvent("open");
-	// 	if (!isOpen && !open) onEvent("closed");
-	// 	if ((isOpen && !open) || (!isOpen && open)) {
-	// 		if (open) {
-	// 			onEvent("opening");
-	// 		} else {
-	// 			onEvent("closing");
-	// 		}
-	// 		isOpenTimer.current = setTimeout(() => {
-	// 			setIsOpen(open);
-	// 			clearTimeout(isOpenTimer.current);
-	// 			isOpenTimer.current = 0;
-	// 		}, animTime * 1000) as any as number;
-	// 	}
-	// 	return () => {
-	// 		clearTimeout(isOpenTimer.current);
-	// 		isOpenTimer.current = 0;
-	// 	};
-	// });
 
 	const mb_className = fixed
 		? "fixed"
@@ -172,7 +129,8 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 							className={classNameFind(
 								s,
 								"menu",
-								// `${right ? "menu-right" : "menu-left"}`,
+								`${right ? "menu-right" : "menu-left"}`,
+								floating?'floating':"",
 								mb_className
 							)}
 							ref={menu}
@@ -180,11 +138,11 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 								maxWidth: maxWidth,
 								...(open
 									? {
-											transform: `translateX(${!right ? "0" : "100%"})`,
+											transform: `translate(${!right ? "0" : "0"},${floating?'-50%':'0'})`,
 											opacity: 1,
 									  }
 									: {
-											transform: `translateX(${!right ? "-100%" : "0"})`,
+											transform: `translate(${!right ? "-100%" : "100%"},${floating?'-50%':'0'})`,
 											opacity: 0,
 									  }),
 								...mb_styles,
@@ -204,7 +162,7 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 						</div>
 					</>
 				}
-				<div className={classNameFind(s, `content`)}>{children}</div>
+				<div className={classNameFind(s, `content`)} {...contentProps}>{children}</div>
 			</div>
 			{/* </div> */}
 		</DrawerContext.Provider>

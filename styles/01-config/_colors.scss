@@ -32,6 +32,12 @@
     @if (is-color($color-text)) {
         @return $color-text;
     }
+    @if (not is-color($bg-color)){
+        $bg-color: get-color($bg-color)
+    }
+    @if (not is-color($bg-color)){
+        @error "#{$bg-color} is not a color name or a color?";
+    }
     // Mix the background with the elements background
     // to get an accurate redability value
     $background: get-color(background);

@@ -1,9 +1,11 @@
 @import "@styles/globals";
+@import "./atom_common";
 
-$transition: 0.3s;
-$size: .8em;
-$gutter: 0.12em;
-$padding: .5em;
+
+
+
+// * Some settings are in 'atom_common'
+
 
 .control {
 	transition: $transition;
@@ -25,10 +27,10 @@ $padding: .5em;
 	&:before{
 		width: $size;
 		height: $size;
-		border: 1px solid get-color(neutral);
+		border: $border-size solid get-color(neutral);
 	}
 	&:after {
-		background: get-color(primary);
+		background: get-color(neutral);
 		width: $size - $gutter * 2;
 		height: $size - $gutter * 2;
 		top:  $gutter + $padding;
@@ -42,28 +44,23 @@ $padding: .5em;
 	opacity: 1;
 }
 
-// @include use-theme using ($ts) {
-// 	// Theme Iterator
-// 	#{$ts}.input + .control {
-// 		// border: 2px solid get-color(neutral, -2, 0.8);
-// 		// background-color: get-color(neutral, 0, 0.7);
-// 		&::after {
-// 			background: get-color(neutral, if(is-dark(), 2, -2));
-// 		}
-// 	}
-// 	#{$ts}.input:checked + .control {
-// 		border-color: get-color(neutral, -3, 0.9);
-// 		background-color: get-color(primary, 0);
-// 	}
+@include use-theme using ($ts) {
+	// Theme Iterator
+	#{$ts}.input + .control {
+		&:before{
+			border: $border-size solid color-text(get-color(background));
+		}
+		&:after {
+			background: color-text(get-color(background));
+		}
+	}
 
-// 	@include use-color using ($cn, $c) {
-// 		// Color Iterator
-// 		#{$ts}.#{$cn}.input:checked + .control {
-// 			// border-color: get-color(neutral, -3, 0.9);
-// 			// background-color: get-color($cn, 0);
-// 			&::after {
-				
-// 			}
-// 		}
-// 	}
-// }
+	@include use-color using ($cn, $c) {
+		// Color Iterator
+		#{$ts}.#{$cn}.input:checked + .control {
+			&::after {
+				background: get-color($cn);
+			}
+		}
+	}
+}

@@ -18,9 +18,9 @@
     }
 
     font-size: 0.9em;
-    border-radius: get-space(5);
-    padding: get-space(5);
-    margin: get-space(4);
+    border-radius: get-space(4);
+    padding: get-space(4);
+    margin: get-space(3);
 
     // @include use-theme using ($ts){
     // 	// Theme Iterator

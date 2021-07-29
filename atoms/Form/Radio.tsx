@@ -20,7 +20,7 @@ export interface RadioProps extends FieldCommon, UseFormFieldProps {
 /**
  * onChange triggers when radio selected/deselected
  *
- * ! Currently can only be used inside Field Component
+ * ! Currently can only be used inside Field Component, or label tag
  */
 const Radio = forwardRef<HTMLInputElement, RadioProps & React.InputHTMLAttributes<HTMLElement>>(
 	({ className, checked, value:radioValue, children, ..._props }, ref) => {
@@ -28,7 +28,6 @@ const Radio = forwardRef<HTMLInputElement, RadioProps & React.InputHTMLAttribute
 		const theme = useTheme().name;
 		className = classFind(s, `input`, className, "dup", theme);
 		
-		// const form = useForm();
 		const { value: formValue,  ...props } = useFormField({ ..._props });
 		
 		const isChecked = setDefault(checked, typeof formValue !=='undefined'? formValue === radioValue : false);

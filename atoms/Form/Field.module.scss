@@ -1,63 +1,110 @@
-@import '@styles/_globals.scss';
+@use 'sass:color';
+@import "@styles/_globals.scss";
 
-$label-top-size: .7em;
+// @keyframes open{
+// 	from{max-height: 0;}
+// 	to{max-height: 100%;}
+// }
+
+$label-top-size: 0.7em;
 $label-size: 1em;
-$margin-top: $label-top-size + .2em;
+$padding-top: $label-top-size + 0.2em;
+$label-error-size: 0.6em;
+$padding-bottom: $label-error-size + .4 * $label-error-size;
 $line-height: 1.5;
-$padding: .2em;
+$padding: 0.2em;
 .comp {
 	display: inline-flex;
-	// overflow: hidden;
-	
-	.label-container{
+	position: relative;
+	flex: 1 1 250px;
+	text-align: left;
+	// box-sizing: content-box;
+
+	.label-container {
 		display: flex;
+		flex-wrap: nowrap;
 		align-items: center;
 		position: relative;
+		padding-bottom: $padding-bottom;
+		padding-top: $padding-top;
+		width: 100%;
+		// box-sizing: border-box;
 	}
-	.label{
-		transform: translate($padding, #{$margin-top + $padding});
-		opacity: .7;
-		line-height: $line-height;
-		transition: transform .4s;
-		transform-origin: top left;
+	.label-text,
+	.label-text-bottom {
+		line-height: 1;
+		transition: transform 0.4s;
 		position: absolute;
-		top:0;
-		left: 0;
-		// display: inline;
 		pointer-events: none;
+		box-sizing: border-box;
 	}
-	.label-persistent{
+	.label-text-bottom {
+		display: block;
+		padding: .2em;
+		width: 100%;
+		bottom: 0;
+		left: 0;
+		transform-origin: bottom left;
+		font-size: $label-error-size;
+	}
+	.label-text-bottom.error{
+		color: get-color(warn);
+	}
+	.label-text {
+		transform: translate($padding, #{$padding-top + $padding});
+		opacity: 0.7;
+		line-height: $line-height;
+		transform-origin: top left;
+		top: 0;
+		left: 0;
+	}
+	.label-text-persistent {
 		pointer-events: auto;
 		display: block;
 		// position: fixed;
 	}
 	// If value="jk" or defaultValue
-	.input[value]:not([value=""]) + .label,
-	.input[data-value]:not([data-value=""]) + .label,
-	.input[type="date"] + .label
-	{
-		transform: translate($padding - .05em ,0) scale(strip-unit($label-top-size / $label-size));
+	.input[value]:not([value=""]) + .label-text,
+	.input[data-value]:not([data-value=""]) + .label-text,
+	.input[type="date"] + .label-text {
+		transform: translate($padding - 0.05em, 0) scale(strip-unit($label-top-size / $label-size));
 		opacity: 1;
 	}
-	.input{
+	.input {
 		border-radius: 0;
 		// flex: 1 1 auto;
 		line-height: $line-height;
-		margin-top: $margin-top;
+		
+		// margin-bottom: $margin-bottom;
 		padding: $padding;
 		padding-inline: none;
 	}
-	&::after{
+	&::after {
 		content: "";
 		border-bottom: 1px solid get-color(neutral);
 	}
-	
-	// @include use-theme using ($ts){
-	// 	// Theme Iterator
-	//  &#{$ts}{}
-	// 	@include use-color using ($cn, $c){
-	// 		// Color Iterator
-	//		&#{$ts}.#{$cn}{}
-	// 	}
-	// }
+
+	@include use-theme using ($ts) {
+		// Theme Iterator
+
+		&#{$ts} {
+			.label-text-bottom.error {
+				@include background-color(warn, 0, true, 0.3);
+			}
+			.input{
+				&:focus-visible{
+					outline: 1px solid color-text(background);
+				}
+				@if(is-dark()){
+					outline: 1px solid color.change(color-text(background), $alpha: .3);
+				}
+				
+			}
+		}
+		// @include use-color using ($cn, $c) {
+		// 	// Color Iterator
+		// 	&#{$ts}.#{$cn} {
+		// 	}
+		// }
+	}
 }

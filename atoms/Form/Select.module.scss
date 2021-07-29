@@ -1,9 +1,10 @@
 @import '@styles/_globals.scss';
-
+@import "./atom_common";
 
 .comp {
 	// My definitions by default
-	
+	line-height: $line-height;
+	height: $height;
 	
 	// @include use-theme using ($ts){
 	// 	// Theme Iterator

@@ -1,4 +1,5 @@
 @import '@styles/_globals.scss';
+@import "./atom_common";
 
 .atom {
     // My definitions by default
@@ -6,8 +7,10 @@
     width: 100%;
     min-width: 30px;
     
-    padding: .3em;
-    line-height: 1.5;
+    padding: $padding;
+    line-height: $line-height;
+    
+    height: $height;
     &[type='range'] {
         padding: 0;
     }

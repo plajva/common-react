@@ -84,9 +84,9 @@ $padding: 0.2em;
     &::after {
         content: '';
         border-bottom: 1px solid get-color(neutral);
-    }    
-.field-select {
-        padding: (get-space(5) - 1px) get-space(4);
+    }
+    .field-select {
+        padding: get-space(5) get-space(4);
         background-position: calc(100% - 0.75rem) center !important;
         -moz-appearance: none !important;
         -webkit-appearance: none !important;

@@ -31,6 +31,7 @@ export interface FormContextI {
     getError: () => MyError;
     getTouched: (name: string) => any;
     getValid: () => any;
+    submit: () => void;
 }
 
 const FormContext = createContext<FormContextI>({
@@ -45,6 +46,7 @@ const FormContext = createContext<FormContextI>({
     getError: () => undefined,
     getTouched: () => {},
     getValid: () => undefined,
+    submit: () => {},
 });
 
 export const useForm = () => useContext(FormContext);
@@ -128,11 +130,12 @@ interface FormProps {
     initialState?: object;
     /**Accepts a schema from zod/yup */
     validationSchema?: any;
+    submit?: (v:any) => void;
     children?: ReactNode;
 }
 const isZod = (s: any): boolean => (s?.parse ? true : false);
 const isYup = (s: any): boolean => (s?.validate ? true : false);
-const Form = ({ initialState, validationSchema: schema, children, ...props }: FormProps) => {
+const Form = ({ initialState, validationSchema: schema, submit, children, ...props }: FormProps) => {
     const [state, setState] = useState<FormState>({
         values:
             (schema &&
@@ -143,7 +146,23 @@ const Form = ({ initialState, validationSchema: schema, children, ...props }: Fo
         // errors: {},
         touched: {},
     });
-    // console.log(state)
+    
+    const getValid = () => {
+        const values = state.values;
+            if (schema) {
+                try {
+                    return isZod(schema) ? schema.parse(values) : schema.validateSync(values, { abortEarly: false });
+                } catch (_error) {
+                    // Set touched to true so all errors are shown
+                    setState((state) => {
+                        return { ...state, touched: true };
+                    });
+                    return undefined;
+                }
+            } else {
+                return values;
+            }
+    }
 
     const context: FormContextI = {
         state: state,
@@ -235,22 +254,13 @@ const Form = ({ initialState, validationSchema: schema, children, ...props }: Fo
             if (state.touched === true) return true;
             return getForm(`touched.${name}`, state);
         },
-        getValid: () => {
-            const values = state.values;
-            if (schema) {
-                try {
-                    return isZod(schema) ? schema.parse(values) : schema.validateSync(values, { abortEarly: false });
-                } catch (_error) {
-                    // Set touched to true so all errors are shown
-                    setState((state) => {
-                        return { ...state, touched: true };
-                    });
-                    return undefined;
-                }
-            } else {
-                return values;
+        getValid,
+        submit: () => {
+            const valid = getValid();
+            if(valid && submit){
+                submit(valid);
             }
-        },
+        }
     };
     // console.log(state);
     return <FormContext.Provider value={context}>{children}</FormContext.Provider>;

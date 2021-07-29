@@ -2,8 +2,8 @@ import { useRef } from 'react';
 import ReactDay from 'react-day-picker/DayPickerInput';
 import MomentLocaleUtils from 'react-day-picker/moment';
 
-import { useTheme } from '@common/atoms/Theme';
-import { classNameFind } from '@common/utils';
+import { useTheme } from '../Theme';
+import { classNameFind } from '../../utils';
 
 import s from './InputDate.module.scss';
 

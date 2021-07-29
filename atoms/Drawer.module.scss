@@ -1,41 +1,7 @@
-@import '@styles/_globals.scss';
-
-@keyframes left_in {
-    from {
-        transform: translateX(-100%);
-    }
-    to {
-        transform: translateX(0);
-    }
-}
-@keyframes left_out {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(-100%);
-    }
-}
-@keyframes right_in {
-    from {
-        transform: translateX(100%);
-    }
-    to {
-        transform: translateX(0);
-    }
-}
-@keyframes right_out {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(100%);
-    }
-}
+@import '../styles/globals';
 
 .comp {
     // My definitions by default
-    text-align: center;
     position: relative;
     .back,
     .menu {
@@ -48,6 +14,10 @@
         &.fixed {
             position: fixed;
             max-height: 100%;
+        }
+        &.sticky {
+            position: sticky;
+            top: 0;
         }
     }
     .menu-right {

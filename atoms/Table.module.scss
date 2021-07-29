@@ -1,5 +1,5 @@
-@import '@styles/_globals.scss';
-@import '@styles/include-media';
+@import '../styles/globals';
+@import '../styles/include-media';
 
 @include media('<desktop') {
     .responsive {

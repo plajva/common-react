@@ -1,6 +1,6 @@
 @use 'sass:color';
-@import '@styles/_globals.scss';
-@import '@styles/include-media';
+@import '../../styles/globals';
+@import '../../styles/include-media';
 
 @include media('<tablet') {
     .comp {
@@ -63,7 +63,6 @@ $padding: 0.2em;
     .label-text-persistent {
         pointer-events: auto;
         display: block;
-        // position: fixed;
     }
     // If value="jk" or defaultValue
     .input[value]:not([value='']) + .label-text,
@@ -73,11 +72,7 @@ $padding: 0.2em;
         opacity: 1;
     }
     .input {
-        border-radius: 0;
-        // flex: 1 1 auto;
         line-height: $line-height;
-
-        // margin-bottom: $margin-bottom;
         padding: $padding;
         padding-inline: none;
     }

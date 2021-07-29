@@ -1,77 +1,57 @@
-@import '@styles/_globals.scss';
+@use 'sass:color';
+@import '../../styles/globals';
+@import './atom_common';
 
-.atom {
-    // My definitions by default
+$width: 3em;
+$height: $width/2;
+// * Some settings are in 'atom_common'
 
-    // @include use-theme using ($ts){
-    // 	// Theme Iterator
-    // 	@include use-color using ($cn, $c){
-    // 		// Color Iterator
-    // 	}
-    // }
-}
+.control {
+    transition: $transition;
+    width: $width;
+    height: $height;
+    box-sizing: content-box;
 
-// Tweak these to change the style of the toggle
-$toggle-background-color-on: dodgerblue;
-$toggle-background-color-off: darkgray;
-$toggle-control-color: #0000;
-$toggle-width: 100px;
-$toggle-height: 50px;
-$toggle-gutter: 5px;
-$toggle-radius: 50%;
-$toggle-control-speed: 0.15s;
-$toggle-control-ease: ease-in;
-
-// These are our computed variables
-// change at your own risk.
-$toggle-radius: $toggle-height / 2;
-$toggle-control-size: $toggle-height - ($toggle-gutter * 2);
-
-.toggle {
-    display: block;
+    border-radius: $height;
     position: relative;
-    padding-left: $toggle-width;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 22px;
-    user-select: none;
-
-    input {
+    &:after {
+        box-sizing: border-box;
+        transition: $transition;
+        content: '';
+        width: $width/2 - $gutter * 2;
+        height: $height - $gutter * 2;
+        display: block;
+        border-radius: 50%;
         position: absolute;
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
+        top: 0 + $gutter;
+        left: 0.1em + $gutter;
     }
+}
 
-    input:checked ~ .control {
-        background-color: $toggle-background-color-on;
+.input:checked + .control:after {
+    left: $width/2 + $gutter;
+}
 
-        &:after {
-            left: $toggle-width - $toggle-control-size - $toggle-gutter;
+@include use-theme using ($ts) {
+    // Theme Iterator
+    #{$ts}.input + .control {
+        border: 2px solid get-color(neutral, -2, 0.8);
+        background-color: get-color(neutral, 0, 0.7);
+        &::after {
+            background: get-color(neutral, if(is-dark(), 2, -2));
         }
     }
+    #{$ts}.input:checked + .control {
+        border-color: get-color(neutral, -3, 0.9);
+        background-color: get-color(primary, 0);
+    }
 
-    .control {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: $toggle-height;
-        width: $toggle-width;
-        border-radius: $toggle-radius;
-        background-color: $toggle-background-color-off;
-        transition: background-color $toggle-control-speed $toggle-control-ease;
-
-        &:after {
-            content: '';
-            position: absolute;
-            left: $toggle-gutter;
-            top: $toggle-gutter;
-            width: $toggle-control-size;
-            height: $toggle-control-size;
-            border-radius: $toggle-radius;
-            background: $toggle-control-color;
-            transition: left $toggle-control-speed $toggle-control-ease;
+    @include use-color using ($cn, $c) {
+        // Color Iterator
+        #{$ts}.#{$cn}.input:checked + .control {
+            border-color: get-color(neutral, -3, 0.9);
+            background-color: get-color($cn, 0);
         }
     }
 }
+// }

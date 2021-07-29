@@ -1,15 +1,21 @@
-@import '@styles/_globals.scss';
+@import '../../styles/globals';
+@import './atom_common';
 
 .atom {
     // My definitions by default
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 30px;
 
-    padding: get-space(4);
-    line-height: 2;
+    padding: $padding;
+    line-height: $line-height;
+
+    height: $height;
     &[type='range'] {
         padding: 0;
     }
-    max-width: 100%;
-    max-height: 100%;
+    // max-width: 100%;
+    // max-height: 100%;
 
     // You can define theme based classes in this loop
     // This will loop through all themes

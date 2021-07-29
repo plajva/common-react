@@ -3,16 +3,6 @@
 .comp {
     // My definitions by default
 
-    .collapsible {
-        cursor: pointer;
-    }
-    .content {
-        // box-sizing: content-box;
-        // padding: 0 get-space(3);
-        overflow: hidden;
-        transition: max-height 0.2s ease-out;
-    }
-
     // @include use-theme using ($ts){
     // 	// Theme Iterator
     //  &#{$ts}{}

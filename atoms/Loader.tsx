@@ -1,4 +1,4 @@
-import Backdrop from '@common/atoms/Backdrop';
+import Backdrop from '../atoms/Backdrop';
 import LoaderReact from 'react-loader-spinner';
 
 export interface LoaderOption {

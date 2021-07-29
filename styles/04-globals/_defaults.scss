@@ -1,4 +1,5 @@
 @use 'sass:color';
+@use 'sass:math';
 @import '../globals';
 
 @if $debug {
@@ -11,12 +12,15 @@
 
 $m: null;
 $sindex: 0;
-// Repeats the index
-@mixin repeat_index($name) {
+// Either
+@function append-media($name) {
+    @return if($m, #{$name}-#{$m}, $name);
+}
+// Repeats the spaces
+@mixin repeat_space($name) {
     $sindex: 0;
     @each $space in get-theme-field(spaces) {
-        $n: #{$name}-#{$sindex};
-        $n: if($m, #{$n}-#{$m}, $n);
+        $n: append-media(#{$name}-#{$sindex});
 
         #{$n} {
             @content ($space);
@@ -34,71 +38,80 @@ $sindex: 0;
 }
 
 @mixin repeat_class {
-    @include repeat_index('.margin') using ($space) {
-        margin: $space !important;
+    // *** Margin
+    @include repeat_space('.margin') using ($space) {
+        margin: $space;
     }
-    @include repeat_index('.margin-h') using ($space) {
-        margin-right: $space !important;
-        margin-left: $space !important;
+    @include repeat_space('.margin-h') using ($space) {
+        margin-right: $space;
+        margin-left: $space;
     }
-    @include repeat_index('.margin-v') using ($space) {
-        margin-top: $space !important;
-        margin-bottom: $space !important;
+    @include repeat_space('.margin-v') using ($space) {
+        margin-top: $space;
+        margin-bottom: $space;
     }
-    @include repeat_index('.margin-top') using ($space) {
-        margin-top: $space !important;
+    @include repeat_space('.margin-top') using ($space) {
+        margin-top: $space;
     }
-    @include repeat_index('.margin-bottom') using ($space) {
-        margin-bottom: $space !important;
+    @include repeat_space('.margin-bottom') using ($space) {
+        margin-bottom: $space;
     }
-    @include repeat_index('.margin-left') using ($space) {
-        margin-left: $space !important;
+    @include repeat_space('.margin-left') using ($space) {
+        margin-left: $space;
     }
-    @include repeat_index('.margin-right') using ($space) {
-        margin-right: $space !important;
+    @include repeat_space('.margin-right') using ($space) {
+        margin-right: $space;
     }
+    // --- Margin
 
-    @include repeat_index('.padding') using ($space) {
-        padding: $space !important;
+    // *** Padding
+    @include repeat_space('.padding') using ($space) {
+        padding: $space;
     }
-    @include repeat_index('.padding-h') using ($space) {
-        padding-left: $space !important;
-        padding-right: $space !important;
+    @include repeat_space('.padding-h') using ($space) {
+        padding-left: $space;
+        padding-right: $space;
     }
+    @include repeat_space('.padding-v') using ($space) {
+        padding-top: $space;
+        padding-bottom: $space;
+    }
+    @include repeat_space('.padding-top') using ($space) {
+        padding-top: $space;
+    }
+    @include repeat_space('.padding-bottom') using ($space) {
+        padding-bottom: $space;
+    }
+    @include repeat_space('.padding-left') using ($space) {
+        padding-left: $space;
+    }
+    @include repeat_space('.padding-right') using ($space) {
+        padding-right: $space;
+    }
+    // --- Padding
 
-    @include repeat_index('.padding-v') using ($space) {
-        padding-top: $space !important;
-        padding-bottom: $space !important;
+    // *** Border Radius
+    @include repeat_space('.border-radius-top') using ($space) {
+        border-top-right-radius: $space;
+        border-top-left-radius: $space;
     }
-    @include repeat_index('.padding-top') using ($space) {
-        padding-top: $space !important;
+    @include repeat_space('.border-radius-top-right') using ($space) {
+        border-top-right-radius: $space;
+        // border-top-left-radius: $space;
     }
-    @include repeat_index('.padding-bottom') using ($space) {
-        padding-bottom: $space !important;
+    @include repeat_space('.border-radius-right') using ($space) {
+        border-top-right-radius: $space;
+        border-bottom-right-radius: $space;
     }
-    @include repeat_index('.padding-left') using ($space) {
-        padding-left: $space !important;
+    @include repeat_space('.border-radius-bottom') using ($space) {
+        border-bottom-left-radius: $space;
+        border-bottom-right-radius: $space;
     }
-    @include repeat_index('.padding-right') using ($space) {
-        padding-right: $space !important;
+    @include repeat_space('.border-radius-left') using ($space) {
+        border-top-left-radius: $space;
+        border-bottom-left-radius: $space;
     }
-
-    @include repeat_index('.border-radius-top') using ($space) {
-        border-top-right-radius: $space !important;
-        border-top-left-radius: $space !important;
-    }
-    @include repeat_index('.border-radius-right') using ($space) {
-        border-top-right-radius: $space !important;
-        border-bottom-right-radius: $space !important;
-    }
-    @include repeat_index('.border-radius-bottom') using ($space) {
-        border-bottom-left-radius: $space !important;
-        border-bottom-right-radius: $space !important;
-    }
-    @include repeat_index('.border-radius-left') using ($space) {
-        border-top-left-radius: $space !important;
-        border-bottom-left-radius: $space !important;
-    }
+    // --- Border Radius
 
     // Define the columns
     @for $i from 0 through 12 {
@@ -107,12 +120,13 @@ $sindex: 0;
 
         #{$n} {
             float: left;
-            width: 100% / 12 * $i;
+            width: math.div(100%, 12) * $i;
         }
     }
 
     @if ($m == null) {
-        @include repeat_index('.border-radius') using ($space) {
+        // For all slectors that use $space but don't need media changes
+        @include repeat_space('.border-radius') using ($space) {
             border-radius: $space;
         }
     }
@@ -141,6 +155,12 @@ $sindex: 0;
 }
 
 @include use-theme-with-default using ($ts) {
+    #{$ts}.shadow {
+        box-shadow: 0 0 10px 0 #{color.change(invert(get-color(background)), $alpha: 0.2)};
+    }
+    #{$ts}.shadow-small {
+        box-shadow: 0 0 7px 0 #{color.change(invert(get-color(background)), $alpha: 0.15)};
+    }
     @include use-color using ($cn, $c) {
         #{$ts}.#{$cn} {
             color: get-color($cn);
@@ -165,20 +185,20 @@ $sindex: 0;
 
         $bc: get-color($cn, $alpha: 0.7);
         // WIll set background and text
-        #{$ts} .#{$cn}-background {
+        #{$ts}.#{$cn}-background {
             @include background-color($bc);
         }
         @for $i from 1 through 10 {
-            #{$ts} .#{$cn}-background-#{$i} {
-                @include background-color(get-color($cn, $alpha: ($i/10)));
+            #{$ts}.#{$cn}-background-#{$i} {
+                @include background-color(get-color($cn, $alpha: math.div($i, 10)));
             }
         }
         // WIll set background and text, also for hover and active
-        #{$ts} .#{$cn}-background-active {
+        #{$ts}.#{$cn}-background-active {
             @include backgound-active-color($bc);
         }
         // WIll set background and text, also for hover and active, but will also set text color
-        #{$ts} .#{$cn}-background-active-text {
+        #{$ts}.#{$cn}-background-active-text {
             @include backgound-active-color($bc, $color-text: true);
         }
     }
@@ -188,7 +208,12 @@ $sindex: 0;
         font-size: get-font-size(html);
         // line-height: 1.5em;
         min-height: 100vh;
+        // overflow: hidden;
         @include background-color(background);
-        // box-sizing: border-box;
+        // To make styling of themes more effective
+        .root-background-color,
+        option {
+            @include background-color(background);
+        }
     }
 }

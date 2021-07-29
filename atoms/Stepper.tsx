@@ -1,6 +1,7 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind, setDefault } from '@common/utils';
+import { useTheme } from './Theme';
+import { classNameFind, setDefault } from '../utils';
 import React, { FunctionComponent, ReactNode, useEffect, useRef, useState } from 'react';
+import { useStateCombine } from '../utils_react';
 import Button from './Button';
 import Divider from './Divider';
 import s from './Stepper.module.scss';
@@ -17,9 +18,10 @@ import s from './Stepper.module.scss';
  */
 
 export interface StepperProps {
-    step?: number;
+    step?: number | string;
     setStep?: any;
     showSteps?: boolean;
+    steps: { header?: string; value: ReactNode }[];
     /** Animaiton time, in seconds */
     animTime?: number;
 }
@@ -32,35 +34,42 @@ export interface StepperProps {
  * @param props
  */
 const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElement>> = (props) => {
-    const [_step, _setStep] = useState(props.step ? props.step : 0);
-    // const [height, setHeight] = useState(0);
+    const stepToNumber = (step?: number | string) => {
+        return typeof step === 'string' ? props.steps.findIndex((s) => s.header === step) : step;
+    };
+
+    let { className, step: _step, setStep: _setStep, steps, showSteps: _showSteps, animTime, ...others } = props;
+    // This is the wanted step
+    const [stepWanted, setStepWanted] = useStateCombine(0, stepToNumber(_step), _setStep);
+    // This is the step cache, doesn't change until animation is done
+    const [stepLast, setStepLast] = useState<number>(stepToNumber(_step) || 0);
+
     const scrollerRef = useRef<HTMLDivElement>(null);
     const section = useRef<HTMLElement | null>(null);
     const lastHeight = useRef<number | undefined>(undefined);
+
     const theme = useTheme().name;
-    let { className, step, setStep, showSteps: _showSteps, animTime, ...others } = props;
     const showSteps = setDefault(_showSteps, true);
     className = classNameFind(s, `atom`, 'dup', theme, className);
     const scrollerClass = classNameFind(s, `scroller`, 'dup');
-    const nextStep = step ? step : 0;
-    animTime = animTime || animTime === 0 ? animTime : 1;
+    animTime = setDefault(animTime, 1);
 
     // Effects run after Render of the component
     // If nextStep != step, mount nextStep
     useEffect(() => {
         // The timeout to remove from DOM
-        if (nextStep === _step) return; // Prevent calling timeout
+        if (stepWanted === stepLast) return; // Prevent calling timeout
 
         let tid = 0;
         if (animTime) {
-            tid = (setTimeout(() => {
-                _setStep(nextStep);
-            }, (animTime || 1) * 1000) as any) as number;
-        } else _setStep(nextStep);
+            tid = setTimeout(() => {
+                setStepLast(stepWanted);
+            }, (animTime || 1) * 1000) as any as number;
+        } else setStepLast(stepWanted);
 
         const handleResize = () => {
             // console.log(`Handled resize ${section?.current}`)
-            if (_step === nextStep) {
+            if (stepLast === stepWanted) {
                 setHeight(0);
             } else if (section.current) {
                 setHeight(section.current.scrollHeight);
@@ -76,7 +85,7 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
             if (tid) clearTimeout(tid);
             window.removeEventListener('resize', handleResize);
         };
-    }, [animTime, nextStep, _step]);
+    }, [animTime, stepWanted, stepLast]);
 
     // Sets scroller height
     const setHeight = (height: number) => {
@@ -88,11 +97,6 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
         }
     };
 
-    // useLayoutEffect(() => {
-    // 	return () => {
-    // 	};
-    // })
-
     const nextRefCallback = (ref: HTMLElement) => {
         // console.log(`Ref called: ${ref?.offsetHeight}`);
         if (ref) {
@@ -101,16 +105,20 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
     };
 
     // console.log(props.children);
-    let children = React.Children.toArray(props.children);
-    let render_array = children.reduce<ReactNode[]>((arr, child, i) => {
-        let right = nextStep > _step;
+    // let children =
+    //     // React.Children.toArray(props.children)
+    //     props.steps;
+    let render_array = steps.reduce<ReactNode[]>((arr, step, i) => {
+        let child = step.value;
+        let right = stepWanted > stepLast;
         let dirAndTiming = right ? 'normal ease-out' : 'reverse ease-in';
-        let done = _step === nextStep;
+        let done = stepLast === stepWanted;
         let out_anim = done ? '' : `${s.out} ${animTime}s ${dirAndTiming} forwards`,
             in_anim = done ? '' : `${s.in} ${animTime}s ${dirAndTiming} forwards `;
-        if (i === nextStep || i === _step) {
+
+        if (i === stepWanted || i === stepLast) {
             if (React.isValidElement(child)) {
-                if (nextStep === _step) {
+                if (stepWanted === stepLast) {
                     arr.push(
                         React.cloneElement(child, {
                             ref: nextRefCallback,
@@ -120,7 +128,7 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
                     );
                     return arr;
                 }
-                if (i === nextStep)
+                if (i === stepWanted)
                     arr.push(
                         React.cloneElement(child, {
                             style: {
@@ -146,27 +154,16 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
                 }
             }
         }
-        // else{
-        // 	if (React.isValidElement(child))arr.push(React.cloneElement(child, { style: {display:'none'}}))
-        // }
         return arr;
     }, []);
 
-    const steps = children.reduce<ReactNode[]>((arr, child, i) => {
-        arr.push((React.isValidElement(child) && child.props.step) || i + 1);
+    const stepsShow = steps.reduce<ReactNode[]>((arr, child, i) => {
+        arr.push(child.header || i + 1);
         return arr;
     }, []);
-
-    // if ( !child){
-    // 	arr.push(<>
-    // 		Step {step}<br />
-    // 		<Button onClick={() => { setStep(step - 1)}}>Previous</Button>
-    // 		<Button onClick={() => { setStep(step + 1)}}>Next</Button>
-    // 	</>)
-    // }
 
     // Updating to last height when transitioning, so there's no jump in scrolling
-    if (_step != nextStep) {
+    if (stepLast !== stepWanted) {
         if (lastHeight.current) setHeight(lastHeight.current);
     } else {
         setHeight(0);
@@ -177,14 +174,14 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
             <table></table>
             {(showSteps && (
                 <div className={classNameFind(s, `stepper`)}>
-                    {steps.reduce<ReactNode[]>((a, stepNode, i) => {
+                    {stepsShow.reduce<ReactNode[]>((a, stepNode, i) => {
                         a.push(
                             <div className={classNameFind(s, `item`)} key={i}>
                                 <Button
                                     ripple_type='center'
-                                    className={`circular ${step === i && 'primary-background'}`}
+                                    className={`circular ${stepWanted === i && 'primary-background'}`}
                                     onClick={() => {
-                                        if (setStep) setStep(i);
+                                        if (setStepWanted) setStepWanted(i);
                                     }}
                                 >
                                     {stepNode}

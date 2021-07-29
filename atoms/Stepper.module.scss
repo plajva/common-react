@@ -1,5 +1,5 @@
-@import '@styles/_globals.scss';
-@import '@styles/include-media';
+@import '../styles/globals';
+@import '../styles/include-media';
 
 @keyframes out {
     from {
@@ -37,6 +37,9 @@
     display: flex;
     align-items: center;
     flex-flow: row nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+
     .item {
         flex: 0 1 auto;
     }

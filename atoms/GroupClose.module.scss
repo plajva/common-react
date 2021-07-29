@@ -1,4 +1,4 @@
-@import '@styles/_globals.scss';
+@import '../styles/globals';
 
 .atom {
     // My definitions by default
@@ -7,13 +7,12 @@
     flex-flow: row nowrap;
     justify-content: center;
     align-items: stretch;
-    // height: max-content;
 
     & > * {
-        flex: 1 1 auto;
+        // flex: 1 1 auto;
         // height: 100%;
         // box-sizing: border-box;
-        margin: 0;
+        margin-inline: 0;
         border-right: 0;
         &:not(:first-child) {
             border-left: 0 !important;

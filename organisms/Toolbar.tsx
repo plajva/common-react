@@ -1,9 +1,7 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind } from '@common/utils';
-import React, { FunctionComponent, ReactNode } from 'react';
+import { useTheme } from '../atoms/Theme';
+import { classNameFind } from '../utils';
+import { ReactElement, ReactNode } from 'react';
 import s from './Toolbar.module.scss';
-
-// We want to -> have a chosen theme variable
 
 export interface ToolbarProps {
     left?: ReactNode;
@@ -11,15 +9,7 @@ export interface ToolbarProps {
     right?: ReactNode;
 }
 
-// const Link: FunctionComponent<LinkProps> = (props) => {
-// 	return (
-// 		// <div>
-// 			<Link to={props.to}>{props.children}</Link>
-// 		// {/* </div> */}
-// 	)
-// }
-
-const Toolbar: FunctionComponent<ToolbarProps> = ({ left, middle, right, ...props }) => {
+const Toolbar: (props: ToolbarProps) => ReactElement = ({ left, middle, right, ...props }) => {
     const theme = useTheme().name;
     // let {className,...others} = props;
     let className = classNameFind(s, theme, `toolbar`);
@@ -27,11 +17,10 @@ const Toolbar: FunctionComponent<ToolbarProps> = ({ left, middle, right, ...prop
     return (
         <div className={className}>
             {left}
-            <div style={{ flexGrow: 4 }}></div>
+            <div style={{ flex: '4 1 auto' }}></div>
             {middle}
-            <div style={{ flexGrow: 4 }}></div>
+            <div style={{ flex: '4 1 auto' }}></div>
             {right}
-            {props.children}
         </div>
     );
 };

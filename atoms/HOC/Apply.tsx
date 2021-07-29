@@ -1,16 +1,17 @@
-import { useTheme } from '@catoms/Theme';
+import { useTheme } from '../Theme';
 import React, { FunctionComponent, ReactElement } from 'react';
 
 export interface ApplyProps {
     to?: any;
     /** If depth_max=-1, will affect all underneath, if depth_max=0, will only affect directly underneath, and so on.. */
     depth_max?: number;
+    [key: string]: any;
 }
 
 /**
  * Clones all elements in children while merging props
  * @param to: Which component type to apply the changes to.
- * @param depth_max: Max depth of modifier, -1 means all, 0 means direct children.
+ * @param depth_max: Max depth of modifier, -1 means all, 0 (default) means direct children.
  */
 const Apply: FunctionComponent<ApplyProps & React.HTMLAttributes<HTMLDivElement>> = ({
     children,

@@ -1,11 +1,18 @@
-import React, { ReactNode, SetStateAction, useState } from 'react';
-import { deepMerge, RecursivePartial } from './utils';
+import React, { ReactNode, useState } from 'react';
+import { combineEvent, deepMerge, RecursivePartial } from './utils';
 
+const getValidState = (ownState, upState) => {
+    return typeof ownState === 'object'
+        ? deepMerge(ownState, upState)
+        : typeof upState !== 'undefined'
+        ? upState
+        : ownState;
+};
 /**
  * Combine incoming state into new state.
  * This helper function takes in incoming state from
  * component props and tries to handle upwards state change
- * by modifyfing setState to set both local and upwards setState
+ * by modifyfing setState to upState if valid, or ownState
  * @param defaultState The default state if no incoming state
  */
 export const useStateCombine = <T>(
@@ -14,16 +21,8 @@ export const useStateCombine = <T>(
     upSetState?: React.Dispatch<React.SetStateAction<T>>
 ): [T, React.Dispatch<React.SetStateAction<T>>] => {
     // If state is object then deep merge object, else then either take upState or default state
-    let [s, ss] = useState(
-        typeof defaultState === 'object' ? deepMerge(defaultState, upState) : upState ? upState : defaultState
-    );
-    // Call both setState functions
-    if (upSetState)
-        ss = (v: SetStateAction<T>) => {
-            ss(v);
-            upSetState(v);
-        };
-    return [s, ss];
+    let [s, ss] = useState(getValidState(defaultState, upState));
+    return [getValidState(s, upState), combineEvent(upSetState, upState ? undefined : ss)];
 };
 
 // Like useState but will merge when setState called, if u need to use object states in function components

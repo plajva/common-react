@@ -25,9 +25,9 @@ $theme-current: $theme-default;
 $themes: (
     default: (
         colors: (
-            primary: #0085b0,
-            secondary: #97b62f,
-            warn: rgb(172, 34, 34),
+            primary: #4adb7a,
+            secondary: #3fc2c7,
+            warn: rgb(190, 29, 29),
             background: #f8f8f8,
             menu: #004961,
             separator: rgba(#000, 0.2),
@@ -49,8 +49,8 @@ $themes: (
             default: 0.8,
         ),
         spaces: (
-            0px,
-            4px,
+            0em,
+            0.3em,
         ),
         font-sizes: (
             0.7em,

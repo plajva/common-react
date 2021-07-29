@@ -1,5 +1,5 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind, separateChildren, setDefault, useStateCombine } from '@common/utils';
+import { useTheme } from './Theme';
+import { classNameFind, separateChildren, setDefault, useStateCombine } from '../utils';
 import React, { FunctionComponent, MouseEvent, useRef } from 'react';
 import s from './Collapsible.module.scss';
 

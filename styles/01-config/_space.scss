@@ -5,7 +5,7 @@
     $spaces: get-theme-field(spaces);
     // Converts it to a set space if valid
     @if (is-number($name) and unitless($name) and $name < list.length($spaces)) {
-        @return get-space(list.nth($spaces, $name));
+        @return get-space(list.nth($spaces, $name + 1));
     }
     @return $name;
 }

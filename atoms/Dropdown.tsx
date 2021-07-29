@@ -1,5 +1,5 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind, separateChildren, setDefault } from '@common/utils';
+import { useTheme } from './Theme';
+import { classNameFind, separateChildren, setDefault } from '../utils';
 import React, { FunctionComponent, useState } from 'react';
 import s from './Dropdown.module.scss';
 

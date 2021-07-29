@@ -1,5 +1,5 @@
-// import { useTheme } from '@catoms/Theme';
-import { combineEvent } from '@common/utils';
+// import { useTheme } from './Theme';
+import { combineEvent } from '../../utils';
 import React, { ComponentType, FunctionComponent, MouseEvent } from 'react';
 import s from './Ripple.module.scss';
 

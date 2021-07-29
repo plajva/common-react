@@ -1,5 +1,5 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind } from '@common/utils';
+import { useTheme } from './Theme';
+import { classNameFind } from '../utils';
 import React, { FunctionComponent } from 'react';
 import s from './Button.module.scss';
 import Ripple from './HOC/Ripple';

@@ -1,5 +1,5 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind, setDefault } from '@common/utils';
+import { useTheme } from './Theme';
+import { classNameFind, setDefault } from '../utils';
 import React, { FunctionComponent, ReactNode, useEffect, useRef, useState } from 'react';
 import { useStateCombine } from '../utils_react';
 import Button from './Button';

@@ -1,6 +1,6 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind as classFind } from '@common/utils';
 import React, { forwardRef } from 'react';
+import { classNameFind as classFind } from '../../utils';
+import { useTheme } from '../Theme';
 import s from './Checkbox.module.scss';
 import { FieldCommon } from './Field';
 import { useFormField } from './Form';

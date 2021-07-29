@@ -1,4 +1,4 @@
-import { toUpperCaseFirst } from 'src/common/utils';
+import { toUpperCaseFirst } from '../../utils';
 import { FieldProps } from './Field';
 import { UseFormFieldOptions } from './Form';
 

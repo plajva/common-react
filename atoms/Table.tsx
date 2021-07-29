@@ -1,7 +1,7 @@
-import { useTheme } from '@catoms/Theme';
-import Button from '@common/atoms/Button';
-import Icon from '@common/atoms/Icon';
-import { classNameFind } from '@common/utils';
+import { useTheme } from './Theme';
+import Button from '../atoms/Button';
+import Icon from '../atoms/Icon';
+import { classNameFind } from '../utils';
 import React, { FunctionComponent, useEffect } from 'react';
 import { FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { Cell, Column, ColumnInstance, HeaderGroup, Row, usePagination, useTable } from 'react-table';

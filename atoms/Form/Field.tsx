@@ -1,7 +1,7 @@
 // This will create the basic state handlers for input elements
 import { Property } from 'csstype';
 import React, { createElement, ReactNode } from 'react';
-import { classNameFind } from 'src/common/utils';
+import { classNameFind } from '../../utils';
 import { useTheme } from '../Theme';
 import Checkbox, { CheckboxProps } from './Checkbox';
 import s from './Field.module.scss';
@@ -11,7 +11,7 @@ import {
     useFieldError,
     useFieldValue,
     UseFormFieldOptions,
-    useFormNameContextCombine,
+    useFormNameContextCombine
 } from './Form';
 import Input from './Input';
 import Radio, { RadioProps } from './Radio';

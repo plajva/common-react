@@ -1,4 +1,4 @@
-import { useTheme } from '@catoms/Theme';
+import { useTheme } from '../Theme';
 import React, { FunctionComponent, ReactElement } from 'react';
 
 export interface ApplyProps {

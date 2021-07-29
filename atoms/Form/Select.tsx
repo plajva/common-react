@@ -1,5 +1,5 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind as classFind } from '@common/utils';
+import { useTheme } from '../Theme';
+import { classNameFind as classFind } from '../../utils';
 import React, { forwardRef, ReactNode } from 'react';
 import { useFormField, UseFormFieldProps } from './Form';
 import s from './Select.module.scss';

@@ -1,45 +1,45 @@
-@import "@styles/globals";
+@import '../styles/globals';
 
 $height: 72px;
 $space: get-space(4);
 
 .toolbar {
-	height: $height;
-	display: flex;
-	flex-flow: row nowrap;
-	align-content: center;
-	align-items: center;
-	justify-content: flex-start;
-	box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.3);
-	position: sticky;
-	top: 0;
-	padding: $space;
-	gap: $space;
-	z-index: 10;
+    height: $height;
+    display: flex;
+    flex-flow: row nowrap;
+    align-content: center;
+    align-items: center;
+    justify-content: flex-start;
+    box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    padding: $space;
+    gap: $space;
+    z-index: 10;
 
-	& > * {
-		flex: 0 0 auto;
-	}
+    & > * {
+        flex: 0 0 auto;
+    }
 
-	& img {
-		max-height: $height;
-		// background: radial-gradient(closest-side, rgba(0, 0, 0, 0.3), transparent);
-	}
+    & img {
+        max-height: $height;
+        // background: radial-gradient(closest-side, rgba(0, 0, 0, 0.3), transparent);
+    }
 
-	@include use-theme using ($ts) {
-		$background: get-color(primary, -3);
+    @include use-theme using ($ts) {
+        $background: get-color(primary, -3);
 
-		&#{$ts} {
-			@include background-color($background);
-			// color: color-text($background);
-			// background: rgba(get-color($background, -1), 1);
-			
-			@supports (backdrop-filter: blur(10px)) {
-				& {
-					background: rgba(get-color($background, -1), if(is-dark(), 0.8, 0.7));
-					backdrop-filter: blur(10px);
-				}
-			}
-		}
-	}
+        &#{$ts} {
+            @include background-color($background);
+            // color: color-text($background);
+            // background: rgba(get-color($background, -1), 1);
+
+            @supports (backdrop-filter: blur(10px)) {
+                & {
+                    background: rgba(get-color($background, -1), if(is-dark(), 0.8, 0.7));
+                    backdrop-filter: blur(10px);
+                }
+            }
+        }
+    }
 }

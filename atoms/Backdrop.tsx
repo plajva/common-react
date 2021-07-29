@@ -1,5 +1,5 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind } from '@common/utils';
+import { useTheme } from './Theme';
+import { classNameFind } from '../utils';
 import { forwardRef, PropsWithChildren } from 'react';
 import s from './Backdrop.module.scss';
 

@@ -1,5 +1,5 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind } from '@common/utils';
+import { useTheme } from '../Theme';
+import { classNameFind } from '../../utils';
 import React from 'react';
 import { FieldCommon } from './Field';
 import { useFormField } from './Form';

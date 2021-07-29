@@ -1,5 +1,5 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind } from '@common/utils';
+import { useTheme } from './Theme';
+import { classNameFind } from '../utils';
 // import FocusTrap from 'focus-trap-react';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import Backdrop from './Backdrop';

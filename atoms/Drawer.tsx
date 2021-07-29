@@ -1,5 +1,5 @@
-import { useTheme } from '@catoms/Theme';
-import { classNameFind, combineEvent, setDefault, useStateCombine } from '@common/utils';
+import { useTheme } from './Theme';
+import { classNameFind, combineEvent, setDefault, useStateCombine } from '../utils';
 import React, { MouseEvent, ReactElement, ReactNode, useContext, useRef, useState } from 'react';
 import s from './Drawer.module.scss';
 

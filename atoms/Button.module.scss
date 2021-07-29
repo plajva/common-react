@@ -12,7 +12,7 @@
     &:hover {
         background: get-color(neutral, $alpha: 0.1);
     }
-    &:focus-visible{
+    &:focus-visible {
         outline: 1px solid color-text(background);
     }
 
@@ -52,7 +52,7 @@
                 // @include background-color(get-color(neutral, $alpha: 0.1));
                 background: get-color(neutral, $alpha: 0.13);
             }
-            &:focus-visible{
+            &:focus-visible {
                 outline: 1px solid color-text(background);
             }
         }

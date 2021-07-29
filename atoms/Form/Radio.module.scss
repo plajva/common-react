@@ -1,66 +1,63 @@
-@import "@styles/globals";
-@import "./atom_common";
-
-
-
+@import '@styles/globals';
+@import './atom_common';
 
 // * Some settings are in 'atom_common'
 
-
 .control {
-	transition: $transition;
-	width: $size;
-	height: $size;
-	box-sizing: content-box;
-	border-radius: $size;
-	padding: $padding;
+    transition: $transition;
+    width: $size;
+    height: $size;
+    box-sizing: content-box;
+    border-radius: $size;
+    padding: $padding;
 
-	position: relative;
-	&:before,&:after{
-		display: block;
-		box-sizing: border-box;
-		transition: $transition;
-		border-radius: 50%;
-		position: absolute;
-		content: "";
-	}
-	&:before{
-		width: $size;
-		height: $size;
-		border: $border-size solid get-color(neutral);
-	}
-	&:after {
-		background: get-color(neutral);
-		width: $size - $gutter * 2;
-		height: $size - $gutter * 2;
-		top:  $gutter + $padding;
-		left: $gutter + $padding;
+    position: relative;
+    &:before,
+    &:after {
+        display: block;
+        box-sizing: border-box;
+        transition: $transition;
+        border-radius: 50%;
+        position: absolute;
+        content: '';
+    }
+    &:before {
+        width: $size;
+        height: $size;
+        border: $border-size solid get-color(neutral);
+    }
+    &:after {
+        background: get-color(neutral);
+        width: $size - $gutter * 2;
+        height: $size - $gutter * 2;
+        top: $gutter + $padding;
+        left: $gutter + $padding;
 
-		opacity: 0;
-	}
+        opacity: 0;
+    }
 }
 
 .input:checked + .control:after {
-	opacity: 1;
+    opacity: 1;
 }
 
 @include use-theme using ($ts) {
-	// Theme Iterator
-	#{$ts}.input + .control {
-		&:before{
-			border: $border-size solid color-text(get-color(background));
-		}
-		&:after {
-			background: color-text(get-color(background));
-		}
-	}
+    // Theme Iterator
+    #{$ts}.input + .control {
+        &:before {
+            border: $border-size solid color-text(get-color(background));
+        }
+        &:after {
+            background: color-text(get-color(background));
+        }
+    }
 
-	@include use-color using ($cn, $c) {
-		// Color Iterator
-		#{$ts}.#{$cn}.input:checked + .control {
-			&::after {
-				background: get-color($cn);
-			}
-		}
-	}
+    @include use-color using ($cn, $c) {
+        // Color Iterator
+        #{$ts}.#{$cn}.input:checked + .control {
+            &::after {
+                background: get-color($cn);
+            }
+        }
+    }
 }

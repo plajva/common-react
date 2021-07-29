@@ -8,14 +8,10 @@ export interface ButtonCompProps {
     button_type?: 'normal' | 'icon';
     button_size?: string | number;
 }
-export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & ButtonCompProps
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & ButtonCompProps;
 // We need to set the className and provide aditinal classnames on component call
 
-const Button: FunctionComponent<ButtonProps> = ({
-    button_type,
-    button_size,
-    ...props
-}) => {
+const Button: FunctionComponent<ButtonProps> = ({ button_type, button_size, ...props }) => {
     const theme = useTheme().name;
     let { className, ...others } = props;
     className = classNameFind(s, `button`, button_type === 'icon' ? 'circular icon' : '', 'dup', theme, className);

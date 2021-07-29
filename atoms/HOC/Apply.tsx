@@ -5,7 +5,7 @@ export interface ApplyProps {
     to?: any;
     /** If depth_max=-1, will affect all underneath, if depth_max=0, will only affect directly underneath, and so on.. */
     depth_max?: number;
-    [key:string]:any,
+    [key: string]: any;
 }
 
 /**

@@ -27,19 +27,20 @@ export function useTheme() {
 }
 
 export interface ThemeToggleProps {
-	// Type ReactElement allows type checking to only have 1 valid element inside tags
-	children: ReactElement;
+    // Type ReactElement allows type checking to only have 1 valid element inside tags
+    children: ReactElement;
 }
 
 export const ThemeToggle = ({ children }: ThemeToggleProps) => {
-	const theme = useTheme();
-	// We do this bc children will be an array always
-	const child = Array.isArray(children) ? children[0] : children;
-	return React.isValidElement<any>(child)
-		? React.cloneElement(child, { onClick: combineEvent(theme.next, child.props?.onClick) })
-		: <span style={{color:'red'}}>Theme Toggle child not element?</span>;
+    const theme = useTheme();
+    // We do this bc children will be an array always
+    const child = Array.isArray(children) ? children[0] : children;
+    return React.isValidElement<any>(child) ? (
+        React.cloneElement(child, { onClick: combineEvent(theme.next, child.props?.onClick) })
+    ) : (
+        <span style={{ color: 'red' }}>Theme Toggle child not element?</span>
+    );
 };
-
 
 const ThemeProvider: FunctionComponent<ThemeProviderProps & React.HTMLAttributes<HTMLDivElement>> = ({
     children,
@@ -65,9 +66,7 @@ const ThemeProvider: FunctionComponent<ThemeProviderProps & React.HTMLAttributes
 
     return (
         <ThemeContext.Provider value={{ name: theme, set: nextTheme, next: nextTheme }}>
-            <div className={`${theme} root`}>
-                {children}
-            </div>
+            <div className={`${theme} root`}>{children}</div>
         </ThemeContext.Provider>
     );
 };

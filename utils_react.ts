@@ -1,12 +1,12 @@
-import React, { ReactNode, SetStateAction, useState } from "react";
-import { combineEvent, deepMerge, RecursivePartial, setDefault } from "./utils";
+import React, { ReactNode, useState } from 'react';
+import { combineEvent, deepMerge, RecursivePartial } from './utils';
 
 const getValidState = (ownState, upState) => {
-	return typeof ownState === "object"
-		? deepMerge(ownState, upState)
-		: typeof upState !== "undefined"
-		? upState
-		: ownState;
+    return typeof ownState === 'object'
+        ? deepMerge(ownState, upState)
+        : typeof upState !== 'undefined'
+        ? upState
+        : ownState;
 };
 /**
  * Combine incoming state into new state.
@@ -16,25 +16,25 @@ const getValidState = (ownState, upState) => {
  * @param defaultState The default state if no incoming state
  */
 export const useStateCombine = <T>(
-	defaultState: T,
-	upState?: T,
-	upSetState?: React.Dispatch<React.SetStateAction<T>>
+    defaultState: T,
+    upState?: T,
+    upSetState?: React.Dispatch<React.SetStateAction<T>>
 ): [T, React.Dispatch<React.SetStateAction<T>>] => {
-	// If state is object then deep merge object, else then either take upState or default state
-	let [s, ss] = useState(getValidState(defaultState, upState));
-	return [getValidState(s, upState), combineEvent(upSetState, upState ? undefined : ss)];
+    // If state is object then deep merge object, else then either take upState or default state
+    let [s, ss] = useState(getValidState(defaultState, upState));
+    return [getValidState(s, upState), combineEvent(upSetState, upState ? undefined : ss)];
 };
 
 // Like useState but will merge when setState called, if u need to use object states in function components
 export const useStateObject = <T extends object>(
-	d: T
+    d: T
 ): [T, React.Dispatch<React.SetStateAction<RecursivePartial<T>>>] => {
-	const [state, _setState] = useState(d);
-	const setState = (sn: React.SetStateAction<RecursivePartial<T>>) =>
-		_setState((s) => {
-			return typeof sn === "function" ? sn(s) : { ...deepMerge(s, sn) };
-		});
-	return [state, setState];
+    const [state, _setState] = useState(d);
+    const setState = (sn: React.SetStateAction<RecursivePartial<T>>) =>
+        _setState((s) => {
+            return typeof sn === 'function' ? sn(s) : { ...deepMerge(s, sn) };
+        });
+    return [state, setState];
 };
 
 /**
@@ -44,19 +44,19 @@ export const useStateObject = <T extends object>(
  * @param setState component setState
  */
 export const separateChildren = (
-	children,
-	state = {},
-	setState: any = () => {}
+    children,
+    state = {},
+    setState: any = () => {}
 ): [ReactNode, ReactNode, (c: ReactNode) => ReactNode] => {
-	const _children = Array.isArray(children) ? [...children] : [children];
-	let child_first;
-	if (_children.length) {
-		child_first = _children.splice(0, 1);
-	}
-	const child_rest = _children;
-	const renderChild = (child) => {
-		const _render = (v) => (typeof v === "function" ? v(state, setState) : v);
-		return Array.isArray(child) ? child.map((v) => _render(v)) : _render(child);
-	};
-	return [child_first, child_rest, renderChild];
+    const _children = Array.isArray(children) ? [...children] : [children];
+    let child_first;
+    if (_children.length) {
+        child_first = _children.splice(0, 1);
+    }
+    const child_rest = _children;
+    const renderChild = (child) => {
+        const _render = (v) => (typeof v === 'function' ? v(state, setState) : v);
+        return Array.isArray(child) ? child.map((v) => _render(v)) : _render(child);
+    };
+    return [child_first, child_rest, renderChild];
 };

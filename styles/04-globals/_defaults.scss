@@ -13,7 +13,7 @@
 $m: null;
 $sindex: 0;
 // Either
-@function append-media($name){
+@function append-media($name) {
     @return if($m, #{$name}-#{$m}, $name);
 }
 // Repeats the spaces
@@ -63,7 +63,7 @@ $sindex: 0;
         margin-right: $space;
     }
     // --- Margin
-    
+
     // *** Padding
     @include repeat_space('.padding') using ($space) {
         padding: $space;
@@ -89,7 +89,7 @@ $sindex: 0;
         padding-right: $space;
     }
     // --- Padding
-    
+
     // *** Border Radius
     @include repeat_space('.border-radius-top') using ($space) {
         border-top-right-radius: $space;
@@ -155,12 +155,11 @@ $sindex: 0;
 }
 
 @include use-theme-with-default using ($ts) {
-    
-    #{$ts}.shadow{
-        box-shadow: 0 0 10px 0 #{color.change(invert(get-color(background)), $alpha: .2)};
+    #{$ts}.shadow {
+        box-shadow: 0 0 10px 0 #{color.change(invert(get-color(background)), $alpha: 0.2)};
     }
-    #{$ts}.shadow-small{
-        box-shadow: 0 0 7px 0 #{color.change(invert(get-color(background)), $alpha: .15)};
+    #{$ts}.shadow-small {
+        box-shadow: 0 0 7px 0 #{color.change(invert(get-color(background)), $alpha: 0.15)};
     }
     @include use-color using ($cn, $c) {
         #{$ts}.#{$cn} {
@@ -185,14 +184,14 @@ $sindex: 0;
         }
 
         $bc: get-color($cn, $alpha: 0.7);
-        
+
         // WIll set background and text
         #{$ts}.#{$cn}-background {
             @include background-color($bc);
         }
         @for $i from 1 through 10 {
             #{$ts}.#{$cn}-background-#{$i} {
-                @include background-color(get-color($cn, $alpha: math.div($i,10)));
+                @include background-color(get-color($cn, $alpha: math.div($i, 10)));
             }
         }
         // WIll set background and text, also for hover and active
@@ -213,11 +212,9 @@ $sindex: 0;
         // overflow: hidden;
         @include background-color(background);
         // To make styling of themes more effective
-        .root-background-color,option{
+        .root-background-color,
+        option {
             @include background-color(background);
         }
     }
-    
 }
-
-

@@ -159,8 +159,8 @@ export type RecursivePartial<T> = {
     [P in keyof T]?: RecursivePartial<T[P]>;
 };
 
-export const toUpperCaseFirst = (s?:string)=>{
-    if(typeof s === 'string'){
-        return s.replace(/\b\w/g, c => c.toUpperCase());
+export const toUpperCaseFirst = (s?: string) => {
+    if (typeof s === 'string') {
+        return s.replace(/\b\w/g, (c) => c.toUpperCase());
     }
-}
+};

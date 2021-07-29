@@ -35,21 +35,19 @@ export interface StepperProps {
  */
 const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElement>> = (props) => {
     const stepToNumber = (step?: number | string) => {
-        return typeof step === 'string'
-            ? props.steps.findIndex((s) => s.header === step)
-            : step;
+        return typeof step === 'string' ? props.steps.findIndex((s) => s.header === step) : step;
     };
 
     let { className, step: _step, setStep: _setStep, steps, showSteps: _showSteps, animTime, ...others } = props;
     // This is the wanted step
-    const [stepWanted, setStepWanted] = useStateCombine(0, stepToNumber(_step), _setStep) ;
+    const [stepWanted, setStepWanted] = useStateCombine(0, stepToNumber(_step), _setStep);
     // This is the step cache, doesn't change until animation is done
     const [stepLast, setStepLast] = useState<number>(stepToNumber(_step) || 0);
-    
+
     const scrollerRef = useRef<HTMLDivElement>(null);
     const section = useRef<HTMLElement | null>(null);
     const lastHeight = useRef<number | undefined>(undefined);
-    
+
     const theme = useTheme().name;
     const showSteps = setDefault(_showSteps, true);
     className = classNameFind(s, `atom`, 'dup', theme, className);

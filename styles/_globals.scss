@@ -15,6 +15,13 @@ $theme-current: $theme-default;
     @return if($theme-current == '', '', if($class, '.', '') + $theme-current + if($prefix, '-', ''));
 }
 
+.c {
+    background: linear-gradient();
+}
+
+// #de5395
+// #5a53a7
+
 $themes: (
     default: (
         colors: (

@@ -184,9 +184,9 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
                             let e = _error as z.ZodError;
                             // const e = _error as Omit<z.ZodError, 'issues'> & {issues?:any};
                             // if(e.message)errors.push({path:'', message:e.message});
-                            if (e?.issues.length) {
+                            if (e?.errors.length) {
                                 errors.push(
-                                    ...e.issues.map((is) => {
+                                    ...e.errors.map((is) => {
                                         return {
                                             path: normalizeName(
                                                 is.path.reduce(

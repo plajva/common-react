@@ -1,12 +1,10 @@
 @import '../styles/globals';
 @import '../styles/include-media';
 
-@include media('<desktop') {
-    .responsive {
-        overflow: auto;
-        position: relative;
-        white-space: nowrap;
-    }
+.responsive {
+    overflow: auto;
+    position: relative;
+    white-space: nowrap;
 }
 
 .comp {

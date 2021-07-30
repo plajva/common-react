@@ -82,7 +82,7 @@ $padding: 0.2em;
         border-bottom: 1px solid get-color(neutral);
     }
     .field-select {
-        padding: (get-space(5)) get-space(4);
+        padding: get-space(5) get-space(4);
         background-position: calc(100% - 0.75rem) center !important;
         -moz-appearance: none !important;
         -webkit-appearance: none !important;

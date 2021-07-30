@@ -120,3 +120,5 @@ export const Field = ({
         </div>
     );
 };
+
+export default Field;

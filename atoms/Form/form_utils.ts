@@ -29,12 +29,12 @@ export const regex_dict = {
     phone: /^\+?(\d{0,3})?[-. (]*(\d{3})[()-. ]*(\d{3})[()-. ]*(\d{4})$/,
     ssn: /^[-. ]*(\d{3})[-. ]*(\d{2})[-. ]*(\d{4})[-. ]*$/,
     card_number:
-        /^(?:[ \-]*(?<visa>4\d{12}\d{3}?)|(?<mastercard>5[1-5]\d{14})|(?<discover>6(?:011|5\d{2})\d{12})|(?<amex>3[47]\d{13})|(?<diners>3(?:0[0-5]|[68]\d)\d{11})|(?<jcb>(?:2131|1800|35\d{3})\d{11})[ \-]*)$/,
+        /^(?:[ -]*(?<visa>4\d{12}\d{3}?)|(?<mastercard>5[1-5]\d{14})|(?<discover>6(?:011|5\d{2})\d{12})|(?<amex>3[47]\d{13})|(?<diners>3(?:0[0-5]|[68]\d)\d{11})|(?<jcb>(?:2131|1800|35\d{3})\d{11})[ -]*)$/,
     card_expiration: /^[^\d]*(0?\d|1[0-2])[/\- ]+(\d{4}|\d{2})[^\d]*$/,
     card_cvv: /^[^\d]*(\d{3,4})[^\d]*$/,
 };
 
-const sd = (s, f: (s) => string, sdef?) => (s || typeof sdef != 'undefined' ? f(s || sdef) : '');
+// const sd = (s, f: (s) => string, sdef?) => (s || typeof sdef != 'undefined' ? f(s || sdef) : '');
 const regexFormat = (regex: RegExp, input: string, format: string) => {
     const g = regex.exec(input);
     if (g) {

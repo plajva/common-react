@@ -1,25 +1,26 @@
 @use 'sass:color';
+@use 'sass:math';
 @import '../../styles/globals';
 @import './atom_common';
 
 $width: 3em;
-$height: $width/2;
+$width-o-2: math.div($width, 2);
 // * Some settings are in 'atom_common'
 
 .control {
     transition: $transition;
     width: $width;
-    height: $height;
+    height: $width-o-2;
     box-sizing: content-box;
 
-    border-radius: $height;
+    border-radius: $width-o-2;
     position: relative;
     &:after {
         box-sizing: border-box;
         transition: $transition;
         content: '';
-        width: $width/2 - $gutter * 2;
-        height: $height - $gutter * 2;
+        width: $width-o-2 - $gutter * 2;
+        height: $width-o-2 - $gutter * 2;
         display: block;
         border-radius: 50%;
         position: absolute;
@@ -29,7 +30,7 @@ $height: $width/2;
 }
 
 .input:checked + .control:after {
-    left: $width/2 + $gutter;
+    left: $width-o-2 + $gutter;
 }
 
 @include use-theme using ($ts) {

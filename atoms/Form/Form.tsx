@@ -68,24 +68,21 @@ const replaceForm = (name: string, value: any, obj: object) => {
         grandparent[grand_key] = val;
     };
     const names = splitName(name);
+    const getMyObj = () => (typeof parent !== 'undefined' ? parent : obj);
+    const setMyObj = (val) => {
+        if (parent) {
+            parent = val;
+            setParent(parent);
+        } else obj = val;
+    };
     while (names.length) {
         const key = names.shift();
-        // console.log(parent, key);
-        // console.log(key)
         // If key's invalid break;
         if (!keyValid(key)) {
             throw Error(`key ${key} not valid`);
-            break;
         }
-
         const isarr = isArr(key);
-        const getMyObj = () => (typeof parent !== 'undefined' ? parent : obj);
-        const setMyObj = (val) => {
-            if (parent) {
-                parent = val;
-                setParent(parent);
-            } else obj = val;
-        };
+
         const getKeyObj = () => getMyObj()[keyToIndex(key)];
         const setKeyObj = (val) => {
             // console.log(`Setting ${getMyObj()} ${key} with ${val}`);
@@ -113,7 +110,6 @@ const getForm = (name: string, obj: object) => {
         const key = names.shift();
         if (!keyValid(key)) {
             throw Error(`key ${key} not valid`);
-            break;
         }
         obj = obj[keyToIndex(key)];
         if (typeof obj === 'undefined') return undefined;

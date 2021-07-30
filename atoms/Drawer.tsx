@@ -1,7 +1,7 @@
-import { useTheme } from './Theme';
+import React, { MouseEvent, ReactElement, ReactNode, useContext, useRef } from 'react';
 import { classNameFind, combineEvent, setDefault, useStateCombine } from '../utils';
-import React, { MouseEvent, ReactElement, ReactNode, useContext, useRef, useState } from 'react';
 import s from './Drawer.module.scss';
+import { useTheme } from './Theme';
 
 export interface DrawerContentData {
     [key: string]: { header?: ReactNode; content?: ReactNode };
@@ -69,8 +69,8 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
     // True if opening/open, False if closing/closed
     const [open, setOpen] = useStateCombine(false, _open, _setOpen);
     // True when open, False if closed
-    const [isOpen, setIsOpen] = useState(false);
-    const isOpenTimer = useRef(0);
+    // const [isOpen, setIsOpen] = useState(false);
+    // const isOpenTimer = useRef(0);
 
     const animTime = setDefault(_animTime, 0.4);
 

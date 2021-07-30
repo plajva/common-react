@@ -1,4 +1,3 @@
-import { useTheme } from '../Theme';
 import React, { FunctionComponent, ReactElement } from 'react';
 
 export interface ApplyProps {
@@ -19,7 +18,6 @@ const Apply: FunctionComponent<ApplyProps & React.HTMLAttributes<HTMLDivElement>
     depth_max,
     ...props
 }) => {
-    const theme = useTheme().name;
     if (typeof depth_max === 'undefined') depth_max = 0;
 
     const mergeProps = (child: ReactElement, depth: any): any => {

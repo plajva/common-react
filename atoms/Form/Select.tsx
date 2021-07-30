@@ -28,9 +28,11 @@ const Select = ({ className, placeholder, placeholderProps, children, ..._props 
             {...props}
             ref={typeof ref === 'object' && !Object.keys(ref).length ? null : ref}
         >
-            <option {...placeProps} value={placeholderProps?.value || ''}>
-                {placeholder}
-            </option>
+            {placeholder && (
+                <option {...placeProps} value={placeholderProps?.value || ''}>
+                    {placeholder}
+                </option>
+            )}
             {/* Making sure selected element is the one with selected attribute */}
             {/* {Children.map(
 				children,

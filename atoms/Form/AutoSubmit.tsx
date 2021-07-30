@@ -1,4 +1,4 @@
-import {useForm} from './Form';
+import { useForm } from './Form';
 import debounce from 'lodash/debounce';
 import { useCallback, useEffect, useState } from 'react';
 

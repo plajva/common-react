@@ -130,7 +130,7 @@ interface FormProps {
     initialState?: object;
     /**Accepts a schema from zod/yup */
     validationSchema?: any;
-    submit?: (v:any) => void;
+    submit?: (v: any) => void;
     children?: ReactNode;
 }
 const isZod = (s: any): boolean => (s?.parse ? true : false);
@@ -146,23 +146,23 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
         // errors: {},
         touched: {},
     });
-    
+
     const getValid = () => {
         const values = state.values;
-            if (schema) {
-                try {
-                    return isZod(schema) ? schema.parse(values) : schema.validateSync(values, { abortEarly: false });
-                } catch (_error) {
-                    // Set touched to true so all errors are shown
-                    setState((state) => {
-                        return { ...state, touched: true };
-                    });
-                    return undefined;
-                }
-            } else {
-                return values;
+        if (schema) {
+            try {
+                return isZod(schema) ? schema.parse(values) : schema.validateSync(values, { abortEarly: false });
+            } catch (_error) {
+                // Set touched to true so all errors are shown
+                setState((state) => {
+                    return { ...state, touched: true };
+                });
+                return undefined;
             }
-    }
+        } else {
+            return values;
+        }
+    };
 
     const context: FormContextI = {
         state: state,
@@ -257,10 +257,10 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
         getValid,
         submit: () => {
             const valid = getValid();
-            if(valid && submit){
+            if (valid && submit) {
                 submit(valid);
             }
-        }
+        },
     };
     // console.log(state);
     return <FormContext.Provider value={context}>{children}</FormContext.Provider>;

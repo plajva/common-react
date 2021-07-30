@@ -4,8 +4,8 @@
 @include media('<desktop') {
     .responsive {
         overflow: auto;
-	position: relative;
-    	white-space: nowrap;
+        position: relative;
+        white-space: nowrap;
     }
 }
 

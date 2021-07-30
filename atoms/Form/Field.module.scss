@@ -20,7 +20,6 @@ $padding: 0.2em;
     position: relative;
     flex: 1 1 250px;
     text-align: left;
-    // box-sizing: content-box;
 
     .label-container {
         display: flex;
@@ -30,7 +29,6 @@ $padding: 0.2em;
         padding-bottom: $padding-bottom;
         padding-top: $padding-top;
         width: 100%;
-        // box-sizing: border-box;
     }
     .label-text,
     .label-text-bottom {
@@ -75,13 +73,16 @@ $padding: 0.2em;
         line-height: $line-height;
         padding: $padding;
         padding-inline: none;
+        box-sizing: border-box;
+        // A neutral color as default, will get overriten in themed below..
+        border: 1px solid get-color(neutral, $alpha: 0.5);
     }
     &::after {
         content: '';
         border-bottom: 1px solid get-color(neutral);
-    }    
-.field-select {
-        padding: (get-space(5) - 1px) get-space(4);
+    }
+    .field-select {
+        padding: (get-space(5)) get-space(4);
         background-position: calc(100% - 0.75rem) center !important;
         -moz-appearance: none !important;
         -webkit-appearance: none !important;
@@ -111,11 +112,9 @@ $padding: 0.2em;
             }
             .input {
                 &:focus-visible {
-                    outline: 1px solid color-text(background);
+                    border: 1px solid color-text(background);
                 }
-                @if (is-dark()) {
-                    outline: 1px solid color.change(color-text(background), $alpha: 0.3);
-                }
+                border: 1px solid color.change(color-text(background), $alpha: if(is-dark(), 0.3, 0.4));
             }
         }
         // @include use-color using ($cn, $c) {

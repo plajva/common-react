@@ -73,7 +73,6 @@ $padding: 0.2em;
     .input {
         line-height: $line-height;
         padding: $padding;
-        padding-inline: none;
         box-sizing: border-box;
         // A neutral color as default, will get overriten in themed below..
         border: 1px solid get-color(neutral, $alpha: 0.5);

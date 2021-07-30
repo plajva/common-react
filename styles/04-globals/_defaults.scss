@@ -40,76 +40,76 @@ $sindex: 0;
 @mixin repeat_class {
     // *** Margin
     @include repeat_space('.margin') using ($space) {
-        margin: $space;
+        margin: $space !important;
     }
     @include repeat_space('.margin-h') using ($space) {
-        margin-right: $space;
-        margin-left: $space;
+        margin-right: $space !important;
+        margin-left: $space !important;
     }
     @include repeat_space('.margin-v') using ($space) {
-        margin-top: $space;
-        margin-bottom: $space;
+        margin-top: $space !important;
+        margin-bottom: $space !important;
     }
     @include repeat_space('.margin-top') using ($space) {
-        margin-top: $space;
+        margin-top: $space !important;
     }
     @include repeat_space('.margin-bottom') using ($space) {
-        margin-bottom: $space;
+        margin-bottom: $space !important;
     }
     @include repeat_space('.margin-left') using ($space) {
-        margin-left: $space;
+        margin-left: $space !important;
     }
     @include repeat_space('.margin-right') using ($space) {
-        margin-right: $space;
+        margin-right: $space !important;
     }
     // --- Margin
 
     // *** Padding
     @include repeat_space('.padding') using ($space) {
-        padding: $space;
+        padding: $space !important;
     }
     @include repeat_space('.padding-h') using ($space) {
-        padding-left: $space;
-        padding-right: $space;
+        padding-left: $space !important;
+        padding-right: $space !important;
     }
     @include repeat_space('.padding-v') using ($space) {
-        padding-top: $space;
-        padding-bottom: $space;
+        padding-top: $space !important;
+        padding-bottom: $space !important;
     }
     @include repeat_space('.padding-top') using ($space) {
-        padding-top: $space;
+        padding-top: $space !important;
     }
     @include repeat_space('.padding-bottom') using ($space) {
-        padding-bottom: $space;
+        padding-bottom: $space !important;
     }
     @include repeat_space('.padding-left') using ($space) {
-        padding-left: $space;
+        padding-left: $space !important;
     }
     @include repeat_space('.padding-right') using ($space) {
-        padding-right: $space;
+        padding-right: $space !important;
     }
     // --- Padding
 
     // *** Border Radius
     @include repeat_space('.border-radius-top') using ($space) {
-        border-top-right-radius: $space;
-        border-top-left-radius: $space;
+        border-top-right-radius: $space !important;
+        border-top-left-radius: $space !important;
     }
     @include repeat_space('.border-radius-top-right') using ($space) {
-        border-top-right-radius: $space;
-        // border-top-left-radius: $space;
+        border-top-right-radius: $space !important;
+        // border-top-left-radius: $space!important;
     }
     @include repeat_space('.border-radius-right') using ($space) {
-        border-top-right-radius: $space;
-        border-bottom-right-radius: $space;
+        border-top-right-radius: $space !important;
+        border-bottom-right-radius: $space !important;
     }
     @include repeat_space('.border-radius-bottom') using ($space) {
-        border-bottom-left-radius: $space;
-        border-bottom-right-radius: $space;
+        border-bottom-left-radius: $space !important;
+        border-bottom-right-radius: $space !important;
     }
     @include repeat_space('.border-radius-left') using ($space) {
-        border-top-left-radius: $space;
-        border-bottom-left-radius: $space;
+        border-top-left-radius: $space !important;
+        border-bottom-left-radius: $space !important;
     }
     // --- Border Radius
 

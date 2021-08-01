@@ -31,7 +31,7 @@ $bw: 1px;
         
         &#{'.'+$ts} {
             $background: get-color(background, if(is-dark(),-3, -5));
-            @include background-color($background, $color-text: true);
+            @include background-color($background);
             @include background-blur(get-color($background, -1, .4));
             @if(is-dark()) {
                 // Border animation if dark

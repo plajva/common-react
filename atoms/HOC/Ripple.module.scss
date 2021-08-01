@@ -22,9 +22,7 @@ span.ripple {
     // $ts (Theme Selector)
     @each $theme in $theme-names-with-empty {
         $theme-current: $theme !global;
-        $ts: theme-selector(
-            $class: true,
-        );
+        $ts: theme-selector();
 
         // My component on this theme
         &#{$ts} {

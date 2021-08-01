@@ -29,6 +29,7 @@ export function classNameFind(s: any, ...classNames: (string | undefined)[]) {
               .join(' ')
         : '';
 }
+export {classNameFind as cnf}; 
 
 export function combineEvent(...functions: any[]) {
     return (...e: any[]) => {

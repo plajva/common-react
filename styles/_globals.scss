@@ -11,8 +11,8 @@ $debug: true;
 // ######## COLORS ############
 $theme-default: default;
 $theme-current: $theme-default;
-@function theme-selector($prefix: false, $class: false) {
-    @return if($theme-current == '', '', if($class, '.', '') + $theme-current + if($prefix, '-', ''));
+@function theme-selector($prefix: '.', $suffix: '') {
+    @return if($theme-current == '', '', if($prefix, $prefix, '') + $theme-current + if($suffix, $suffix, ''));
 }
 
 .c {
@@ -27,7 +27,8 @@ $themes: (
         colors: (
             primary: #4adb7a,
             secondary: #3fc2c7,
-            warn: rgb(190, 29, 29),
+            warn: #be9a35,
+            error: #b93737,
             background: #f8f8f8,
             menu: #004961,
             separator: rgba(#000, 0.2),
@@ -162,23 +163,19 @@ $theme-names-with-empty: list.join('', $theme-names);
 // }
 
 // Theme iterator
-@mixin use-theme {
+@mixin use-theme($prefix: '.', $suffix: '') {
     @each $theme-name, $theme in $themes {
         $theme-current: $theme-name !global;
-        $ts: theme-selector(
-            $class: true,
-        );
+        $ts: theme-selector($prefix, $suffix);
         @content ($ts);
     }
     $theme-current: $theme-default !global;
 }
-@mixin use-theme-with-default {
+@mixin use-theme-with-default($prefix: '.', $suffix: '') {
     @content (null);
     @each $theme-name, $theme in $themes {
         $theme-current: $theme-name !global;
-        $ts: theme-selector(
-            $class: true,
-        );
+        $ts: theme-selector($prefix, $suffix);
         @content ($ts);
     }
     $theme-current: $theme-default !global;

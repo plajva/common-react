@@ -108,3 +108,12 @@
     // 	color: get-color($color, get-theme-field(shades, active));
     // }
 }
+
+@mixin background-blur($color, $blur: 10px) {
+    @supports (backdrop-filter: blur($blur)) {
+        & {
+            background: $color;
+            backdrop-filter: blur($blur);
+        }
+    }
+}

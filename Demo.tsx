@@ -8,7 +8,7 @@ import {
     FaHeart,
     FaHeartbeat,
     FaPlusCircle,
-    FaPlusSquare,
+    FaPlusSquare
 } from 'react-icons/fa';
 import { GiHealthDecrease, GiHealthIncrease, GiHealthNormal } from 'react-icons/gi';
 import { ImLab } from 'react-icons/im';
@@ -23,6 +23,7 @@ import Form from './atoms/Form/Form';
 import Input from './atoms/Form/Input';
 import Toggle from './atoms/Form/Toggle';
 import Icon from './atoms/Icon';
+import { useNotifications } from './atoms/Notifications';
 import Stepper from './atoms/Stepper';
 import { useTheme } from './atoms/Theme';
 
@@ -105,6 +106,7 @@ const Demo = (props) => {
             </tbody>
         );
     };
+    const notifications = useNotifications();
     const MyIcon = (props: any) => <Icon style={{ margin: '5px auto 8px' }} icon={props.icon} />;
     return (
         <div style={{ textAlign: 'center', padding: '56px 5%' }}>
@@ -126,17 +128,17 @@ const Demo = (props) => {
             <Divider className='thin' />
             <h2>Form</h2>
             <Form initialState={{ first: '', last: '' }}>
-                {(state) => (
+                {(form) => (
                     <div className='col'>
                         <div className='col-6'>
                             <h4>{`<Input>`}</h4>
                             <Input name='first' placeholder='First Name' />
-                            First is {state.values['first']}
+                            First is {form.state.values['first']}
                         </div>
                         <div className='col-6'>
                             <h4>{`<Field>`}</h4>
                             <Field name='last' placeholder='Last Name' />
-                            Last is {state.values['last']}
+                            Last is {form.state.values['last']}
                         </div>
                         <div className='col-6'>
                             <Input placeholder='Type Flavor' />
@@ -155,6 +157,22 @@ const Demo = (props) => {
                     </div>
                 )}
             </Form>
+            <Divider className='thin' />
+            <h2>Notifications</h2>
+            <div>
+                <Form>
+                    {(form) => <><Field name="type" type="select" label="Type">
+                        <option value="success">Success</option>
+                        <option value="warning">Warning</option>
+                        <option value="error">Error</option>
+                    </Field>
+                    <Field name="sticky" type="checkbox" label="Sticky"/>
+                    <Field name="icon" type="checkbox" label="Icon"/>
+                    <Field name="text" />
+                    <Button onClick={() => notifications.addNotification(form.state.values)}>Test Notification</Button></>}
+                </Form>
+            </div>
+            <Divider className='thin' />
             <h2>Button</h2>
             {allTypes(Button)}
             <Divider className='thin' />

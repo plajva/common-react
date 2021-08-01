@@ -8,8 +8,8 @@ import {
     useContext,
     useState,
 } from 'react';
-import * as y from 'yup';
-import * as z from 'zod';
+// import * as y from 'yup';
+// import * as z from 'zod';
 import { combineEvent, setDefault } from '../../utils';
 
 export type InputPropsAll =
@@ -127,7 +127,7 @@ interface FormProps {
     /**Accepts a schema from zod/yup */
     validationSchema?: any;
     submit?: (v: any) => void;
-    children?: ReactNode;
+    children?: ReactNode | ((context: FormContextI) => ReactElement);
 }
 const isZod = (s: any): boolean => (s?.parse ? true : false);
 const isYup = (s: any): boolean => (s?.validate ? true : false);
@@ -177,21 +177,21 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
                         errors = [];
 
                         if (isZod(schema)) {
-                            let e = _error as z.ZodError;
+                            let e = _error //as z.ZodError;
                             // const e = _error as Omit<z.ZodError, 'issues'> & {issues?:any};
                             // if(e.message)errors.push({path:'', message:e.message});
                             if (e?.errors.length) {
                                 errors.push(
-                                    ...e.errors.map((is) => {
+                                    ...e.errors.map((issue) => {
                                         return {
                                             path: normalizeName(
-                                                is.path.reduce(
-                                                    (p, pv) =>
-                                                        p + '.' + String(typeof pv === 'number' ? `[${pv}]` : pv),
+                                                issue.path.reduce(
+                                                    (fullPath, currPath) =>
+                                                        fullPath + '.' + String(typeof currPath === 'number' ? `[${currPath}]` : currPath),
                                                     ''
                                                 ) as string
                                             ),
-                                            message: is.message,
+                                            message: issue.message,
                                         };
                                     })
                                 );
@@ -208,9 +208,10 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
                             }
                             // errors = _errors;
                         } else if (isYup(schema)) {
-                            const e = _error as y.ValidationError;
+                            const e = _error //as y.ValidationError;
                             values = e.value;
-                            const addError = (err: y.ValidationError) => {
+                            const addError = (err //: y.ValidationError
+                                ) => {
                                 if (!err) return;
                                 if (err.message) {
                                     let path = err.path || '';
@@ -259,7 +260,7 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
         },
     };
     // console.log(state);
-    return <FormContext.Provider value={context}>{children}</FormContext.Provider>;
+    return <FormContext.Provider value={context}>{typeof children === 'function' ? children(context) : children}</FormContext.Provider>;
 };
 export const UseForm = ({ children, ...props }: { children: (form: { getValueRel? } & FormContextI) => any }) => {
     const name = useFormNameContext();

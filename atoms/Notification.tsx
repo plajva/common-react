@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import { FaBomb, FaCheck, FaExclamation, FaTimes } from 'react-icons/fa';
-import { classNameFind } from '../utils';
+import { classNameFind, cnf } from '../utils';
 import Icon from './Icon';
 import s from './Notification.module.scss';
 import { useNotifications } from './Notifications';
 import { useTheme } from './Theme';
+import Button from './Button';
 
 const mapIcons = {
-    error: <FaBomb />,
-    warning: <FaExclamation />,
-    success: <FaCheck />,
+    error: FaBomb,
+    warning: FaExclamation,
+    success: FaCheck,
 };
 
 export interface NotificationProps {
@@ -25,9 +26,9 @@ const Notification = (props: NotificationProps) => {
     const { name: theme } = useTheme();
     const [inNoty, setInNoty] = useState(false);
 
-    const cls = classNameFind(s, 'atom', icon ? 'atom-icon' : '', inNoty ? 'in' : '', type, theme);
-    const contentCls = classNameFind(s, 'content', !!icon ? 'hasIcon' : '', theme);
-    const iconCls = classNameFind(s, 'close-icon');
+    const cls = classNameFind(s, 'atom margin-2 padding-1', icon ? 'atom-icon' : '', inNoty ? 'in' : '', type, 'dup', theme);
+    const contentCls = classNameFind(s, 'content padding-1', icon ? 'hasIcon' : '');
+    // const iconCls = classNameFind(s, 'close-icon');
 
     const { removeNotification } = useNotifications();
 
@@ -57,13 +58,13 @@ const Notification = (props: NotificationProps) => {
 
     return (
         <div className={cls}>
-            {!!icon && <div className={s.icon}>{mapIcons[type]}</div>}
+            {icon && <Icon className={cnf(s, 'icon margin-h-1')} icon={mapIcons[type]}/>}
             <div className={contentCls}>
-                <p>{text}</p>
+                {text}
             </div>
-            <div className={s.close}>
-                <Icon className={iconCls} icon={FaTimes} onClick={closeNotification} />
-            </div>
+            <Button button_type="icon" className={cnf(s, 'close')} onClick={closeNotification}>
+                <Icon icon={FaTimes} />
+            </Button>
         </div>
     );
 };

@@ -1,3 +1,7 @@
+/**
+ * Creates a new <div> element (rootElemRef) and returns it since React's Portal needs something to attach to on the first render
+ * Then on the useEffect 2nd pass, creates the parent element <div id={id}> (if non-existent) and makes rootElemRef it's child
+ */
 import { useEffect, useRef } from 'react';
 
 /**

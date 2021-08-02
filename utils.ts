@@ -165,3 +165,5 @@ export const toUpperCaseFirst = (s?: string) => {
         return s.replace(/\b\w/g, (c) => c.toUpperCase());
     }
 };
+
+export type ValuesOf<T extends any[]>= T[number];

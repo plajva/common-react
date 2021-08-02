@@ -9,7 +9,7 @@ export interface DrawerContentData {
 export interface DrawerContextItems {
     open?: boolean;
     setOpen?: any;
-    setContent?: any;
+    setContent?: (o:DrawerContentData) => void;
 }
 
 export interface DrawerProps extends DrawerContextItems {
@@ -76,13 +76,13 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 
     const back = useRef<HTMLDivElement>(null);
     const menu = useRef<HTMLDivElement>(null);
-    const hookContentData = useRef<DrawerContentData>({});
+    const contentData = useRef<DrawerContentData>({});
 
     const theme = useTheme().name;
     className = classNameFind(s, `comp`, theme, className);
 
     const setContent = (o: DrawerContentData) => {
-        hookContentData.current = { ...hookContentData.current, ...o };
+        contentData.current = { ...contentData.current, ...o };
     };
 
     const mb_className = fixed
@@ -141,8 +141,8 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
                             }}
                         >
                             {drawer}
-                            {hookContentData &&
-                                Object.entries(hookContentData.current).map(
+                            {contentData &&
+                                Object.entries(contentData.current).map(
                                     ([k, v], i) =>
                                         v && (
                                             <div>

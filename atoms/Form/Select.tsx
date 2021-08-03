@@ -4,11 +4,6 @@ import React, { forwardRef, ReactNode } from 'react';
 import { useFormField, UseFormFieldProps } from './Form';
 import s from './Select.module.scss';
 
-// interface PlaceholderProps {
-//     disabled?: boolean;
-//     value?: string | number;
-// }
-
 export interface SelectProps extends UseFormFieldProps {
     children?: ReactNode;
     placeholderProps?: React.OptionHTMLAttributes<HTMLElement>;
@@ -28,11 +23,11 @@ const Select = ({ className, placeholder, placeholderProps, children, ..._props 
             {...props}
             ref={typeof ref === 'object' && !Object.keys(ref).length ? null : ref}
         >
-            {(placeholder && (
+            {placeholder !== undefined && (
                 <option {...placeProps} value={placeholderProps?.value || ''}>
                     {placeholder}
                 </option>
-            )) || <option />}
+            )}
             {/* Making sure selected element is the one with selected attribute */}
             {/* {Children.map(
 				children,

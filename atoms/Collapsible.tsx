@@ -1,49 +1,47 @@
-import { useTheme } from './Theme';
-import { classNameFind, separateChildren, setDefault, useStateCombine } from '../utils';
-import React, { FunctionComponent, MouseEvent, useRef } from 'react';
+import React, { ReactNode, useContext, useRef } from 'react';
+import { BiRightArrow } from 'react-icons/bi';
+import { classNameFind, separateChildren } from '../utils';
 import s from './Collapsible.module.scss';
+import StateCombineHOC, { StateCombineContext, StateCombineProps } from './HOC/StateCombineHOC';
+import Icon from './Icon';
+import { useTheme } from './Theme';
+
+
+
+
 
 export interface CollapsibleState {
     open: boolean;
 }
-
 export interface CollapsibleProps {
-    state?: CollapsibleState;
-    setState?: React.Dispatch<React.SetStateAction<CollapsibleState>>;
-
     canCollapse?: boolean;
+    children?: ReactNode;
 }
+const initialState: CollapsibleState = { open: false };
+export const CollapsibleContext = StateCombineContext(initialState);
+export const useCollapsible = () => useContext(CollapsibleContext);
 
-// First child can be function (open)
-
-const Collapsible: FunctionComponent<CollapsibleProps & React.HTMLAttributes<HTMLDivElement>> = ({
+const Collapsible = ({
     canCollapse: _canCollapse,
     className,
     children,
-    state: _state,
-    setState: _setState,
+    state,
+    setState,
     ...props
-}) => {
+}: CollapsibleProps & StateCombineProps<CollapsibleState> & React.HTMLAttributes<HTMLDivElement>) => {
     const theme = useTheme().name;
     className = classNameFind(s, `comp`, theme, className);
-    const [state, setState] = useStateCombine({ open: false }, _state, _setState);
+
     const content = useRef<HTMLDivElement>(null);
-    // Setting default for canCollapse
-    const canCollapse = setDefault(_canCollapse, true);
 
     const [child_first, child_rest, renderChild] = separateChildren(children, state, setState);
 
-    const toggle = (e: MouseEvent<HTMLElement>) => {
-        if (!canCollapse) return;
-        setState({ open: !state.open });
-        // if(content.current){
-        // 	content.current.style.maxHeight = content.current.scrollHeight + 'px';
-        // }
-    };
-
     return (
         <div className={className} {...props}>
-            <div onClick={toggle} className={classNameFind(s, canCollapse ? 'collapsible' : '')}>
+            <div
+                onClick={() => setState({ open: !state.open })}
+                className={classNameFind(s, true ? 'collapsible' : '')}
+            >
                 {renderChild(child_first)}
             </div>
             <div
@@ -57,4 +55,12 @@ const Collapsible: FunctionComponent<CollapsibleProps & React.HTMLAttributes<HTM
     );
 };
 
-export default Collapsible;
+export const CollapsibleToggleIcon = () => {
+    const collapsible = useCollapsible();
+    return (
+        <Icon icon={BiRightArrow} style={{transition:'all .5s', transform: `rotate(${collapsible.state.open?'90deg':'0'})`}}></Icon>
+    )
+}
+
+
+export default StateCombineHOC(Collapsible, { initialState, context: CollapsibleContext });

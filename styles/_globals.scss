@@ -25,8 +25,11 @@ $theme-current: $theme-default;
 $themes: (
     default: (
         colors: (
-            primary: #4adb7a,
-            secondary: #3fc2c7,
+            // primary: #4adb7a,
+            // secondary: #3fc2c7,
+            primary: #7B54A3,
+            secondary: #DF5395,
+            
             warn: #be9a35,
             error: #b93737,
             background: #f8f8f8,

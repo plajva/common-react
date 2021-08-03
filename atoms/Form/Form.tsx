@@ -254,7 +254,7 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
         getValid,
         submit: () => {
             const valid = getValid();
-            if (valid && submit) {
+            if (submit) {
                 submit(valid);
             }
         },

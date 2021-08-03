@@ -45,7 +45,8 @@
     .content {
         min-height: 100%;
         position: relative;
-        // z-index: 0;
+        // So that if there are any items with higher z-index in content they won't get on top of our drawer
+        z-index: 0;
     }
     .menu {
         text-align: center;

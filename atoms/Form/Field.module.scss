@@ -38,6 +38,8 @@ $padding: 0.2em;
         position: absolute;
         pointer-events: none;
         box-sizing: border-box;
+        // We only have a reserved space under/over fields, label contents can't overflow
+        overflow: hidden;
     }
     .label-text-bottom {
         display: block;
@@ -45,11 +47,12 @@ $padding: 0.2em;
         width: 100%;
         bottom: 0;
         left: 0;
+        max-height: 1.4em;
         transform-origin: bottom left;
         font-size: $label-error-size;
     }
     .label-text-bottom.error {
-        color: get-color(warn);
+        color: get-color(error);
     }
     .label-text {
         transform: translate($padding, #{$padding-top + $padding});
@@ -108,7 +111,7 @@ $padding: 0.2em;
 
         &#{$ts} {
             .label-text-bottom.error {
-                @include background-color(warn, 0, true, 0.3);
+                @include background-color(error, 0, true, 0.3);
             }
             .input {
                 &:focus-visible {

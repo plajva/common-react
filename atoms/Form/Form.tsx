@@ -177,7 +177,7 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
                         errors = [];
 
                         if (isZod(schema)) {
-                            let e = _error //as z.ZodError;
+                            let e = _error; //as z.ZodError;
                             // const e = _error as Omit<z.ZodError, 'issues'> & {issues?:any};
                             // if(e.message)errors.push({path:'', message:e.message});
                             if (e?.errors.length) {
@@ -187,7 +187,11 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
                                             path: normalizeName(
                                                 issue.path.reduce(
                                                     (fullPath, currPath) =>
-                                                        fullPath + '.' + String(typeof currPath === 'number' ? `[${currPath}]` : currPath),
+                                                        fullPath +
+                                                        '.' +
+                                                        String(
+                                                            typeof currPath === 'number' ? `[${currPath}]` : currPath
+                                                        ),
                                                     ''
                                                 ) as string
                                             ),
@@ -208,10 +212,11 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
                             }
                             // errors = _errors;
                         } else if (isYup(schema)) {
-                            const e = _error //as y.ValidationError;
+                            const e = _error; //as y.ValidationError;
                             values = e.value;
-                            const addError = (err //: y.ValidationError
-                                ) => {
+                            const addError = (
+                                err //: y.ValidationError
+                            ) => {
                                 if (!err) return;
                                 if (err.message) {
                                     let path = err.path || '';
@@ -260,7 +265,11 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
         },
     };
     // console.log(state);
-    return <FormContext.Provider value={context}>{typeof children === 'function' ? children(context) : children}</FormContext.Provider>;
+    return (
+        <FormContext.Provider value={context}>
+            {typeof children === 'function' ? children(context) : children}
+        </FormContext.Provider>
+    );
 };
 export const UseForm = ({ children, ...props }: { children: (form: { getValueRel? } & FormContextI) => any }) => {
     const name = useFormNameContext();

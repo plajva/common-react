@@ -5,35 +5,36 @@ import { setDefault, useStateCombine } from '../../utils';
  * It also optionally provides a context
  */
 export interface StateCombineProps<T> {
-	state: T;
-	setState: Dispatch<SetStateAction<T>>;
+    state: T;
+    setState: Dispatch<SetStateAction<T>>;
 }
-export const StateCombineContext = <State extends {}>(initialState:State)=>createContext<StateCombineProps<State>>({state:initialState, setState:()=>{}});
+export const StateCombineContext = <State extends {}>(initialState: State) =>
+    createContext<StateCombineProps<State>>({ state: initialState, setState: () => {} });
 interface StateCombineOptions<T> {
-	initialState: T;
-	context?: Context<StateCombineProps<T>>;
+    initialState: T;
+    context?: Context<StateCombineProps<T>>;
 }
 const StateCombineHOC = <EProps extends {}, State>(
-	Comp: (props: EProps & StateCombineProps<State>) => any,
-	options: StateCombineOptions<State>
+    Comp: (props: EProps & StateCombineProps<State>) => any,
+    options: StateCombineOptions<State>
 ) => {
-	// HOC Component creator execution
-	const StateCombine = ({
-			initialState,
-			state: _state,
-			setState: _setState,
-			...props
-	}: Partial<EProps> & Partial<StateCombineProps<State>> & { initialState?: State }) => {
-			const [state, setState] = useStateCombine(setDefault(initialState, options.initialState), _state, _setState);
-			const comp = <Comp {...(props as EProps)} state={state} setState={setState} />;
-			return options.context ? (
-					<options.context.Provider value={{ state, setState }}>{comp}</options.context.Provider>
-			) : (
-					comp
-			);
-	};
+    // HOC Component creator execution
+    const StateCombine = ({
+        initialState,
+        state: _state,
+        setState: _setState,
+        ...props
+    }: Partial<EProps> & Partial<StateCombineProps<State>> & { initialState?: State }) => {
+        const [state, setState] = useStateCombine(setDefault(initialState, options.initialState), _state, _setState);
+        const comp = <Comp {...(props as EProps)} state={state} setState={setState} />;
+        return options.context ? (
+            <options.context.Provider value={{ state, setState }}>{comp}</options.context.Provider>
+        ) : (
+            comp
+        );
+    };
 
-	return StateCombine;
+    return StateCombine;
 };
 export default StateCombineHOC;
 // ----------------------------------------------

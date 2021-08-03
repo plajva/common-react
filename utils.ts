@@ -29,7 +29,7 @@ export function classNameFind(s: any, ...classNames: (string | undefined)[]) {
               .join(' ')
         : '';
 }
-export {classNameFind as cnf}; 
+export { classNameFind as cnf };
 
 export function combineEvent(...functions: any[]) {
     return (...e: any[]) => {
@@ -166,4 +166,4 @@ export const toUpperCaseFirst = (s?: string) => {
     }
 };
 
-export type ValuesOf<T extends any[]>= T[number];
+export type ValuesOf<T extends any[]> = T[number];

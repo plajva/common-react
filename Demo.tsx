@@ -8,7 +8,7 @@ import {
     FaHeart,
     FaHeartbeat,
     FaPlusCircle,
-    FaPlusSquare
+    FaPlusSquare,
 } from 'react-icons/fa';
 import { GiHealthDecrease, GiHealthIncrease, GiHealthNormal } from 'react-icons/gi';
 import { ImLab } from 'react-icons/im';
@@ -161,15 +161,21 @@ const Demo = (props) => {
             <h2>Notifications</h2>
             <div>
                 <Form>
-                    {(form) => <><Field name="type" type="select" label="Type">
-                        <option value="success">Success</option>
-                        <option value="warning">Warning</option>
-                        <option value="error">Error</option>
-                    </Field>
-                    <Field name="sticky" type="checkbox" label="Sticky"/>
-                    <Field name="icon" type="checkbox" label="Icon"/>
-                    <Field name="text" />
-                    <Button onClick={() => notifications.addNotification(form.state.values)}>Test Notification</Button></>}
+                    {(form) => (
+                        <>
+                            <Field name='type' type='select' label='Type'>
+                                <option value='success'>Success</option>
+                                <option value='warning'>Warning</option>
+                                <option value='error'>Error</option>
+                            </Field>
+                            <Field name='sticky' type='checkbox' label='Sticky' />
+                            <Field name='icon' type='checkbox' label='Icon' />
+                            <Field name='text' />
+                            <Button onClick={() => notifications.addNotification(form.state.values)}>
+                                Test Notification
+                            </Button>
+                        </>
+                    )}
                 </Form>
             </div>
             <Divider className='thin' />

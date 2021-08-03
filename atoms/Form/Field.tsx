@@ -19,7 +19,18 @@ import Select, { SelectProps } from './Select';
 import Toggle, { ToggleProps } from './Toggle';
 
 export interface FieldProps {
-    type?: 'checkbox' | 'email' | 'number' | 'text' | 'radio' | 'range' | 'select' | 'textarea' | 'toggle' | 'date';
+    type?:
+        | 'checkbox'
+        | 'email'
+        | 'number'
+        | 'text'
+        | 'password'
+        | 'radio'
+        | 'range'
+        | 'select'
+        | 'textarea'
+        | 'toggle'
+        | 'date';
     children?: ReactNode;
     ref?: any;
     direction?: 'right' | 'left' | 'top' | 'bottom';

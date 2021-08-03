@@ -26,7 +26,15 @@ const Notification = (props: NotificationProps) => {
     const { name: theme } = useTheme();
     const [inNoty, setInNoty] = useState(false);
 
-    const cls = classNameFind(s, 'atom margin-2 padding-1', icon ? 'atom-icon' : '', inNoty ? 'in' : '', type, 'dup', theme);
+    const cls = classNameFind(
+        s,
+        'atom margin-2 padding-1',
+        icon ? 'atom-icon' : '',
+        inNoty ? 'in' : '',
+        type,
+        'dup',
+        theme
+    );
     const contentCls = classNameFind(s, 'content padding-1', icon ? 'hasIcon' : '');
     // const iconCls = classNameFind(s, 'close-icon');
 
@@ -58,11 +66,9 @@ const Notification = (props: NotificationProps) => {
 
     return (
         <div className={cls}>
-            {icon && <Icon className={cnf(s, 'icon margin-h-1')} icon={mapIcons[type]}/>}
-            <div className={contentCls}>
-                {text}
-            </div>
-            <Button button_type="icon" className={cnf(s, 'close')} onClick={closeNotification}>
+            {icon && <Icon className={cnf(s, 'icon margin-h-1')} icon={mapIcons[type]} />}
+            <div className={contentCls}>{text}</div>
+            <Button button_type='icon' className={cnf(s, 'close')} onClick={closeNotification}>
                 <Icon icon={FaTimes} />
             </Button>
         </div>

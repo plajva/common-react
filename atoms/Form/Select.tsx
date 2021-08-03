@@ -23,7 +23,7 @@ const Select = ({ className, placeholder, placeholderProps, children, ..._props 
             {...props}
             ref={typeof ref === 'object' && !Object.keys(ref).length ? null : ref}
         >
-            {placeholder && (
+            {placeholder !== undefined && (
                 <option {...placeProps} value={placeholderProps?.value || ''}>
                     {placeholder}
                 </option>

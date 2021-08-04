@@ -27,13 +27,11 @@ $themes: (
         colors: (
             // primary: #4adb7a,
             // secondary: #3fc2c7,
-            primary: #7B54A3,
-            secondary: #DF5395,
-            
+            primary: #7b54a3,
+            secondary: #df5395,
             warn: #be9a35,
             error: #b93737,
             background: #f8f8f8,
-            menu: #004961,
             separator: rgba(#000, 0.2),
             neutral: rgb(127, 127, 127),
             disabled: rgb(101, 101, 101),
@@ -63,7 +61,7 @@ $themes: (
             2em,
         ),
         font-size-defaults: (
-            html: calc(17px + 0.5vmin),
+            html: 17px,
             h1: 4,
             h2: 3,
             h3: 2,

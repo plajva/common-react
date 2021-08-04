@@ -6,10 +6,6 @@ import StateCombineHOC, { StateCombineContext, StateCombineProps } from './HOC/S
 import Icon from './Icon';
 import { useTheme } from './Theme';
 
-
-
-
-
 export interface CollapsibleState {
     open: boolean;
 }
@@ -58,9 +54,11 @@ const Collapsible = ({
 export const CollapsibleToggleIcon = () => {
     const collapsible = useCollapsible();
     return (
-        <Icon icon={BiRightArrow} style={{transition:'all .5s', transform: `rotate(${collapsible.state.open?'90deg':'0'})`}}></Icon>
-    )
-}
-
+        <Icon
+            icon={BiRightArrow}
+            style={{ transition: 'all .5s', transform: `rotate(${collapsible.state.open ? '90deg' : '0'})` }}
+        ></Icon>
+    );
+};
 
 export default StateCombineHOC(Collapsible, { initialState, context: CollapsibleContext });

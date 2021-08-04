@@ -22,7 +22,7 @@ export interface DrawerProps extends DrawerContextItems {
     floating?: boolean;
     sticky?: boolean;
     right?: boolean;
-    background?:boolean;
+    background?: boolean;
     contentProps?: React.HTMLAttributes<HTMLDivElement>;
     drawerProps?: React.HTMLAttributes<HTMLDivElement>;
 }
@@ -73,7 +73,7 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 }) => {
     // True if opening/open, False if closing/closed
     const [open, setOpen] = useStateCombine(false, _open, _setOpen);
-    
+
     // True when open, False if closed
     // const [isOpen, setIsOpen] = useState(false);
     // const isOpenTimer = useRef(0);
@@ -89,27 +89,25 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 
     const theme = useTheme().name;
     className = classNameFind(s, `comp`, theme, className);
-    
+
     // ! Depracated
     useEffect(() => {
         // Clear right after rendering on every child change
         if (Object.entries(getContentData()).length) {
-            setContentData({})
+            setContentData({});
             console.log('Cleared drawer');
         }
-        return () => {
-        };
+        return () => {};
     }, [children]);
     const setContent = (o: DrawerContentData) => {
         const cdk = Object.keys(getContentData());
-        if(!Object.keys(o).every(k => cdk.includes(k)))
-            setContentData({ ...getContentData(), ...o });
+        if (!Object.keys(o).every((k) => cdk.includes(k))) setContentData({ ...getContentData(), ...o });
     };
     // ! -------
 
     const mb_className = fixed
         ? 'fixed'
-        :  //sticky ? "sticky" :
+        : //sticky ? "sticky" :
           '';
     const mb_styles = {
         transition: `${animTime}s, opacity cubic-bezier(.01,.79,.57,1) ${animTime}s`,
@@ -125,19 +123,21 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
                     // (isOpen || open) &&
                     <>
                         {/* The shaded back panel, if clicked will close the drawer */}
-                        {background && <div
-                            className={classNameFind(s, `back`, mb_className)}
-                            style={{
-                                opacity: open ? 1 : 0,
-                                // transition: `opacity ${animTime}s`,
-                                pointerEvents: !open ? 'none' : undefined,
-                                ...mb_styles,
-                            }}
-                            ref={back}
-                            onClick={() => {
-                                setOpen(false);
-                            }}
-                        ></div>}
+                        {background && (
+                            <div
+                                className={classNameFind(s, `back`, mb_className)}
+                                style={{
+                                    opacity: open ? 1 : 0,
+                                    // transition: `opacity ${animTime}s`,
+                                    pointerEvents: !open ? 'none' : undefined,
+                                    ...mb_styles,
+                                }}
+                                ref={back}
+                                onClick={() => {
+                                    setOpen(false);
+                                }}
+                            ></div>
+                        )}
                         {/* The drawer */}
                         <div
                             {...drawerProps}
@@ -168,20 +168,17 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
                             }}
                         >
                             {drawer}
-                            {
-                                Object.entries(getContentData()).map(
-                                    ([k, v], i) =>
-                                        v && (
-                                            <div>
-                                                <div
-                                                    className={classNameFind(s, 'hook-header', 'margin-2 margin-top-4')}
-                                                >
-                                                    {v.header}
-                                                </div>
-                                                <div>{v.content}</div>
+                            {Object.entries(getContentData()).map(
+                                ([k, v], i) =>
+                                    v && (
+                                        <div>
+                                            <div className={classNameFind(s, 'hook-header', 'margin-2 margin-top-4')}>
+                                                {v.header}
                                             </div>
-                                        )
-                                )}
+                                            <div>{v.content}</div>
+                                        </div>
+                                    )
+                            )}
                         </div>
                     </>
                 }

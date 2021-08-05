@@ -32,6 +32,7 @@ export interface FormContextI {
     getTouched: (name: string) => any;
     getValid: () => any;
     submit: () => void;
+    reset: () => void;
 }
 
 const FormContext = createContext<FormContextI>({
@@ -47,6 +48,7 @@ const FormContext = createContext<FormContextI>({
     getTouched: () => {},
     getValid: () => undefined,
     submit: () => {},
+    reset: () => {},
 });
 
 export const useForm = () => useContext(FormContext);
@@ -127,11 +129,12 @@ interface FormProps {
     /**Accepts a schema from zod/yup */
     validationSchema?: any;
     submit?: (v: any) => void;
+    reset?: () => void;
     children?: ReactNode | ((context: FormContextI) => ReactElement);
 }
 const isZod = (s: any): boolean => (s?.parse ? true : false);
 const isYup = (s: any): boolean => (s?.validate ? true : false);
-const Form = ({ initialState, validationSchema: schema, submit, children, ...props }: FormProps) => {
+const Form = ({ initialState, validationSchema: schema, submit, reset, children, ...props }: FormProps) => {
     const [state, setState] = useState<FormState>({
         values:
             (schema &&
@@ -257,6 +260,20 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
             return getForm(`touched.${name}`, state);
         },
         getValid,
+        reset: () => {
+            setState({
+                values:
+                    (schema &&
+                        ((isZod(schema) && schema.safeParse(initialState)['data']) ||
+                            (isYup(schema) && schema.cast(initialState)))) ||
+                    initialState ||
+                    {},
+                // errors: {},
+                touched: {},
+            });
+
+            reset && reset();
+        },
         submit: () => {
             const valid = getValid();
             if (submit) {

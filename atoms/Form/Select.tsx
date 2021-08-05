@@ -14,12 +14,15 @@ const Select = ({ className, placeholder, placeholderProps, children, ..._props 
     className = classFind(s, `comp`, className, 'dup', theme);
 
     const { value, ...props } = useFormField(_props);
-    const placeProps = { disabled: !!placeholderProps?.disabled, selected: true };
+    const placeProps = {
+        className: classFind(s, 'placeholder'),
+        ...placeholderProps,
+    };
     return (
         <select
             data-value={value || ''}
             className={className}
-            value={value}
+            value={value || ''}
             {...props}
             ref={typeof ref === 'object' && !Object.keys(ref).length ? null : ref}
         >

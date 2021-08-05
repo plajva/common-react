@@ -27,10 +27,12 @@ const Select = ({ className, placeholder, placeholderProps, children, ..._props 
             ref={typeof ref === 'object' && !Object.keys(ref).length ? null : ref}
         >
             {placeholder !== undefined && (
-                <option {...placeProps} value={placeholderProps?.value || ''}>
+                // Removed  || ''   so that value will be undefined if unset.
+                <option {...placeProps} value={placeholderProps?.value}>
                     {placeholder}
                 </option>
             )}
+            {/* React already does this by default when a value prop is passed to <select> */}
             {/* Making sure selected element is the one with selected attribute */}
             {/* {Children.map(
 				children,

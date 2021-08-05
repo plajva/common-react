@@ -21,10 +21,10 @@ import Toggle, { ToggleProps } from './Toggle';
 export interface FieldProps {
     type?:
         | 'checkbox'
-        | 'password'
         | 'email'
         | 'number'
         | 'text'
+        | 'password'
         | 'radio'
         | 'range'
         | 'select'

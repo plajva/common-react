@@ -1,13 +1,31 @@
+@use 'sass:color';
+@use 'sass:math';
 @import '../../styles/globals';
+@import './atom_common';
 
 .atom {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 30px;
+
+    padding: $padding;
+    line-height: $line-height;
+    border: 1px solid get-color(neutral, $alpha: 0.5);
+
     @include use-theme using ($ts) {
+        // Theme Iterator
+
         &#{$ts} {
             $color: color-text(get-color(background));
 
             &::placeholder {
-                color: $color;
+                color: gray;
             }
+
+            &:focus-visible {
+                border: 1px solid color-text(background);
+            }
+            border: 1px solid color.change(color-text(background), $alpha: if(is-dark(), 0.3, 0.4));
         }
     }
 }

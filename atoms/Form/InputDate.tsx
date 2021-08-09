@@ -36,7 +36,6 @@ const InputDate = ({
         <ReactDay
             ref={ref}
             value={value}
-            showOverlay={true}
             placeholder={placeholder}
             inputProps={{
                 className: classNameFind(s, 'atom', theme) + ' ' + className,

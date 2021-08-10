@@ -1,72 +1,94 @@
 @import '../styles/globals';
 
+
+.menu {
+    text-align: center;
+    z-index: 12;
+}
+.open {
+    // transform: 0;
+}
+
+.menu.v_always {
+    position: relative;
+    transform: unset;
+}
+.back,
+.menu {
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+
+    overflow: auto;
+    &.fixed {
+        position: fixed;
+        max-height: 100%;
+    }
+    &.sticky {
+        position: sticky;
+        top: 0;
+    }
+}
+
+.back {
+    background: rgba(#000, 0.3);
+}
+.menu {
+    transform: translateX(-100%);
+}
+.menu-right {
+    transform: translateX(100%);
+    left: unset;
+    right: 0;
+}
+.menu-right {
+    left: unset;
+    right: 0;
+}
+.menu-left {
+    left: 0;
+    right: unset;
+}
+.menu.floating {
+    top: 50%;
+    transform: translateY(-50%);
+    height: unset;
+    left: 5px;
+    padding-block: get-space(4);
+    border-radius: get-space(2);
+}
+
+
+.hook-header {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+.content {
+    flex-grow: 1;
+    min-height: 100%;
+    position: relative;
+    min-width: 0;
+    // So that if there are any items with higher z-index in content they won't get on top of our drawer
+    z-index: 0;
+}
+
+
+.menu,
+.menu-right {
+    max-width: 240px;
+}
+
 .comp {
     // My definitions by default
     position: relative;
-    .back,
-    .menu {
-        z-index: 10;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        max-height: 100vh;
-
-        overflow: auto;
-        &.fixed {
-            position: fixed;
-            max-height: 100%;
-        }
-        &.sticky {
-            position: sticky;
-            top: 0;
-        }
-    }
-    .menu.floating {
-        top: 50%;
-        transform: translateY(-50%);
-        height: unset;
-        left: 5px;
-        padding-block: get-space(4);
-        border-radius: get-space(2);
-    }
-    .menu-right {
-        right: 0;
-    }
-    .menu-left {
-        left: 0;
-    }
-
-    .hook-header {
-        font-size: 1.1em;
-        font-weight: bold;
-    }
-    .content {
-        min-height: 100%;
-        position: relative;
-        // So that if there are any items with higher z-index in content they won't get on top of our drawer
-        z-index: 0;
-    }
-    .menu {
-        text-align: center;
-        z-index: 12;
-    }
-    .back {
-        background: rgba(#000, 0.3);
-    }
-    .menu {
-        transform: translateX(-100%);
-    }
-    .menu-right {
-        transform: translateX(100%);
-        left: unset;
-        right: 0;
-    }
-    .menu,
-    .menu-right {
-        max-width: 240px;
-    }
+    display: flex;
+    
+        
+    
 
     @include use-theme using ($ts) {
         // Theme Iterator

@@ -1,4 +1,13 @@
-import React, { MouseEvent, ReactElement, ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+    CSSProperties,
+    MouseEvent,
+    ReactElement,
+    ReactNode,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import { classNameFind, combineEvent, setDefault, useStateCombine } from '../utils';
 import s from './Drawer.module.scss';
 import { useTheme } from './Theme';
@@ -21,6 +30,7 @@ export interface DrawerProps extends DrawerContextItems {
     fixed?: boolean;
     floating?: boolean;
     sticky?: boolean;
+    visible_always?: boolean;
     right?: boolean;
     background?: boolean;
     contentProps?: React.HTMLAttributes<HTMLDivElement>;
@@ -53,7 +63,11 @@ export const DrawerToggle = ({ children }: DrawerToggleProps) => {
         <span style={{ color: 'red' }}>Drawer Toggle child not element?</span>
     );
 };
-
+/**
+ *
+ * @param right: Drawer is on the right
+ * @returns
+ */
 const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => ReactElement = ({
     right,
     className,
@@ -62,6 +76,7 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
     open: _open,
     setOpen: _setOpen,
     animTime: _animTime,
+    visible_always,
     floating,
     fixed,
     sticky,
@@ -73,6 +88,7 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 }) => {
     // True if opening/open, False if closing/closed
     const [open, setOpen] = useStateCombine(false, _open, _setOpen);
+    background = setDefault(background, visible_always ? false : true);
 
     // True when open, False if closed
     // const [isOpen, setIsOpen] = useState(false);
@@ -83,14 +99,13 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
     background = setDefault(background, true);
     const back = useRef<HTMLDivElement>(null);
     const menu = useRef<HTMLDivElement>(null);
-    const [_contentData, _setContentData] = useState<DrawerContentData>({});
-    const getContentData = () => _contentData;
-    const setContentData = (v) => _setContentData(v);
-
     const theme = useTheme().name;
     className = classNameFind(s, `comp`, theme, className);
 
     // ! Depracated
+    const [_contentData, _setContentData] = useState<DrawerContentData>({});
+    const getContentData = () => _contentData;
+    const setContentData = (v) => _setContentData(v);
     useEffect(() => {
         // Clear right after rendering on every child change
         if (Object.entries(getContentData()).length) {
@@ -105,13 +120,28 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
     };
     // ! -------
 
-    const mb_className = fixed
-        ? 'fixed'
-        : //sticky ? "sticky" :
-          '';
+    const menuBack_class = fixed ? 'fixed' : sticky ? 'sticky' : '';
     const mb_styles = {
         transition: `${animTime}s, opacity cubic-bezier(.01,.79,.57,1) ${animTime}s`,
     };
+    const menu_style: CSSProperties = visible_always
+        ? open
+            ? { maxWidth: 240 }
+            : { maxWidth: 100 }
+        : open
+        ? {
+              transform: `translate(${!right ? '0' : '0'},${floating ? '-50%' : '0'})`,
+              opacity: 1,
+          }
+        : {
+              transform: `translate(${!right ? '-100%' : '100%'},${floating ? '-50%' : '0'})`,
+              opacity: 0,
+          };
+    const content_styles: CSSProperties = visible_always
+        ? open
+            ? { marginLeft: '240px' }
+            : { marginLeft: '100px' }
+        : {};
 
     // if(Object.entries(contentData.current).length)
     console.log('Rendering drawer');
@@ -125,10 +155,9 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
                         {/* The shaded back panel, if clicked will close the drawer */}
                         {background && (
                             <div
-                                className={classNameFind(s, `back`, mb_className)}
+                                className={classNameFind(s, `back`, menuBack_class)}
                                 style={{
                                     opacity: open ? 1 : 0,
-                                    // transition: `opacity ${animTime}s`,
                                     pointerEvents: !open ? 'none' : undefined,
                                     ...mb_styles,
                                 }}
@@ -146,23 +175,14 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
                                 'menu',
                                 `${right ? 'menu-right' : 'menu-left'}`,
                                 floating ? 'floating' : '',
-                                mb_className,
-                                drawerProps?.className
+                                menuBack_class,
+                                drawerProps?.className,
+                                visible_always ? 'v_always' : ''
                             )}
                             ref={menu}
                             style={{
                                 maxWidth: maxWidth,
-                                ...(open
-                                    ? {
-                                          transform: `translate(${!right ? '0' : '0'},${floating ? '-50%' : '0'})`,
-                                          opacity: 1,
-                                      }
-                                    : {
-                                          transform: `translate(${!right ? '-100%' : '100%'},${
-                                              floating ? '-50%' : '0'
-                                          })`,
-                                          opacity: 0,
-                                      }),
+                                ...menu_style,
                                 ...mb_styles,
                                 ...drawerProps?.style,
                             }}
@@ -182,7 +202,11 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
                         </div>
                     </>
                 }
-                <div className={classNameFind(s, `content`)} {...contentProps}>
+                <div
+                    {...contentProps}
+                    className={classNameFind(s, `content`, contentProps?.className)}
+                    style={{ ...content_styles, ...mb_styles, ...(contentProps?.style || {}) }}
+                >
                     {children}
                 </div>
             </div>

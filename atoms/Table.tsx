@@ -17,12 +17,12 @@ const amountsPerPage = [10, 50, 100];
  * @example columnsQuick('rxcui;name;strength;route;')
  */
 export const columnsQuick = (cols: string) => {
-    const transform = (s: string): Column<{}> | { [index: string]: any } => {
+    const transform = (s: string) => {
         const a = s.split(',');
-        let col = {
+        let col:Column = {
             accessor: a[0],
             Header: a[1] || a[0],
-        } as any;
+        };
         if (a[2]) col['Cell'] = a[2];
         return col;
     };

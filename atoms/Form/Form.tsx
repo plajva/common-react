@@ -6,11 +6,13 @@ import {
     ReactElement,
     ReactNode,
     useContext,
+    useEffect,
     useState,
 } from 'react';
 // import * as y from 'yup';
 // import * as z from 'zod';
 import { combineEvent, setDefault } from '../../utils';
+import {isEqual} from 'lodash'
 
 export type InputPropsAll =
     | React.InputHTMLAttributes<HTMLElement>
@@ -127,11 +129,12 @@ interface FormProps {
     /**Accepts a schema from zod/yup */
     validationSchema?: any;
     submit?: (v: any) => void;
+    onChange?: (v: FormState) => void;
     children?: ReactNode | ((context: FormContextI) => ReactElement);
 }
 const isZod = (s: any): boolean => (s?.parse ? true : false);
 const isYup = (s: any): boolean => (s?.validate ? true : false);
-const Form = ({ initialState, validationSchema: schema, submit, children, ...props }: FormProps) => {
+const Form = ({ initialState, validationSchema: schema, submit, onChange, children, ...props }: FormProps) => {
     const [state, setState] = useState<FormState>({
         values:
             (schema &&
@@ -159,7 +162,9 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
             return values;
         }
     };
-
+    
+    useEffect(()=>{if(onChange)onChange(state)}, [state])
+    
     const context: FormContextI = {
         state: state,
         setValue: (name, value) => {
@@ -234,8 +239,11 @@ const Form = ({ initialState, validationSchema: schema, submit, children, ...pro
                         }
                     }
                 }
-
-                return { ...state, values, errors };
+                
+                
+                const newState = { ...state, values, errors };
+                
+                return newState;
             });
         },
         setTouched: (name, value) => {

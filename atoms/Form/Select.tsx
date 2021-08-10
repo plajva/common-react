@@ -14,7 +14,10 @@ const Select = ({ className, placeholder, placeholderProps, children, ..._props 
     className = classFind(s, `comp`, className, 'dup', theme);
 
     const { value, ...props } = useFormField(_props);
-    const placeProps = { disabled: !!placeholderProps?.disabled, selected: true };
+    const placeProps = { disabled: !!placeholderProps?.disabled, 
+        // Warning on React console, pass 'value' on <select> instead of setting 'selected' on <option>
+        // selected: true 
+    };
     return (
         <select
             data-value={value || ''}

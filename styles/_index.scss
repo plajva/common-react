@@ -186,6 +186,21 @@ h4,
 h5 {
     margin: 0.7em 0;
 }
+table{
+    padding: get-space(1);
+    border-collapse: collapse;
+}
+
+th,td{
+    padding: get-space(1);
+    border: 1px solid get-color(neutral, $alpha: .3);
+    // border-top: 1px solid get-color(neutral, $alpha: .5);
+    // border-bottom: 1px solid get-color(neutral, $alpha: .5);
+}
+code{
+    padding: .3em;
+    background: get-color(neutral, $alpha: .1);
+}
 
 a {
     color: inherit;

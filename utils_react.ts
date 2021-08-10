@@ -60,3 +60,16 @@ export const separateChildren = (
     };
     return [child_first, child_rest, renderChild];
 };
+
+export const scrollToElement = (el:HTMLElement|null, {offset, scrollView}:{offset?:number, scrollView?:ScrollIntoViewOptions | boolean}) => {
+    if(el){
+        if(scrollView){
+            el.scrollIntoView({ block: "start", behavior: "smooth" ,...(typeof scrollView==='object'?scrollView:{})})
+        }else{
+            const y = (el.getBoundingClientRect().top||0) + window.pageYOffset + (offset||0);
+            window.scrollTo({top: y, behavior: 'smooth'});
+        }
+        
+    }
+}
+

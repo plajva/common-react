@@ -7,12 +7,13 @@ import {
     ReactNode,
     useContext,
     useEffect,
+    useMemo,
     useState,
 } from 'react';
 // import * as y from 'yup';
 // import * as z from 'zod';
 import { combineEvent, setDefault } from '../../utils';
-import {isEqual} from 'lodash'
+import { isEqual } from 'lodash';
 
 export type InputPropsAll =
     | React.InputHTMLAttributes<HTMLElement>
@@ -34,6 +35,7 @@ export interface FormContextI {
     getTouched: (name: string) => any;
     getValid: () => any;
     submit: () => void;
+    reset: () => void;
 }
 
 const FormContext = createContext<FormContextI>({
@@ -49,6 +51,7 @@ const FormContext = createContext<FormContextI>({
     getTouched: () => {},
     getValid: () => undefined,
     submit: () => {},
+    reset: () => {},
 });
 
 export const useForm = () => useContext(FormContext);
@@ -128,23 +131,29 @@ interface FormProps {
     initialState?: object;
     /**Accepts a schema from zod/yup */
     validationSchema?: any;
-    submit?: (v: any) => void;
+    onSubmit?: (v: any) => void;
     onChange?: (v: FormState) => void;
+    onReset?: () => void;
     children?: ReactNode | ((context: FormContextI) => ReactElement);
 }
 const isZod = (s: any): boolean => (s?.parse ? true : false);
 const isYup = (s: any): boolean => (s?.validate ? true : false);
-const Form = ({ initialState, validationSchema: schema, submit, onChange, children, ...props }: FormProps) => {
-    const [state, setState] = useState<FormState>({
-        values:
-            (schema &&
-                ((isZod(schema) && schema.safeParse(initialState)['data']) ||
-                    (isYup(schema) && schema.cast(initialState)))) ||
-            initialState ||
-            {},
-        // errors: {},
-        touched: {},
-    });
+const Form = ({ initialState, validationSchema: schema, onSubmit, onReset, onChange, children, ...props }: FormProps) => {
+    // Cache initial state
+    const initial = useMemo(
+        () => ({
+            values:
+                (schema &&
+                    ((isZod(schema) && schema.safeParse(initialState)['data']) ||
+                        (isYup(schema) && schema.cast(initialState)))) ||
+                initialState ||
+                {},
+            // errors: {},
+            touched: {},
+        }),
+        [initialState, schema]
+    );
+    const [state, setState] = useState<FormState>(initial);
 
     const getValid = () => {
         const values = state.values;
@@ -162,9 +171,11 @@ const Form = ({ initialState, validationSchema: schema, submit, onChange, childr
             return values;
         }
     };
-    
-    useEffect(()=>{if(onChange)onChange(state)}, [state])
-    
+
+    useEffect(() => {
+        if (onChange) onChange(state);
+    }, [state]);
+
     const context: FormContextI = {
         state: state,
         setValue: (name, value) => {
@@ -239,10 +250,9 @@ const Form = ({ initialState, validationSchema: schema, submit, onChange, childr
                         }
                     }
                 }
-                
-                
+
                 const newState = { ...state, values, errors };
-                
+
                 return newState;
             });
         },
@@ -265,10 +275,14 @@ const Form = ({ initialState, validationSchema: schema, submit, onChange, childr
             return getForm(`touched.${name}`, state);
         },
         getValid,
+        reset: () => {
+            setState(initial);
+            onReset && onReset();
+        },
         submit: () => {
             const valid = getValid();
-            if (submit) {
-                submit(valid);
+            if (onSubmit) {
+                onSubmit(valid);
             }
         },
     };

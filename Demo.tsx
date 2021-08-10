@@ -21,6 +21,7 @@ import { Field } from './atoms/Form/Field';
 import Form from './atoms/Form/Form';
 // import Field from './atoms/Form/Field';
 import Input from './atoms/Form/Input';
+import Select from './atoms/Form/Select';
 import Toggle from './atoms/Form/Toggle';
 import Icon from './atoms/Icon';
 import { useNotifications } from './atoms/Notifications';
@@ -158,6 +159,12 @@ const Demo = (props) => {
                 )}
             </Form>
             <Divider className='thin' />
+            <div >
+                <h1>SELECT</h1>
+                <Select placeholder="Choose">
+                    <option>Hello </option>
+                </Select>
+            </div>
             <h2>Notifications</h2>
             <div>
                 <Form>

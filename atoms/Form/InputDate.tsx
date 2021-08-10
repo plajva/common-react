@@ -5,6 +5,7 @@ import MomentLocaleUtils from 'react-day-picker/moment';
 import { useTheme } from '../Theme';
 import { classNameFind } from '../../utils';
 
+import 'react-day-picker/lib/style.css';
 import s from './InputDate.module.scss';
 
 interface InputDateProps {

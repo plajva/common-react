@@ -5,7 +5,6 @@ import { createSignal } from '@react-rxjs/utils';
 import { catchError, distinctUntilChanged, Observable, of, shareReplay, switchMap } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
 
-
 // ! This is to be moved out of common if it's to actually be 'common'
 // Implementation error handling should not be common as different APIs return different error values
 export interface APIFetchResponse {
@@ -22,7 +21,7 @@ export const createAPIFetch = <T>(
     //     // Add host if available
     //     init = {headers:{"Host":process.env.REACT_APP_API_HOST,...init?.headers},...init};
     // }
-    
+
     if (endpoint[0] !== '/') endpoint = '/' + endpoint;
     if (!process.env.REACT_APP_API_URL) throw new Error(`process.env.REACT_APP_API_URL undefined?`);
     const url = `${process.env.REACT_APP_API_URL}${endpoint}`;
@@ -60,16 +59,16 @@ export const queryString = (v?: any) => {
 export function createAPIFetchCustom<T extends {}, E = any>(
     toFetch: (val: T) => Observable<E>,
     defaultValue?: any
-): [(v: T) => void, () => Exclude<T, typeof SUSPENSE> | null,() => Exclude<E, typeof SUSPENSE> | null, Observable<E>] {
-    const [value$, setValue] = createSignal<T>(); 
+): [(v: T) => void, () => Exclude<T, typeof SUSPENSE> | null, () => Exclude<E, typeof SUSPENSE> | null, Observable<E>] {
+    const [value$, setValue] = createSignal<T>();
     const [useValue, valueShare$] = bind(value$, null);
     const result$ = value$.pipe(
         // Only update when parameters changed
         // distinctUntilChanged((prev, curr) => {
-				// 	// console.log('Prev', JSON.stringify(prev))
-				// 	// console.log('Curr', JSON.stringify(curr))
-				// 	return isEqual(JSON.stringify(prev), JSON.stringify(curr))
-				// }),
+        // 	// console.log('Prev', JSON.stringify(prev))
+        // 	// console.log('Curr', JSON.stringify(curr))
+        // 	return isEqual(JSON.stringify(prev), JSON.stringify(curr))
+        // }),
         switchMap(toFetch),
         shareReplay(1)
     );

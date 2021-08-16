@@ -138,7 +138,15 @@ interface FormProps {
 }
 const isZod = (s: any): boolean => (s?.parse ? true : false);
 const isYup = (s: any): boolean => (s?.validate ? true : false);
-const Form = ({ initialState, validationSchema: schema, onSubmit, onReset, onChange, children, ...props }: FormProps) => {
+const Form = ({
+    initialState,
+    validationSchema: schema,
+    onSubmit,
+    onReset,
+    onChange,
+    children,
+    ...props
+}: FormProps) => {
     // Cache initial state
     const initial = useMemo(
         () => ({
@@ -276,7 +284,17 @@ const Form = ({ initialState, validationSchema: schema, onSubmit, onReset, onCha
         },
         getValid,
         reset: () => {
-            setState(initial);
+            // If we use the memoized 'initial' value, then the input values remains equals.
+            setState({
+                values:
+                    (schema &&
+                        ((isZod(schema) && schema.safeParse(initialState)['data']) ||
+                            (isYup(schema) && schema.cast(initialState)))) ||
+                    initialState ||
+                    {},
+                // errors: {},
+                touched: {},
+            });
             onReset && onReset();
         },
         submit: () => {

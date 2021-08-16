@@ -9,10 +9,10 @@
     -moz-appearance: none !important;
     -webkit-appearance: none !important;
     appearance: none !important;
-    color: gray;
+    color: get-color(neutral, $alpha: 0.6);
 
     & option:first-child.placeholder {
-        color: gray;
+        color: get-color(neutral, $alpha: 0.6);
     }
 
     @include use-theme using ($ts) {

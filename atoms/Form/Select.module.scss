@@ -5,34 +5,34 @@
     // My definitions by default
     line-height: $line-height;
     height: $height;
-    // background-position: calc(100% - 0.75rem) center !important;
-    // -moz-appearance: none !important;
-    // -webkit-appearance: none !important;
-    // appearance: none !important;
-    // ! IMPLEMENT OUR OWN SELECT
-    // color: gray;
+    
+    background-position: calc(100% - 0.75rem) center !important;
+    -moz-appearance: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    color: get-color(neutral, $alpha: 0.6);
 
-    // & option:first-child.placeholder {
-    //     color: gray;
-    // }
+    & option:first-child.placeholder {
+        color: get-color(neutral, $alpha: 0.6);
+    }
 
-    // @include use-theme using ($ts) {
-    //     $color: color-text(get-color(background));
+    @include use-theme using ($ts) {
+        $color: color-text(get-color(background));
 
-    //     &#{$ts} {
-    //         background: rgba(0, 0, 0, 0.05)
-    //             url("data:image/svg+xml,<svg height='10px' width='10px' viewBox='0 0 16 16' fill='#{$color}' xmlns='http://www.w3.org/2000/svg'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>")
-    //             no-repeat;
+        &#{$ts} {
+            background: rgba(0, 0, 0, 0.05)
+                url("data:image/svg+xml,<svg height='10px' width='10px' viewBox='0 0 16 16' fill='#{$color}' xmlns='http://www.w3.org/2000/svg'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>")
+                no-repeat;
 
-    //         &:not([data-value='']) {
-    //             color: $color;
-    //         }
-    //         option {
-    //             color: $color;
-    //             background-color: get-color(background, 1, 1);
-    //         }
-    //     }
-    // }
+            &:not([data-value='']) {
+                color: $color;
+            }
+            option {
+                color: $color;
+                background-color: get-color(background, 1, 1);
+            }
+        }
+    }
 
     // @include use-theme using ($ts){
     // 	// Theme Iterator

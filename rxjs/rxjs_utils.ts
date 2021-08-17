@@ -21,11 +21,7 @@ export const createAPIFetch = <T>(
     init?: RequestInit,
     okReturn?: (res: Response) => Observable<T>
 ): Observable<ResponseFetch<T>> => {
-    // if(process.env.REACT_APP_API_HOST){
-    //     // Add host if available
-    //     init = {headers:{"Host":process.env.REACT_APP_API_HOST,...init?.headers},...init};
-    // }
-
+    // Attach / if not present in endpoint
     if (endpoint[0] !== '/') endpoint = '/' + endpoint;
     if (!process.env.REACT_APP_API_URL) throw new Error(`process.env.REACT_APP_API_URL undefined?`);
     const url = `${process.env.REACT_APP_API_URL}${endpoint}`;
@@ -84,31 +80,10 @@ export function createAPIFetchCustom<T extends {}, E>(
 ): [(v: T) => void, () => Exclude<T, typeof SUSPENSE> | null, () => Exclude<E, typeof SUSPENSE> | null, Observable<E>] {
     const _shareReplay = setDefault(options?.shareReplay, true);
 
-    // const [value$, setValue] = createSignal<T>();
-    // const [useValue, valueShare$] = bind(value$, null);
-    // const result$ = value$.pipe(
-    //     // Only update when parameters changed
-    //     // distinctUntilChanged((prev, curr) => {
-    //     // 	// console.log('Prev', JSON.stringify(prev))
-    //     // 	// console.log('Curr', JSON.stringify(curr))
-    //     // 	return isEqual(JSON.stringify(prev), JSON.stringify(curr))
-    //     // }),
-    //     switchMap(toFetch),
-    //     shareReplay(1)
-    // );
-    // const [useResult, shareResult$] = bind(result$, options?.defaultValue || null);
-    // return [setValue, useValue, useResult, shareResult$];
-
     const value$ = new Subject<T>();
     const setValue = (v: T) => value$.next(v);
     const useValue = () => useObservable(value$);
     let result$ = value$.pipe(
-        // Only update when parameters changed
-        // distinctUntilChanged((prev, curr) => {
-        // 	// console.log('Prev', JSON.stringify(prev))
-        // 	// console.log('Curr', JSON.stringify(curr))
-        // 	return isEqual(JSON.stringify(prev), JSON.stringify(curr))
-        // }),
         switchMap(toFetch)
     );
     if (_shareReplay) result$ = result$.pipe(shareReplay(1));

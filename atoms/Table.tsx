@@ -19,7 +19,7 @@ const amountsPerPage = [10, 50, 100];
 export const columnsQuick = (cols: string) => {
     const transform = (s: string) => {
         const a = s.split(',');
-        let col:Column = {
+        let col: Column = {
             accessor: a[0],
             Header: a[1] || a[0],
         };
@@ -100,7 +100,7 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
         setPageSize,
         // Get the state from the instance
         state: { pageIndex, pageSize },
-    } = useTable({ ...options }, usePagination) as any;
+    } = useTable({ ...options, pageCount: pagination?.pageCount }, usePagination) as any;
 
     useEffect(() => {
         fetchData && fetchData({ pageIndex, pageSize });

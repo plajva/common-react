@@ -12,15 +12,15 @@
     line-height: $line-height;
     border: 1px solid get-color(neutral, $alpha: 0.5);
 
+    &::placeholder {
+        color: get-color(neutral, $alpha: 0.6);
+    }
+
     @include use-theme using ($ts) {
         // Theme Iterator
 
         &#{$ts} {
             $color: color-text(get-color(background));
-
-            &::placeholder {
-                color: gray;
-            }
 
             &:focus-visible {
                 border: 1px solid color-text(background);

@@ -127,7 +127,7 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
     const menu_style: CSSProperties = visible_always
         ? open
             ? { maxWidth: 240 }
-            : { maxWidth: 100 }
+            : { maxWidth: 60 }
         : open
         ? {
               transform: `translate(${!right ? '0' : '0'},${floating ? '-50%' : '0'})`,
@@ -139,8 +139,8 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
           };
     const content_styles: CSSProperties = visible_always
         ? open
-            ? { marginLeft: '240px' }
-            : { marginLeft: '100px' }
+            ? { marginLeft: 240 }
+            : { marginLeft: 60 }
         : {};
 
     // if(Object.entries(contentData.current).length)

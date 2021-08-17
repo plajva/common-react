@@ -24,7 +24,7 @@ const Select = ({ className, placeholder, placeholderProps, children, ..._props 
         <select
             data-value={value || ''}
             className={className}
-            value={value || ''}
+            value={value}
             {...props}
             ref={typeof ref === 'object' && !Object.keys(ref).length ? null : ref}
         >

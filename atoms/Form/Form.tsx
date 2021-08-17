@@ -13,8 +13,25 @@ import {
 // import * as y from 'yup';
 // import * as z from 'zod';
 import { combineEvent, setDefault } from '../../utils';
-import { isEqual } from 'lodash';
+import { cloneDeep, get, isEqual, set, setWith } from 'lodash';
+import StateCombineHOC, { StateCombineContext, StateCombineProps } from '../HOC/StateCombineHOC';
 
+const splitName = (name: string) => {
+    return name
+        .replace(/\[/g, '.[')
+        .split('.')
+        .filter((v) => v);
+};
+const normalizeName = (name: string) => splitName(name).join('.');
+const replaceForm = (name, v, obj) => set(obj, name, v);
+const getForm = (name, obj) => get(obj, name);
+
+type Issue = {
+    path: string;
+    message: string;
+};
+
+type MyError = Issue[] | undefined;
 export type InputPropsAll =
     | React.InputHTMLAttributes<HTMLElement>
     | React.SelectHTMLAttributes<HTMLElement>
@@ -25,8 +42,7 @@ export interface FormState {
     errors?: MyError;
     touched?: any;
 }
-export interface FormContextI {
-    state: FormState;
+interface FormContextExtra {
     setValue: (name: string, value: any) => void;
     // setError: (name: string, value: any) => void;
     setTouched: (name: string, value: any) => void;
@@ -36,15 +52,16 @@ export interface FormContextI {
     getValid: () => any;
     submit: () => void;
     reset: () => void;
+    touched?: boolean;
+    errors?: boolean;
 }
+export type FormContextI = StateCombineProps<FormState> & FormContextExtra;
 
-const FormContext = createContext<FormContextI>({
-    // values: {},
-    // errors: {},
-    // touched: {},
+const FormContext = StateCombineContext<FormState, FormContextExtra>({
     state: {},
+    setState: () => {},
+    initialState: {},
     setValue: () => {},
-    // setError: () => {},
     setTouched: () => {},
     getValue: () => {},
     getError: () => undefined,
@@ -56,110 +73,48 @@ const FormContext = createContext<FormContextI>({
 
 export const useForm = () => useContext(FormContext);
 
-const isArr = (key) => key[0] === '[' && key[key.length - 1] === ']';
-const isTypeGood = (key, obj) => (isArr(key) ? Array.isArray(obj) : typeof obj === 'object' && !Array.isArray(obj));
-const keyToIndex = (key) => (isArr(key) ? Number(key.replace(/\[/g, '').replace(/\]/g, '')) : key);
-const keyValid = (key) => typeof key === 'string' && (isArr(key) ? !isNaN(keyToIndex(key)) : true);
-const splitName = (name: string) => {
-    return name
-        .replace(/\[/g, '.[')
-        .split('.')
-        .filter((v) => v);
-};
-const normalizeName = (name: string) => splitName(name).join('.');
-const replaceForm = (name: string, value: any, obj: object) => {
-    let parent, grandparent, grand_key;
-    let setParent = (val) => {
-        grandparent[grand_key] = val;
-    };
-    const names = splitName(name);
-    const getMyObj = () => (typeof parent !== 'undefined' ? parent : obj);
-    const setMyObj = (val) => {
-        if (parent) {
-            parent = val;
-            setParent(parent);
-        } else obj = val;
-    };
-    while (names.length) {
-        const key = names.shift();
-        // If key's invalid break;
-        if (!keyValid(key)) {
-            throw Error(`key ${key} not valid`);
-        }
-        const isarr = isArr(key);
-
-        const getKeyObj = () => getMyObj()[keyToIndex(key)];
-        const setKeyObj = (val) => {
-            // console.log(`Setting ${getMyObj()} ${key} with ${val}`);
-            getMyObj()[keyToIndex(key)] = val;
-        };
-        // Make sure obj type is good
-        if (!isTypeGood(key, getMyObj())) setMyObj(isarr ? [] : {});
-        if (!names.length) {
-            setKeyObj(value);
-            break;
-        } else if (typeof getKeyObj() === 'undefined') {
-            setKeyObj(true);
-        }
-
-        // Set parent with (obj||parent)[key]
-        grandparent = getMyObj();
-        grand_key = keyToIndex(key);
-        parent = getKeyObj();
-    }
-    return obj;
-};
-const getForm = (name: string, obj: object) => {
-    const names = splitName(name);
-    while (names.length && typeof obj === 'object') {
-        const key = names.shift();
-        if (!keyValid(key)) {
-            throw Error(`key ${key} not valid`);
-        }
-        obj = obj[keyToIndex(key)];
-        if (typeof obj === 'undefined') return undefined;
-    }
-    return obj;
-};
-type Issue = {
-    path: string;
-    message: string;
-};
-type MyError = Issue[] | undefined;
-
 interface FormProps {
-    initialState?: object;
+    // initialState?: object;
+    /** Defaults to initialState, if reset, state will become this */
+    resetState?: FormState;
     /**Accepts a schema from zod/yup */
     validationSchema?: any;
     onSubmit?: (v: any) => void;
     onChange?: (v: FormState) => void;
-    onReset?: () => void;
+    readonly?: boolean;
+    onReset?: (v: FormState) => void;
     children?: ReactNode | ((context: FormContextI) => ReactElement);
 }
 const isZod = (s: any): boolean => (s?.parse ? true : false);
 const isYup = (s: any): boolean => (s?.validate ? true : false);
-const Form = ({ initialState, validationSchema: schema, onSubmit, onReset, onChange, children, ...props }: FormProps) => {
-    // Cache initial state
-    const initial = useMemo(
-        () => ({
-            values:
-                (schema &&
-                    ((isZod(schema) && schema.safeParse(initialState)['data']) ||
-                        (isYup(schema) && schema.cast(initialState)))) ||
-                initialState ||
-                {},
-            // errors: {},
-            touched: {},
-        }),
-        [initialState, schema]
-    );
-    const [state, setState] = useState<FormState>(initial);
 
+const FormComp = ({
+    state,
+    setState,
+    initialState,
+    readonly,
+    resetState: _resetState,
+    validationSchema: schema,
+    onSubmit,
+    onReset,
+    onChange,
+    children,
+    ...props
+}: FormProps & StateCombineProps<FormState>) => {
+    // Will always re-render if schema & state=initialState bc we need to set default values from schema
+    // console.log('Form Getting', state)
+    // if (state === initialState && schema) {
+    //     setState((s) => getInitial(initialState, schema));
+    // }
+    const resetState = useMemo( () =>  cloneDeep(setDefault(_resetState, initialState)), [initialState, _resetState] );
+
+    // Happens on submission
     const getValid = () => {
         const values = state.values;
+        let valid = values;
         if (schema) {
             try {
-                return isZod(schema) ? schema.parse(values) : schema.validateSync(values, { abortEarly: false });
+                valid = isZod(schema) ? schema.parse(values) : schema.validateSync(values, { abortEarly: false });
             } catch (_error) {
                 // Set touched to true so all errors are shown
                 setState((state) => {
@@ -167,9 +122,11 @@ const Form = ({ initialState, validationSchema: schema, onSubmit, onReset, onCha
                 });
                 return undefined;
             }
-        } else {
-            return values;
         }
+        setState((state) => {
+            return { ...state, touched: false };
+        });
+        return valid;
     };
 
     useEffect(() => {
@@ -177,10 +134,14 @@ const Form = ({ initialState, validationSchema: schema, onSubmit, onReset, onCha
     }, [state]);
 
     const context: FormContextI = {
-        state: state,
+        state,
+        initialState,
+        setState,
+        touched: Boolean(typeof state.touched === 'object' ? Object.keys(state.touched)?.length : state.touched),
+        errors: Boolean(typeof state.errors === 'object' ? Object.keys(state.errors)?.length : state.errors),
         setValue: (name, value) => {
             setState((state) => {
-                let values = replaceForm(name, value, state.values);
+                let values = readonly ? state.values : replaceForm(name, value, state.values);
 
                 // Doing validation
                 let errors: MyError;
@@ -200,17 +161,13 @@ const Form = ({ initialState, validationSchema: schema, onSubmit, onReset, onCha
                                 errors.push(
                                     ...e.errors.map((issue) => {
                                         return {
-                                            path: normalizeName(
-                                                issue.path.reduce(
-                                                    (fullPath, currPath) =>
-                                                        fullPath +
-                                                        '.' +
-                                                        String(
-                                                            typeof currPath === 'number' ? `[${currPath}]` : currPath
-                                                        ),
-                                                    ''
-                                                ) as string
-                                            ),
+                                            path: issue.path.reduce(
+                                                (fullPath, currPath) =>
+                                                    fullPath +
+                                                    '.' +
+                                                    String(typeof currPath === 'number' ? `[${currPath}]` : currPath),
+                                                ''
+                                            ) as string,
                                             message: issue.message,
                                         };
                                     })
@@ -276,14 +233,15 @@ const Form = ({ initialState, validationSchema: schema, onSubmit, onReset, onCha
         },
         getValid,
         reset: () => {
-            setState(initial);
-            onReset && onReset();
+            setState(resetState);
+            onReset && onReset(resetState);
         },
         submit: () => {
             const valid = getValid();
-            if (onSubmit) {
-                onSubmit(valid);
+            if (!valid) {
+                console.log('Form not valid: ', state.errors);
             }
+            onSubmit && onSubmit(valid);
         },
     };
     // console.log(state);
@@ -334,28 +292,27 @@ export const useFormField = (
     const { onBlur, onChange, valueName: _valueName, toForm, toFormBlur, fromForm, value, name, ..._props } = props;
     const form = useForm();
     const valueName = _valueName ? _valueName : 'value';
+    const getValue = (name) => {
+        let formValue = form.getValue(name);
+        // if (_props['type'] === 'date' && typeof formValue === 'string')formValue = new Date(formValue)?.toISOString().substr(0,10) || formValue;
+        return setDefault(value, formValue) || '';
+    };
     return name
         ? {
               onChange: combineEvent((e) => {
                   form.setValue(name, toForm ? toForm(e, e.target[valueName]) : e.target[valueName]);
                   // console.log("OnChange");
+                  form.setTouched(name, true);
               }, onChange),
               onBlur: combineEvent((e) => {
                   // form.setTouched(name, true);
                   if (toFormBlur) form.setValue(name, toFormBlur(e, e.target[valueName]));
               }, onBlur),
               onFocus: combineEvent((e) => {
-                  form.setTouched(name, true);
+                  //   form.setTouched(name, true);
                   // if(toFormBlur)form.setValue(name, toFormBlur(e,e.target[valueName]));
               }, onBlur),
-              ...Object.fromEntries([
-                  [
-                      valueName,
-                      fromForm
-                          ? fromForm(setDefault(value, form.getValue(name)) || '')
-                          : setDefault(value, form.getValue(name) || ''),
-                  ],
-              ]),
+              ...Object.fromEntries([[valueName, fromForm ? fromForm(getValue(name)) : getValue(name)]]),
               ..._props,
           }
         : props;
@@ -426,7 +383,7 @@ export const useFieldValue = (name?: string) => {
 // 	return useFieldValue(props.name);
 // };
 
-type MapProps = Omit<HTMLAttributes<HTMLDivElement>, 'children'> & {
+type MapProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
     root_type?: any;
     children?: ((props: { value; index }) => any) | ReactNode;
 };
@@ -493,4 +450,26 @@ export const FieldArray = <T extends {}>({ name, children }: FieldArrayProps<T>)
     );
 };
 
+const getInitial = (initialState?: FormState, schema?: any) => {
+    let values = initialState?.values || {};
+    try {
+        values =
+            (schema &&
+                ((isZod(schema) && schema.safeParse(initialState?.values)['data']) ||
+                    (isYup(schema) && schema.cast(initialState?.values)))) ||
+            initialState?.values ||
+            {};
+    } catch (err) {
+        console.error('Form initial state values parsing error: ', err);
+    }
+
+    return {
+        touched: [],
+        ...initialState,
+        values,
+    };
+};
+const Form = StateCombineHOC(FormComp, (props) => ({
+    initialState: getInitial(props.initialState && cloneDeep(props.initialState), props.validationSchema),
+}));
 export default Form;

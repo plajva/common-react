@@ -1,7 +1,7 @@
 import { useTheme } from './Theme';
 import { classNameFind } from '../utils';
 import FocusTrap from 'focus-trap-react';
-import { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, ReactNode, useEffect, useRef, useState } from 'react';
 import Backdrop from './Backdrop';
 import s from './Modal.module.scss';
 import Portal from './Portal';
@@ -11,13 +11,12 @@ export interface ModalProps {
     isOpen: boolean;
     isLocked?: boolean;
     onClose?: Function;
+    children?: ReactNode;
 }
 
-const Modal = (props: PropsWithChildren<ModalProps>) => {
+const Modal = ({ isOpen, onClose, isLocked, children, className, ...props }: ModalProps & React.HTMLAttributes<HTMLElement>) => {
     // set up active state
     const [active, setActive] = useState(false);
-    // get spread props out variables
-    const { isOpen, onClose, isLocked, children, className } = props;
     // Make a reference to the backdrop
     const backdrop = useRef<HTMLDivElement>(null);
 
@@ -53,7 +52,7 @@ const Modal = (props: PropsWithChildren<ModalProps>) => {
 
     return (
         ((isOpen || active) && (
-            <Portal id='modals'>
+            <Portal id='modals' {...props}>
                 <FocusTrap
                     focusTrapOptions={{
                         preventScroll: true,
@@ -62,7 +61,7 @@ const Modal = (props: PropsWithChildren<ModalProps>) => {
                 >
                     <Backdrop ref={backdrop} active={isOpen} fixed={true}>
                         <div className={clsContent}>
-                            <div className={s.content}>{children}</div>
+                            <div className={s.content}>{typeof children === 'function' ? children() : children}</div>
                         </div>
                     </Backdrop>
                 </FocusTrap>

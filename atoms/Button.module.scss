@@ -57,7 +57,7 @@
             }
         }
         &#{$ts}:disabled {
-            color: rgba(color-text(get-color(background)), 0.7);
+            color: rgba(color-text(get-color(background)), 0.3);
             cursor: not-allowed;
         }
 

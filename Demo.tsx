@@ -25,6 +25,7 @@ import Select from './atoms/Form/Select';
 import Toggle from './atoms/Form/Toggle';
 import Icon from './atoms/Icon';
 import { useNotifications } from './atoms/Notifications';
+import QueryErrorContainer from './atoms/QueryErrorContainer';
 import Stepper from './atoms/Stepper';
 import { useTheme } from './atoms/Theme';
 
@@ -128,7 +129,7 @@ const Demo = (props) => {
             <h1>Atoms</h1>
             <Divider className='thin' />
             <h2>Form</h2>
-            <Form initialState={{ first: '', last: '' }}>
+            <Form initialState={{ values: { first: '', last: '' } }}>
                 {(form) => (
                     <div className='col'>
                         <div className='col-6'>
@@ -159,9 +160,33 @@ const Demo = (props) => {
                 )}
             </Form>
             <Divider className='thin' />
-            <div >
+            <div>
+                <h1>QueryErrorContainer</h1>
+                <div style={{ display: 'flex' }}>
+                    <div>
+                        <h2>Loading</h2>
+                        <QueryErrorContainer response={{ loading: true }}>
+                            {(v) => <>Valid Data</>}
+                        </QueryErrorContainer>
+                    </div>
+                    <div>
+                        <h2>Error</h2>
+                        <QueryErrorContainer response={{ errors: true, message: 'Bad Request' }}>
+                            {(v) => <>Valid Data</>}
+                        </QueryErrorContainer>
+                    </div>
+                    <div>
+                        <h2>Vaid</h2>
+                        <QueryErrorContainer response={{ data:'Hello there' }}>
+                            {(v) => <>Valid Data '{v.data}'</>}
+                        </QueryErrorContainer>
+                    </div>
+                </div>
+            </div>
+            <Divider className='thin' />
+            <div>
                 <h1>SELECT</h1>
-                <Select placeholder="Choose">
+                <Select placeholder='Choose'>
                     <option>Hello </option>
                 </Select>
             </div>

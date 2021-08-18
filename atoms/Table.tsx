@@ -6,6 +6,7 @@ import Icon from '../atoms/Icon';
 import { classNameFind } from '../utils';
 import s from './Table.module.scss';
 import { useTheme } from './Theme';
+import v from 'voca';
 
 // Create a default prop getter
 const defaultPropGetter = () => ({});
@@ -16,21 +17,31 @@ const amountsPerPage = [10, 50, 100];
  * @param cols A string for colums in the form of 'accessor/Header, Header, Cell; ...'
  * @example columnsQuick('rxcui;name;strength;route;')
  */
-export const columnsQuick = (cols: string) => {
+export const columnsQuick = (...cols: (string | Column)[]) => {
     const transform = (s: string) => {
         const a = s.split(',');
         let col: Column = {
             accessor: a[0],
-            Header: a[1] || a[0],
+            Header: a[1] || v.capitalize(a[0]),
         };
         if (a[2]) col['Cell'] = a[2];
         return col;
     };
     // return React.useMemo(() => {
-    const j = cols
-        .split(';')
-        .filter((s) => s)
-        .map(transform);
+    const j = cols.reduce((a, v) => {
+        if (typeof v === 'string') {
+            a.push(
+                ...v
+                    .split(';')
+                    .filter((s) => s.match(/[^ ]+/)?.length)
+                    .map(transform)
+            );
+        } else {
+            a.push(v);
+        }
+        return a;
+    }, [] as Column[]);
+
     return j;
     // }, [cols])
 };

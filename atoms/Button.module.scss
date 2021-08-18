@@ -24,6 +24,7 @@
     &.outline {
         border: 1px solid get-color(neutral, $alpha: 0.7);
     }
+    
 
     &.circular {
         padding: none;
@@ -47,7 +48,7 @@
     @include use-theme using ($ts) {
         &#{$ts} {
             // @include background-color(get-color(neutral, $alpha: 0.05));
-            background: get-color(neutral, -4, $alpha: 0.1);
+            background: get-color(neutral, -4, $alpha: 0.05);
             &:hover {
                 // @include background-color(get-color(neutral, $alpha: 0.1));
                 background: get-color(neutral, $alpha: 0.13);

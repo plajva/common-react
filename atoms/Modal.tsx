@@ -57,9 +57,10 @@ const Modal = ({ isOpen, onClose, isLocked, children, className, ...props }: Mod
                     focusTrapOptions={{
                         preventScroll: true,
                         onDeactivate: () => !isLocked && onClose && onClose(),
+                        // clickOutsideDeactivates:true,
                     }}
                 >
-                    <Backdrop ref={backdrop} active={isOpen} fixed={true}>
+                    <Backdrop ref={backdrop} active={isOpen} fixed={true} >
                         <div className={clsContent}>
                             <div className={s.content}>{typeof children === 'function' ? children() : children}</div>
                         </div>

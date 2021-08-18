@@ -1,3 +1,7 @@
+/**
+ * Component renders as a parent <div> and child X when response is loading|error|feedback, 
+ * or just renders as children when response is valid
+ */
 import React, { CSSProperties, ReactNode } from 'react';
 import s from './QueryErrorContainer.module.scss';
 import { useTheme } from '@common/atoms/Theme';
@@ -14,10 +18,17 @@ export interface QueryErrorContainerProps<T> {
     inline?: boolean;
     minWidth?: number;
     minHeight?: number;
-    // Will make this component feedback, meaning undefined response is allowed and not shown
-    // And a success will make color green and render child
+    /**  
+     * Will make this component feedback, meaning undefined response is allowed and not shown
+     * And a success will make color green and render child
+     */
     feedback?: boolean;
-    feedbackDefault?: any;
+    /**
+     * Shown when response evaluates to false
+     */
+    childrenDefault?: any;
+    
+    
 }
 
 const QueryErrorContainer = <T extends any>({
@@ -29,7 +40,7 @@ const QueryErrorContainer = <T extends any>({
     minWidth,
     minHeight,
     feedback,
-    feedbackDefault,
+    childrenDefault,
     ...props
 }: QueryErrorContainerProps<T> & React.HTMLAttributes<HTMLDivElement>) => {
     const theme = useTheme().name;
@@ -76,7 +87,7 @@ const QueryErrorContainer = <T extends any>({
     }
     if (!response) {
         // error = `Response is '${response}'`;
-        return feedbackDefault ? render({ children: feedbackDefault }) : render({ error });
+        return childrenDefault ? render({ children: childrenDefault }) : render({ error });
     }
     //@ts-ignore
     let { errors, loading, message, ...rest } = response;

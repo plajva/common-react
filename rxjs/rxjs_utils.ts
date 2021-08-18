@@ -11,8 +11,10 @@ export interface APIFetchResponse {
     message?: string;
     loading?: boolean;
 }
-export const responseValid = <T>(v): Exclude<T, APIFetchResponse | undefined | null> =>
-    v && !v.errors && !v.loading && !v.message && v;
+export const responseIsValid = <T>(v): Exclude<T, APIFetchResponse | undefined | null> =>
+    (v && !v.errors && !v.loading && !v.message && v) || undefined;
+export const responseIsError = <T>(v): Exclude<T, APIFetchResponse | undefined | null> =>
+    (v && v.errors) || undefined;
 
 export type ResponseFetch<T> = { data: T } | APIFetchResponse;
 const fetchInit: APIFetchResponse = { loading: true };
@@ -27,7 +29,8 @@ export const createAPIFetch = <T>(
     const url = `${process.env.REACT_APP_API_URL}${endpoint}`;
     return fromFetch(url, init).pipe(
         switchMap((res) => {
-            let content_type = res.headers.get('Content-type');
+            // The .split is to handle content types like 'application/json; charset=utf-8'
+            let content_type = res.headers.get('Content-type')?.split(';')[0];
             // let content_size = res.headers.get
             if (res.ok) {
                 return (okReturn ? okReturn(res) : from(res.json())).pipe(map((v) => ({ data: v })));
@@ -105,7 +108,7 @@ export const responseSelector = <T>(
     response: T,
     selector: (v: Exclude<T, APIFetchResponse | undefined | null>) => any
 ) => {
-    const vv = responseValid<T>(response);
+    const vv = responseIsValid<T>(response);
     if (vv) {
         return selector(vv);
     }

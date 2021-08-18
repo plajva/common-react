@@ -10,7 +10,7 @@ export interface QueryErrorContainerProps<T> {
     /**
      * Exclude null/undefined and any of the status/loading properties from type
      */
-    children?: (v: Exclude<T, APIFetchResponse | undefined | null>) => any;
+    children?: (v: Exclude<T, APIFetchResponse<T> | undefined | null>) => any;
     inline?: boolean;
     minWidth?: number;
     minHeight?: number;

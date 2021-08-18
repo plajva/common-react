@@ -6,21 +6,21 @@ import { fromFetch } from 'rxjs/fetch';
 
 // ! This is to be moved out of common if it's to actually be 'common'
 // Implementation error handling should not be common as different APIs return different error values
-export interface APIFetchResponse {
+export interface APIFetchResponse<T> {
     errors?: boolean;
     message?: string;
     loading?: boolean;
+    data?: T;
 }
-export const responseValid = <T>(v): Exclude<T, APIFetchResponse | undefined | null> =>
+export const responseValid = <T>(v): Exclude<T, APIFetchResponse<T> | undefined | null> =>
     v && !v.errors && !v.loading && !v.message && v;
 
-export type ResponseFetch<T> = { data: T } | APIFetchResponse;
-const fetchInit: APIFetchResponse = { loading: true };
+const fetchInit: APIFetchResponse<any> = { loading: true, data: undefined };
 export const createAPIFetch = <T>(
     endpoint: string,
     init?: RequestInit,
     okReturn?: (res: Response) => Observable<T>
-): Observable<ResponseFetch<T>> => {
+): Observable<APIFetchResponse<T>> => {
     // Attach / if not present in endpoint
     if (endpoint[0] !== '/') endpoint = '/' + endpoint;
     if (!process.env.REACT_APP_API_URL) throw new Error(`process.env.REACT_APP_API_URL undefined?`);
@@ -35,7 +35,11 @@ export const createAPIFetch = <T>(
                 switch (content_type) {
                     case 'application/json':
                         return from(res.json()).pipe(
-                            map((v) => ({ errors: true, message: String(v?.message) || `Error ${res.status}` }))
+                            map((v) => ({
+                                errors: true,
+                                message: String(v?.message) || `Error ${res.status}`,
+                                data: undefined,
+                            }))
                         );
                     case 'text/plain':
                         return from(res.text()).pipe(
@@ -60,7 +64,7 @@ export const createAPIFetchStatic = <T>(
     init?: RequestInit,
     defaultValue?: any,
     okReturn?: (res: Response) => Observable<T>
-) => bind<ResponseFetch<T>>(createAPIFetch<T>(endpoint, init, okReturn).pipe(shareReplay(1)), defaultValue || null);
+) => bind<APIFetchResponse<T>>(createAPIFetch<T>(endpoint, init, okReturn).pipe(shareReplay(1)), defaultValue || null);
 
 export const queryString = (v?: any) => {
     if (typeof v !== 'object' || Array.isArray(v)) return '';
@@ -83,16 +87,14 @@ export function createAPIFetchCustom<T extends {}, E>(
     const value$ = new Subject<T>();
     const setValue = (v: T) => value$.next(v);
     const useValue = () => useObservable(value$);
-    let result$ = value$.pipe(
-        switchMap(toFetch)
-    );
+    let result$ = value$.pipe(switchMap(toFetch));
     if (_shareReplay) result$ = result$.pipe(shareReplay(1));
     const useResult = () => useObservable(result$, options?.defaultValue || null);
     return [setValue, useValue, useResult, result$];
 }
 /** To customize how to fetch the API */
 export function createAPIFetchQuery<T extends {}, E = any>(endpoint: string, init?: RequestInit, defaultValue?: any) {
-    return createAPIFetchCustom<T, ResponseFetch<E>>((val: T) => createAPIFetch(endpoint + queryString(val), init), {
+    return createAPIFetchCustom<T, APIFetchResponse<E>>((val: T) => createAPIFetch(endpoint + queryString(val), init), {
         defaultValue,
     });
 }
@@ -103,7 +105,7 @@ export const QueryError = ({ query }) => {
 
 export const responseSelector = <T>(
     response: T,
-    selector: (v: Exclude<T, APIFetchResponse | undefined | null>) => any
+    selector: (v: Exclude<T, APIFetchResponse<T> | undefined | null>) => any
 ) => {
     const vv = responseValid<T>(response);
     if (vv) {

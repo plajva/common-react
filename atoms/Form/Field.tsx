@@ -39,6 +39,7 @@ export interface FieldProps {
     id?: string;
     rel?: boolean;
     rootProps?: object;
+    labelProps?: React.LabelHTMLAttributes<HTMLLabelElement>;
     labelBottom?: ((v: any) => any) | any;
 }
 
@@ -49,6 +50,7 @@ export const Field = ({
     children,
     label,
     labelBottom,
+    labelProps,
     rootProps,
     className,
     direction,
@@ -109,12 +111,14 @@ export const Field = ({
         name,
         ...props,
     });
+    const { className: clsLabel, style: styLabel, htmlFor, ...lblProps } = labelProps ?? {};
     return (
         <div {...rootProps} className={className}>
             <label
                 htmlFor={props.id}
-                className={classNameFind(s, 'label-container')}
-                style={{ flexDirection, cursor: tog_sel_check_radio ? 'pointer' : undefined }}
+                className={classNameFind(s, 'label-container', clsLabel)}
+                style={{ flexDirection, cursor: tog_sel_check_radio ? 'pointer' : undefined, ...styLabel }}
+                {...lblProps}
             >
                 {input}
                 <span className={classNameFind(s, labelPersistent ? 'label-text-persitent' : 'label-text')}>

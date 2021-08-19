@@ -28,20 +28,19 @@ const StateCombineHOC = <EProps extends {}, State, P = {}>(
     const StateCombine = (_props: Partial<EProps> & Partial<StateCombineProps<State>>) => {
         // Define options by calling the function if necessary
         const options = typeof _options === 'function' ? _options(_props) : _options;
-        
+
         // Spread out State Combine Component Props
         const { initialState, state: _state, setState: _setState, ...props } = _props;
-        
+
         // Give priority to the function option that set the inital state, because we are dynamically creating it.
-        const initial =
-            typeof _options === 'function' ? options.initialState : (initialState ??  options.initialState);
-        
+        const initial = typeof _options === 'function' ? options.initialState : initialState ?? options.initialState;
+
         // Create state
         const [state, setState] = useStateCombine(initial, _state, _setState);
-        
+
         // Define new component with redefined props
         const comp = <Comp {...(props as EProps)} state={state} setState={setState} initialState={initial} />;
-        
+
         // Return either the component inside a context, or the component itself if the context invalid
         return options.context && options.contextExtra ? (
             <options.context.Provider value={{ state, setState, ...options.contextExtra, initialState: initial }}>

@@ -12,7 +12,7 @@ import {
 } from 'react';
 // import * as y from 'yup';
 // import * as z from 'zod';
-import { combineEvent,  } from '../../utils';
+import { combineEvent } from '../../utils';
 import { cloneDeep, get, isEqual, set, setWith } from 'lodash';
 import StateCombineHOC, { StateCombineContext, StateCombineProps } from '../HOC/StateCombineHOC';
 
@@ -106,7 +106,7 @@ const FormComp = ({
     // if (state === initialState && schema) {
     //     setState((s) => getInitial(initialState, schema));
     // }
-    const resetState = useMemo( () =>  cloneDeep(_resetState ?? initialState), [initialState , _resetState] );
+    const resetState = useMemo(() => cloneDeep(_resetState ?? initialState), [initialState, _resetState]);
 
     // Happens on submission
     const getValid = () => {
@@ -295,7 +295,7 @@ export const useFormField = (
     const getValue = (name) => {
         let formValue = form.getValue(name);
         // if (_props['type'] === 'date' && typeof formValue === 'string')formValue = new Date(formValue)?.toISOString().substr(0,10) || formValue;
-        return (value ??  formValue) || '';
+        return (value ?? formValue) || '';
     };
     return name
         ? {

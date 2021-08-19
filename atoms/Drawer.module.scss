@@ -1,6 +1,5 @@
 @import '../styles/globals';
 
-
 .menu {
     text-align: center;
     z-index: 12;
@@ -62,7 +61,6 @@
     border-radius: get-space(2);
 }
 
-
 .hook-header {
     font-size: 1.1em;
     font-weight: bold;
@@ -76,7 +74,6 @@
     z-index: 0;
 }
 
-
 .menu,
 .menu-right {
     max-width: 240px;
@@ -86,9 +83,6 @@
     // My definitions by default
     position: relative;
     display: flex;
-    
-        
-    
 
     @include use-theme using ($ts) {
         // Theme Iterator

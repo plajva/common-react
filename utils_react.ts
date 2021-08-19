@@ -47,7 +47,11 @@ export const separateChildren = (
     children: ReactNode,
     state = {},
     setState: any = () => {}
-): [ReactNode | undefined, (React.ReactChild | React.ReactFragment | React.ReactPortal)[], (c: ReactNode) => ReactNode] => {
+): [
+    ReactNode | undefined,
+    (React.ReactChild | React.ReactFragment | React.ReactPortal)[],
+    (c: ReactNode) => ReactNode
+] => {
     const _children = React.Children.toArray(children);
     let child_first: typeof _children[0] | undefined;
     if (_children.length) {
@@ -61,15 +65,20 @@ export const separateChildren = (
     return [child_first, child_rest, renderChild];
 };
 
-export const scrollToElement = (el:HTMLElement|null, {offset, scrollView}:{offset?:number, scrollView?:ScrollIntoViewOptions | boolean}) => {
-    if(el){
-        if(scrollView){
-            el.scrollIntoView({ block: "start", behavior: "smooth" ,...(typeof scrollView==='object'?scrollView:{})})
-        }else{
-            const y = (el.getBoundingClientRect().top||0) + window.pageYOffset + (offset||0);
-            window.scrollTo({top: y, behavior: 'smooth'});
+export const scrollToElement = (
+    el: HTMLElement | null,
+    { offset, scrollView }: { offset?: number; scrollView?: ScrollIntoViewOptions | boolean }
+) => {
+    if (el) {
+        if (scrollView) {
+            el.scrollIntoView({
+                block: 'start',
+                behavior: 'smooth',
+                ...(typeof scrollView === 'object' ? scrollView : {}),
+            });
+        } else {
+            const y = (el.getBoundingClientRect().top || 0) + window.pageYOffset + (offset || 0);
+            window.scrollTo({ top: y, behavior: 'smooth' });
         }
-        
     }
-}
-
+};

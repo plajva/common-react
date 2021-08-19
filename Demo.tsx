@@ -165,9 +165,7 @@ const Demo = (props) => {
                 <div style={{ display: 'flex' }}>
                     <div>
                         <h2>Loading</h2>
-                        <QueryErrorContainer response={{ loading: true }}>
-                            {(v) => <>Valid Data</>}
-                        </QueryErrorContainer>
+                        <QueryErrorContainer response={{ loading: true }}>{(v) => <>Valid Data</>}</QueryErrorContainer>
                     </div>
                     <div>
                         <h2>Error</h2>
@@ -177,7 +175,7 @@ const Demo = (props) => {
                     </div>
                     <div>
                         <h2>Vaid</h2>
-                        <QueryErrorContainer response={{ data:'Hello there' }}>
+                        <QueryErrorContainer response={{ data: 'Hello there' }}>
                             {(v) => <>Valid Data '{v.data}'</>}
                         </QueryErrorContainer>
                     </div>

@@ -25,9 +25,9 @@ const Dropdown: FunctionComponent<DropdownProps & React.HTMLAttributes<HTMLDivEl
     const theme = useTheme().name;
     const [state, setState] = useState({ open: on_click ? false : true });
     className = classNameFind(s, `comp`, theme, className, 'dropdown');
-    
+
     // Default to true if handleclick is undefined
-    const handle_click = (_handle_click ??  true);
+    const handle_click = _handle_click ?? true;
 
     const [child_first, child_rest, renderChild] = separateChildren(children, state, setState);
 
@@ -40,8 +40,16 @@ const Dropdown: FunctionComponent<DropdownProps & React.HTMLAttributes<HTMLDivEl
                 {renderChild(child_first)}
             </div>
 
-            {state.open && child_rest?.some(s => Boolean(s)) && (
-                <div {...contentProps} className={classNameFind(s, 'dropdown-content', !on_click ? 'dropdown-content-hover' : '', contentProps?.className)}>
+            {state.open && child_rest?.some((s) => Boolean(s)) && (
+                <div
+                    {...contentProps}
+                    className={classNameFind(
+                        s,
+                        'dropdown-content',
+                        !on_click ? 'dropdown-content-hover' : '',
+                        contentProps?.className
+                    )}
+                >
                     {renderChild(child_rest)}
                 </div>
             )}

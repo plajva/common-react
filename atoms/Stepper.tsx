@@ -1,5 +1,5 @@
 import { useTheme } from './Theme';
-import { classNameFind,  } from '../utils';
+import { classNameFind } from '../utils';
 import React, { FunctionComponent, ReactNode, useEffect, useRef, useState } from 'react';
 import { useStateCombine } from '../utils_react';
 import Button from './Button';
@@ -49,10 +49,10 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
     const lastHeight = useRef<number | undefined>(undefined);
 
     const theme = useTheme().name;
-    const showSteps = (_showSteps ??  true);
+    const showSteps = _showSteps ?? true;
     className = classNameFind(s, `atom`, 'dup', theme, className);
     const scrollerClass = classNameFind(s, `scroller`, 'dup');
-    animTime = (animTime ??  1);
+    animTime = animTime ?? 1;
 
     // Effects run after Render of the component
     // If nextStep != step, mount nextStep

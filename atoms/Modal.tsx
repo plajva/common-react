@@ -14,14 +14,28 @@ export interface ModalProps {
     children?: ReactNode;
 }
 
-const Modal = ({ isOpen, onClose, isLocked, children, className, ...props }: ModalProps & React.HTMLAttributes<HTMLElement>) => {
+const Modal = ({
+    isOpen,
+    onClose,
+    isLocked,
+    children,
+    className,
+    ...props
+}: ModalProps & React.HTMLAttributes<HTMLElement>) => {
     // set up active state
     const [active, setActive] = useState(false);
     // Make a reference to the backdrop
     const backdrop = useRef<HTMLDivElement>(null);
 
     const theme = useTheme().name;
-    const clsContent = classNameFind(s, `atom`, isOpen && active ? 'active' : '', 'background-background-10 padding-4', className, theme);
+    const clsContent = classNameFind(
+        s,
+        `atom`,
+        isOpen && active ? 'active' : '',
+        'background-background-10 padding-4',
+        className,
+        theme
+    );
 
     useEffect(() => {
         // get dom element from backdrop
@@ -52,7 +66,7 @@ const Modal = ({ isOpen, onClose, isLocked, children, className, ...props }: Mod
 
     return (
         ((isOpen || active) && (
-            <Portal id='modals' >
+            <Portal id='modals'>
                 <FocusTrap
                     focusTrapOptions={{
                         preventScroll: true,
@@ -60,7 +74,7 @@ const Modal = ({ isOpen, onClose, isLocked, children, className, ...props }: Mod
                         // clickOutsideDeactivates:true,
                     }}
                 >
-                    <Backdrop ref={backdrop} active={isOpen} fixed={true} >
+                    <Backdrop ref={backdrop} active={isOpen} fixed={true}>
                         <div className={clsContent} {...props}>
                             {typeof children === 'function' ? children() : children}
                         </div>

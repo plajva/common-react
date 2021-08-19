@@ -29,7 +29,7 @@ export interface QueryErrorContainerProps<T> {
     childrenDefault?: any;
 }
 
-const QueryErrorContainer = <T extends (ResponseFetch<any> | undefined | null)>({
+const QueryErrorContainer = <T extends ResponseFetch<any> | undefined | null>({
     className,
     response,
     children,
@@ -86,10 +86,10 @@ const QueryErrorContainer = <T extends (ResponseFetch<any> | undefined | null)>(
     if (!response) {
         // error = `Response is '${response}'`;
         return childrenDefault ? render({ children: childrenDefault }) : render({ error });
-    }else if (!responseIsValid(response)){
+    } else if (!responseIsValid(response)) {
         let { errors, loading, message, ...rest } = response;
         return render({ loading, error: (errors && message) || undefined });
-    }else {
+    } else {
         // let { ...rest } = response;
         //@ts-ignore
         return render({ children: children(response), success: true });

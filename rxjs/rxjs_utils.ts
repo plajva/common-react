@@ -102,12 +102,11 @@ export const createAPIFetchStatic = <R, D = undefined>(
     init?: RequestInit,
     defaultValue?: any,
     okReturn?: (res: Response) => Observable<R>
-):[() => ResponseFetch<R> | D, Observable<ResponseFetch<R>>] =>{
+): [() => ResponseFetch<R> | D, Observable<ResponseFetch<R>>] => {
     const o = createAPIFetch<R>(endpoint, init, okReturn).pipe(shareReplay(1));
-    const useO = () => useObservable (o, defaultValue);
+    const useO = () => useObservable(o, defaultValue);
     return [useO, o];
-}
-    
+};
 
 export const queryString = (v?: any) => {
     if (typeof v !== 'object' || Array.isArray(v)) return '';
@@ -141,5 +140,3 @@ export function createAPIFetchQuery<T extends {}, E = any>(endpoint: string, ini
         defaultValue,
     });
 }
-
-

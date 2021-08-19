@@ -18,9 +18,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps & React.InputHTMLAtt
         className = classNameFind(s, `atom`, 'dup', theme, className);
         // if(_props.name==='household.size')console.log(_props.name)
         const props = useFormField(_props);
-        if(_props.type === 'date' && props.value) {
+        if (_props.type === 'date' && props.value) {
             const v = moment(props.value);
-            if(v)props.value = v.format('YYYY-MM-DD');
+            if (v) props.value = v.format('YYYY-MM-DD');
         }
 
         return <input ref={ref} className={className} {...props} />;

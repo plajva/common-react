@@ -88,15 +88,15 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 }) => {
     // True if opening/open, False if closing/closed
     const [open, setOpen] = useStateCombine(false, _open, _setOpen);
-    background = (background ??  visible_always ? false : true);
+    background = background ?? visible_always ? false : true;
 
     // True when open, False if closed
     // const [isOpen, setIsOpen] = useState(false);
     // const isOpenTimer = useRef(0);
 
-    const animTime = (_animTime ??  0.4);
+    const animTime = _animTime ?? 0.4;
 
-    background = (background ??  true);
+    background = background ?? true;
     const back = useRef<HTMLDivElement>(null);
     const menu = useRef<HTMLDivElement>(null);
     const theme = useTheme().name;
@@ -137,11 +137,7 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
               transform: `translate(${!right ? '-100%' : '100%'},${floating ? '-50%' : '0'})`,
               opacity: 0,
           };
-    const content_styles: CSSProperties = visible_always
-        ? open
-            ? { marginLeft: 240 }
-            : { marginLeft: 60 }
-        : {};
+    const content_styles: CSSProperties = visible_always ? (open ? { marginLeft: 240 } : { marginLeft: 60 }) : {};
 
     // if(Object.entries(contentData.current).length)
     console.log('Rendering drawer');

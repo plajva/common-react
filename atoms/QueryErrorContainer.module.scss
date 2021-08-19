@@ -1,36 +1,36 @@
 @import '@common/styles/globals';
 
-
 .comp {
-		padding: get-space(1);
-    &.error,&.loading {
-				padding: get-space(1);
+    padding: get-space(1);
+    &.error,
+    &.loading {
+        padding: get-space(1);
         display: flex;
-				// min-width: 100px;
-				// min-height: 100px;
+        // min-width: 100px;
+        // min-height: 100px;
         // width: 100vw;
         // height: 100vh;
         justify-content: center;
         align-items: center;
     }
-		&.error{
-			color: get-color(error);
-		}
-		&.loading{
-			color: get-color(primary);
-		}
-		&.feedback{
-			// color: rgb(30, 139, 30);
-			border: 1px solid rgb(30, 139, 30);
-			border-radius: get-space(2);
-			&.success{
-				@include background-color(rgb(30, 139, 30));
-			}
-		}
-		
-		&.inline{
-			display: inline-block;
-		}
+    &.error {
+        color: get-color(error);
+    }
+    &.loading {
+        color: get-color(primary);
+    }
+    &.feedback {
+        // color: rgb(30, 139, 30);
+        border: 1px solid rgb(30, 139, 30);
+        border-radius: get-space(2);
+        &.success {
+            @include background-color(rgb(30, 139, 30));
+        }
+    }
+
+    &.inline {
+        display: inline-block;
+    }
     // My definitions by default
 
     // @include use-theme using ($ts){

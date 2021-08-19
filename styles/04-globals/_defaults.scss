@@ -159,7 +159,7 @@ $sindex: 0;
         box-shadow: 0 0 10px 0 #{color.change(invert(get-color(background)), $alpha: 0.2)};
     }
     #{$ts}.shadow-bottom {
-        box-shadow: 0 .2em .3em .2em #{color.change(invert(get-color(background)), $alpha: 0.15)};
+        box-shadow: 0 0.2em 0.3em 0.2em #{color.change(invert(get-color(background)), $alpha: 0.15)};
     }
     #{$ts}.shadow-small {
         box-shadow: 0 0 7px 0 #{color.change(invert(get-color(background)), $alpha: 0.15)};

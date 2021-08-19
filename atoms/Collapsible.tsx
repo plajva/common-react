@@ -14,7 +14,11 @@ export interface CollapsibleProps {
     children?: ReactNode;
 }
 const initialState: CollapsibleState = { open: false };
-export const CollapsibleContext = StateCombineContext<CollapsibleState>({ state: initialState, setState: () => {}, initialState });
+export const CollapsibleContext = StateCombineContext<CollapsibleState>({
+    state: initialState,
+    setState: () => {},
+    initialState,
+});
 export const useCollapsible = () => useContext(CollapsibleContext);
 
 const Collapsible = ({
@@ -28,7 +32,7 @@ const Collapsible = ({
 }: CollapsibleProps & StateCombineProps<CollapsibleState> & React.HTMLAttributes<HTMLDivElement>) => {
     const theme = useTheme().name;
     className = classNameFind(s, `comp`, theme, className);
-    canCollapse = (canCollapse ??  true);
+    canCollapse = canCollapse ?? true;
 
     const content = useRef<HTMLDivElement>(null);
 
@@ -42,14 +46,16 @@ const Collapsible = ({
             >
                 {renderChild(child_first)}
             </div>
-            
-            {canCollapse && <div
-                ref={content}
-                style={{ maxHeight: state.open ? (content.current ? content.current.scrollHeight : undefined) : 0 }}
-                className={classNameFind(s, 'content')}
-            >
-                {renderChild(child_rest)}
-            </div>}
+
+            {canCollapse && (
+                <div
+                    ref={content}
+                    style={{ maxHeight: state.open ? (content.current ? content.current.scrollHeight : undefined) : 0 }}
+                    className={classNameFind(s, 'content')}
+                >
+                    {renderChild(child_rest)}
+                </div>
+            )}
         </div>
     );
 };
@@ -60,7 +66,11 @@ export const CollapsibleToggleIcon = (props) => {
         <Icon
             {...props}
             icon={BiRightArrow}
-            style={{ transition: 'all .5s', transform: `rotate(${collapsible.state.open ? '90deg' : '0'})`, ...props.style }}
+            style={{
+                transition: 'all .5s',
+                transform: `rotate(${collapsible.state.open ? '90deg' : '0'})`,
+                ...props.style,
+            }}
         ></Icon>
     );
 };

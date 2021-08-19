@@ -9,7 +9,7 @@
  *
  */
 import { useTheme } from '../Theme';
-import { classNameFind as classFind,  } from '../../utils';
+import { classNameFind as classFind } from '../../utils';
 import React, { forwardRef } from 'react';
 import { FieldCommon } from './Field';
 import { useFormField, UseFormFieldProps } from './Form';
@@ -28,7 +28,7 @@ const Radio = forwardRef<HTMLInputElement, RadioProps & React.InputHTMLAttribute
 
         const { value: formValue, ...props } = useFormField({ ..._props });
 
-        const isChecked = (checked ??  typeof formValue !== 'undefined' ? formValue === radioValue : false);
+        const isChecked = checked ?? typeof formValue !== 'undefined' ? formValue === radioValue : false;
         return (
             <>
                 <input

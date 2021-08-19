@@ -14,7 +14,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & Button
 const Button: FunctionComponent<ButtonProps> = ({ button_type, button_size, ...props }) => {
     const theme = useTheme().name;
     let { className, ...others } = props;
-    className = classNameFind(s, `button`, button_type === 'icon' ? 'circular icon' : '', 'dup', theme, className);
+    className = classNameFind(s, `button`, button_type === 'icon' ? 'circular icon' : '', 'padding-3 border-radius-2', 'dup', theme, className);
 
     return (
         <button

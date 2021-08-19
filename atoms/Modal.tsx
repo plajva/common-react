@@ -21,7 +21,7 @@ const Modal = ({ isOpen, onClose, isLocked, children, className, ...props }: Mod
     const backdrop = useRef<HTMLDivElement>(null);
 
     const theme = useTheme().name;
-    const clsContent = classNameFind(s, `atom`, isOpen && active ? 'active' : '', className, theme);
+    const clsContent = classNameFind(s, `atom`, isOpen && active ? 'active' : '', 'background-background-10 padding-4', className, theme);
 
     useEffect(() => {
         // get dom element from backdrop
@@ -52,7 +52,7 @@ const Modal = ({ isOpen, onClose, isLocked, children, className, ...props }: Mod
 
     return (
         ((isOpen || active) && (
-            <Portal id='modals' {...props}>
+            <Portal id='modals' >
                 <FocusTrap
                     focusTrapOptions={{
                         preventScroll: true,
@@ -61,8 +61,8 @@ const Modal = ({ isOpen, onClose, isLocked, children, className, ...props }: Mod
                     }}
                 >
                     <Backdrop ref={backdrop} active={isOpen} fixed={true} >
-                        <div className={clsContent}>
-                            <div className={s.content}>{typeof children === 'function' ? children() : children}</div>
+                        <div className={clsContent} {...props}>
+                            {typeof children === 'function' ? children() : children}
                         </div>
                     </Backdrop>
                 </FocusTrap>

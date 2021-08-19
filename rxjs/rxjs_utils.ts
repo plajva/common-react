@@ -1,5 +1,4 @@
 import {} from '@common/utils';
-import { bind, SUSPENSE } from '@react-rxjs/core';
 import { useEffect, useState } from 'react';
 import { catchError, from, map, Observable, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
@@ -17,6 +16,28 @@ export type ResponseFetchValid<T extends ResponseFetch<any>> = Required<Pick<Exc
 export type ResponseFetchErrors<T extends ResponseFetch<any>> = Required<
     Pick<Exclude<T, undefined | null>, 'errors' | 'message'>
 >;
+
+export const QueryError = ({ query }) => {
+    return (query?.errors && query?.message) || '';
+};
+
+export const responseSelector = <T>(response: T, selector: (v: ResponseFetchValid<T>) => any) => {
+    const vv = responseIsValid<T>(response);
+    if (vv) {
+        return selector(vv);
+    }
+};
+
+export const useObservable = (observable, defaultValue?) => {
+    const [state, setState] = useState(defaultValue);
+
+    useEffect(() => {
+        const sub = observable.subscribe(setState);
+        return () => sub.unsubscribe();
+    }, [observable]);
+
+    return state;
+};
 
 export const responseIsValid = <T extends ResponseFetch<any>>(v): ResponseFetchValid<T> =>
     (v && !v.errors && !v.loading && !v.message && v) || undefined;
@@ -76,13 +97,17 @@ export const createAPIFetch = <T>(
 };
 // ! ---------------------------------
 
-export const createAPIFetchStatic = <T>(
+export const createAPIFetchStatic = <R, D = undefined>(
     endpoint: string,
     init?: RequestInit,
     defaultValue?: any,
-    okReturn?: (res: Response) => Observable<T>
-) =>
-    bind<ResponseFetch<T>>(createAPIFetch<T>(endpoint, init, okReturn).pipe(shareReplay(1)), defaultValue || undefined);
+    okReturn?: (res: Response) => Observable<R>
+):[() => ResponseFetch<R> | D, Observable<ResponseFetch<R>>] =>{
+    const o = createAPIFetch<R>(endpoint, init, okReturn).pipe(shareReplay(1));
+    const useO = () => useObservable (o, defaultValue);
+    return [useO, o];
+}
+    
 
 export const queryString = (v?: any) => {
     if (typeof v !== 'object' || Array.isArray(v)) return '';
@@ -96,14 +121,14 @@ export const queryString = (v?: any) => {
     }
 };
 /** To customize how to fetch the API */
-export function createAPIFetchCustom<T extends {}, E, D = undefined>(
-    toFetch: (val: T) => Observable<E>,
+export function createAPIFetchCustom<I extends {}, R, D = undefined>(
+    toFetch: (val: I) => Observable<R>,
     options?: { defaultValue?: D; shareReplay?: boolean }
-): [(v: T) => void, () => T | undefined, () => Exclude<E, typeof SUSPENSE> | D, Observable<E>] {
+): [(v: I) => void, () => I | undefined, () => R | D, Observable<R>] {
     const _shareReplay = options?.shareReplay ?? true;
 
-    const value$ = new Subject<T>();
-    const setValue = (v: T) => value$.next(v);
+    const value$ = new Subject<I>();
+    const setValue = (v: I) => value$.next(v);
     const useValue = () => useObservable(value$);
     let result$ = value$.pipe(switchMap(toFetch));
     if (_shareReplay) result$ = result$.pipe(shareReplay(1));
@@ -117,24 +142,4 @@ export function createAPIFetchQuery<T extends {}, E = any>(endpoint: string, ini
     });
 }
 
-export const QueryError = ({ query }) => {
-    return (query?.errors && query?.message) || '';
-};
 
-export const responseSelector = <T>(response: T, selector: (v: ResponseFetchValid<T>) => any) => {
-    const vv = responseIsValid<T>(response);
-    if (vv) {
-        return selector(vv);
-    }
-};
-
-export const useObservable = (observable, defaultValue?) => {
-    const [state, setState] = useState(defaultValue);
-
-    useEffect(() => {
-        const sub = observable.subscribe(setState);
-        return () => sub.unsubscribe();
-    }, [observable]);
-
-    return state;
-};

@@ -1,12 +1,12 @@
 /**
- * Component renders as a parent <div> and child X when response is loading|error|feedback, 
+ * Component renders as a parent <div> and child X when response is loading|error|feedback,
  * or just renders as children when response is valid
  */
 import React, { CSSProperties, ReactNode } from 'react';
 import s from './QueryErrorContainer.module.scss';
 import { useTheme } from '@common/atoms/Theme';
 import { cnf } from '@common/utils';
-import { ResponseFetch, ResponseFetchValid } from '@common/rxjs/rxjs_utils';
+import { ResponseFetch, ResponseFetchValid, responseIsError, responseIsValid } from '@common/rxjs/rxjs_utils';
 import LoaderReact from 'react-loader-spinner';
 
 export interface QueryErrorContainerProps<T> {
@@ -18,7 +18,7 @@ export interface QueryErrorContainerProps<T> {
     inline?: boolean;
     minWidth?: number;
     minHeight?: number;
-    /**  
+    /**
      * Will make this component feedback, meaning undefined response is allowed and not shown
      * And a success will make color green and render child
      */
@@ -27,11 +27,9 @@ export interface QueryErrorContainerProps<T> {
      * Shown when response evaluates to false
      */
     childrenDefault?: any;
-    
-    
 }
 
-const QueryErrorContainer = <T extends any>({
+const QueryErrorContainer = <T extends (ResponseFetch<any> | undefined | null)>({
     className,
     response,
     children,
@@ -88,11 +86,14 @@ const QueryErrorContainer = <T extends any>({
     if (!response) {
         // error = `Response is '${response}'`;
         return childrenDefault ? render({ children: childrenDefault }) : render({ error });
+    }else if (!responseIsValid(response)){
+        let { errors, loading, message, ...rest } = response;
+        return render({ loading, error: (errors && message) || undefined });
+    }else {
+        // let { ...rest } = response;
+        //@ts-ignore
+        return render({ children: children(response), success: true });
     }
-    //@ts-ignore
-    let { errors, loading, message, ...rest } = response;
-    //@ts-ignore
-    return render({ loading, error: (errors && message) || undefined, children: children(rest), success: true });
 };
 
 export default QueryErrorContainer;

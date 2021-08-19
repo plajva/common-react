@@ -44,14 +44,14 @@ export const useStateObject = <T extends object>(
  * @param setState component setState
  */
 export const separateChildren = (
-    children: any,
+    children: ReactNode,
     state = {},
     setState: any = () => {}
-): [ReactNode, ReactNode, (c: ReactNode) => ReactNode] => {
-    const _children = Array.isArray(children) ? [...children] : [children];
-    let child_first;
+): [ReactNode | undefined, (React.ReactChild | React.ReactFragment | React.ReactPortal)[], (c: ReactNode) => ReactNode] => {
+    const _children = React.Children.toArray(children);
+    let child_first: typeof _children[0] | undefined;
     if (_children.length) {
-        child_first = _children.splice(0, 1);
+        child_first = _children.shift();
     }
     const child_rest = _children;
     const renderChild = (child: any) => {

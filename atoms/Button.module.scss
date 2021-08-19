@@ -5,8 +5,8 @@
     position: relative;
     overflow: hidden;
     transition: background 0.3s;
-    padding: get-space(3);
-    border-radius: get-space(2);
+    // padding: get-space(3);
+    // border-radius: get-space(2);
     background: transparent;
 
     &:hover {
@@ -27,10 +27,10 @@
     
 
     &.circular {
-        padding: none;
+        // padding: none;
         border-radius: 9999px;
         background: transparent;
-        padding: get-space(3);
+        // padding: get-space(3);
 
         &:hover {
             background: get-color(neutral, $alpha: 0.1);

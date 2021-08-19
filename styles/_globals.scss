@@ -100,7 +100,7 @@ $theme-names-with-empty: list.join('', $theme-names);
         (
             // color-names: map-keys(map-get($theme, colors)),
             color-names:
-                (primary, background, secondary, warn, neutral)
+                (primary, background, secondary, error, warn, neutral)
         )
     );
 

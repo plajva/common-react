@@ -8,7 +8,7 @@ export interface DropdownProps {
     on_click?: boolean;
     /**Wether to handle click or not */
     handle_click?: boolean;
-    contentProps?: any;
+    contentProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 /**
  * Gets two children either functions or components, if functions, then call with (state, setState) arguments
@@ -35,13 +35,13 @@ const Dropdown: FunctionComponent<DropdownProps & React.HTMLAttributes<HTMLDivEl
         <div className={className} {...props}>
             <div
                 className={classNameFind(s, 'dropbtn')}
-                onClick={on_click && handle_click ? () => setState({ open: !state.open }) : () => {}}
+                onClick={on_click && handle_click ? () => setState({ open: !state.open }) : undefined}
             >
                 {renderChild(child_first)}
             </div>
 
-            {state.open && (
-                <div {...contentProps} className={classNameFind(s, 'dropdown-content', !on_click ? 'dropdown-content-hover' : '', ...(contentProps?.className||[]))}>
+            {state.open && child_rest?.some(s => Boolean(s)) && (
+                <div {...contentProps} className={classNameFind(s, 'dropdown-content', !on_click ? 'dropdown-content-hover' : '', contentProps?.className)}>
                     {renderChild(child_rest)}
                 </div>
             )}

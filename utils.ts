@@ -94,9 +94,9 @@ export const setObjectDefault = <T>(v: T, defaults: Partial<T>): T => {
  * @param v input object
  * @param d set if unset
  */
-export const setDefault = <T>(v: T | undefined, d: T): T => {
-    return typeof v === 'undefined' ? d : v;
-};
+// export const setDefault = <T>(v: T | undefined, d: T): T => {
+//     return typeof v === 'undefined' ? d : v;
+// };
 
 /**
  * Will filter array when an item matches another with the same criteria

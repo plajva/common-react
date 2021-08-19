@@ -1,5 +1,5 @@
 import { useTheme } from './Theme';
-import { classNameFind, separateChildren, setDefault } from '../utils';
+import { classNameFind, separateChildren } from '../utils';
 import React, { FunctionComponent, useState } from 'react';
 import s from './Dropdown.module.scss';
 
@@ -27,7 +27,7 @@ const Dropdown: FunctionComponent<DropdownProps & React.HTMLAttributes<HTMLDivEl
     className = classNameFind(s, `comp`, theme, className, 'dropdown');
     
     // Default to true if handleclick is undefined
-    const handle_click = setDefault(_handle_click, true);
+    const handle_click = (_handle_click ??  true);
 
     const [child_first, child_rest, renderChild] = separateChildren(children, state, setState);
 

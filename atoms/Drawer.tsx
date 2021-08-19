@@ -8,7 +8,7 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import { classNameFind, combineEvent, setDefault, useStateCombine } from '../utils';
+import { classNameFind, combineEvent, useStateCombine } from '../utils';
 import s from './Drawer.module.scss';
 import { useTheme } from './Theme';
 
@@ -88,15 +88,15 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 }) => {
     // True if opening/open, False if closing/closed
     const [open, setOpen] = useStateCombine(false, _open, _setOpen);
-    background = setDefault(background, visible_always ? false : true);
+    background = (background ??  visible_always ? false : true);
 
     // True when open, False if closed
     // const [isOpen, setIsOpen] = useState(false);
     // const isOpenTimer = useRef(0);
 
-    const animTime = setDefault(_animTime, 0.4);
+    const animTime = (_animTime ??  0.4);
 
-    background = setDefault(background, true);
+    background = (background ??  true);
     const back = useRef<HTMLDivElement>(null);
     const menu = useRef<HTMLDivElement>(null);
     const theme = useTheme().name;

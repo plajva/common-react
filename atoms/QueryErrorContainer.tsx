@@ -6,7 +6,7 @@ import React, { CSSProperties, ReactNode } from 'react';
 import s from './QueryErrorContainer.module.scss';
 import { useTheme } from '@common/atoms/Theme';
 import { cnf } from '@common/utils';
-import { APIFetchResponse } from '@common/rxjs/rxjs_utils';
+import { ResponseFetch, ResponseFetchValid } from '@common/rxjs/rxjs_utils';
 import LoaderReact from 'react-loader-spinner';
 
 export interface QueryErrorContainerProps<T> {
@@ -14,7 +14,7 @@ export interface QueryErrorContainerProps<T> {
     /**
      * Exclude null/undefined and any of the status/loading properties from type
      */
-    children?: (v: Exclude<T, APIFetchResponse | undefined | null>) => any;
+    children?: (v: ResponseFetchValid<T>) => any;
     inline?: boolean;
     minWidth?: number;
     minHeight?: number;

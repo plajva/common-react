@@ -1,4 +1,4 @@
-import { setDefault } from '@common/utils';
+import {} from '@common/utils';
 import { bind, SUSPENSE } from '@react-rxjs/core';
 import { useEffect, useState } from 'react';
 import { catchError, from, map, Observable, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
@@ -6,18 +6,24 @@ import { fromFetch } from 'rxjs/fetch';
 
 // ! This is to be moved out of common if it's to actually be 'common'
 // Implementation error handling should not be common as different APIs return different error values
-export interface APIFetchResponse {
+
+export interface ResponseFetch<T> {
     errors?: boolean;
     message?: string;
     loading?: boolean;
+    data?: T;
 }
-export const responseIsValid = <T>(v): Exclude<T, APIFetchResponse | undefined | null> =>
+export type ResponseFetchValid<T extends ResponseFetch<any>> = Required<Pick<Exclude<T, undefined | null>, 'data'>>;
+export type ResponseFetchErrors<T extends ResponseFetch<any>> = Required<
+    Pick<Exclude<T, undefined | null>, 'errors' | 'message'>
+>;
+
+export const responseIsValid = <T extends ResponseFetch<any>>(v): ResponseFetchValid<T> =>
     (v && !v.errors && !v.loading && !v.message && v) || undefined;
-export const responseIsError = <T>(v): Exclude<T, APIFetchResponse | undefined | null> =>
+export const responseIsError = <T extends ResponseFetch<any>>(v): ResponseFetchErrors<T> =>
     (v && v.errors) || undefined;
 
-export type ResponseFetch<T> = { data: T } | APIFetchResponse;
-const fetchInit: APIFetchResponse = { loading: true };
+const fetchInit: ResponseFetch<any> = { loading: true, data: undefined };
 export const createAPIFetch = <T>(
     endpoint: string,
     init?: RequestInit,
@@ -33,12 +39,24 @@ export const createAPIFetch = <T>(
             let content_type = res.headers.get('Content-type')?.split(';')[0];
             // let content_size = res.headers.get
             if (res.ok) {
-                return (okReturn ? okReturn(res) : from(res.json())).pipe(map((v) => ({ data: v })));
+                return (
+                    okReturn
+                        ? okReturn(res)
+                        : content_type === 'application/json'
+                        ? from(res.json())
+                        : content_type === 'text/plain'
+                        ? from(res.text())
+                        : of(undefined)
+                ).pipe(map((v) => ({ data: v })));
             } else {
                 switch (content_type) {
                     case 'application/json':
                         return from(res.json()).pipe(
-                            map((v) => ({ errors: true, message: String(v?.message) || `Error ${res.status}` }))
+                            map((v) => ({
+                                errors: true,
+                                message: String(v?.message) || `Error ${res.status}`,
+                                data: undefined,
+                            }))
                         );
                     case 'text/plain':
                         return from(res.text()).pipe(
@@ -63,7 +81,8 @@ export const createAPIFetchStatic = <T>(
     init?: RequestInit,
     defaultValue?: any,
     okReturn?: (res: Response) => Observable<T>
-) => bind<ResponseFetch<T>>(createAPIFetch<T>(endpoint, init, okReturn).pipe(shareReplay(1)), defaultValue || null);
+) =>
+    bind<ResponseFetch<T>>(createAPIFetch<T>(endpoint, init, okReturn).pipe(shareReplay(1)), defaultValue || undefined);
 
 export const queryString = (v?: any) => {
     if (typeof v !== 'object' || Array.isArray(v)) return '';
@@ -77,20 +96,18 @@ export const queryString = (v?: any) => {
     }
 };
 /** To customize how to fetch the API */
-export function createAPIFetchCustom<T extends {}, E>(
+export function createAPIFetchCustom<T extends {}, E, D = undefined>(
     toFetch: (val: T) => Observable<E>,
-    options?: { defaultValue?: any; shareReplay?: boolean }
-): [(v: T) => void, () => Exclude<T, typeof SUSPENSE> | null, () => Exclude<E, typeof SUSPENSE> | null, Observable<E>] {
-    const _shareReplay = setDefault(options?.shareReplay, true);
+    options?: { defaultValue?: D; shareReplay?: boolean }
+): [(v: T) => void, () => T | undefined, () => Exclude<E, typeof SUSPENSE> | D, Observable<E>] {
+    const _shareReplay = options?.shareReplay ?? true;
 
     const value$ = new Subject<T>();
     const setValue = (v: T) => value$.next(v);
     const useValue = () => useObservable(value$);
-    let result$ = value$.pipe(
-        switchMap(toFetch)
-    );
+    let result$ = value$.pipe(switchMap(toFetch));
     if (_shareReplay) result$ = result$.pipe(shareReplay(1));
-    const useResult = () => useObservable(result$, options?.defaultValue || null);
+    const useResult = () => useObservable(result$, options?.defaultValue);
     return [setValue, useValue, useResult, result$];
 }
 /** To customize how to fetch the API */
@@ -104,10 +121,7 @@ export const QueryError = ({ query }) => {
     return (query?.errors && query?.message) || '';
 };
 
-export const responseSelector = <T>(
-    response: T,
-    selector: (v: Exclude<T, APIFetchResponse | undefined | null>) => any
-) => {
+export const responseSelector = <T>(response: T, selector: (v: ResponseFetchValid<T>) => any) => {
     const vv = responseIsValid<T>(response);
     if (vv) {
         return selector(vv);

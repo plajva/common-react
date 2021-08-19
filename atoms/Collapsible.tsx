@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext, useRef } from 'react';
 import { BiRightArrow } from 'react-icons/bi';
-import { classNameFind, separateChildren, setDefault } from '../utils';
+import { classNameFind, separateChildren } from '../utils';
 import s from './Collapsible.module.scss';
 import StateCombineHOC, { StateCombineContext, StateCombineProps } from './HOC/StateCombineHOC';
 import Icon from './Icon';
@@ -28,7 +28,7 @@ const Collapsible = ({
 }: CollapsibleProps & StateCombineProps<CollapsibleState> & React.HTMLAttributes<HTMLDivElement>) => {
     const theme = useTheme().name;
     className = classNameFind(s, `comp`, theme, className);
-    canCollapse = setDefault(canCollapse, true);
+    canCollapse = (canCollapse ??  true);
 
     const content = useRef<HTMLDivElement>(null);
 

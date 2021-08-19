@@ -1,5 +1,5 @@
 import React, { Context, createContext, Dispatch, SetStateAction } from 'react';
-import { setDefault, useStateCombine } from '../../utils';
+import { useStateCombine } from '../../utils';
 /**
  * StateCombineHOC is passed a component that needs a state, but this state is optionally controlled by another component higher up
  * It also optionally provides a context
@@ -34,7 +34,7 @@ const StateCombineHOC = <EProps extends {}, State, P = {}>(
         
         // Give priority to the function option that set the inital state, because we are dynamically creating it.
         const initial =
-            typeof _options === 'function' ? options.initialState : setDefault(initialState, options.initialState);
+            typeof _options === 'function' ? options.initialState : (initialState ??  options.initialState);
         
         // Create state
         const [state, setState] = useStateCombine(initial, _state, _setState);

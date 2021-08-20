@@ -12,10 +12,11 @@ export interface ResponseFetch<T> {
     loading?: boolean;
     data?: T;
 }
-export type ResponseFetchValid<T extends ResponseFetch<any>> = Required<Pick<Exclude<T, undefined | null>, 'data'>>;
-export type ResponseFetchErrors<T extends ResponseFetch<any>> = Required<
-    Pick<Exclude<T, undefined | null>, 'errors' | 'message'>
->;
+// type Test = ResponseFetchValid<ResponseFetch<{id:string} | undefined>>;
+type ResponseFetchAny = ResponseFetch<any> | undefined |null;
+type Define<T> = Exclude<T, undefined | null>;
+export type ResponseFetchValid<T extends ResponseFetchAny> = Required<Pick<Define<T>, 'data'>>;
+export type ResponseFetchErrors<T extends ResponseFetchAny> = Required<Pick<Define<T>, 'errors'>> & Pick<Define<T>, 'message'>;
 
 export const QueryError = ({ query }) => {
     return (query?.errors && query?.message) || '';
@@ -38,12 +39,20 @@ export const useObservable = (observable, defaultValue?) => {
 
     return state;
 };
+// From https://fettblog.eu/typescript-hasownproperty/
+function hasOwnProperty<X extends {}, Y extends PropertyKey>
+  (obj: X, prop: Y): obj is X & Record<Y, unknown> {
+  return obj.hasOwnProperty(prop)
+}
+// --------------
+export const responseIsValid = <T extends ResponseFetchAny>(v:T): ResponseFetchValid<T> | undefined =>
+    (v && !v.errors && !v.loading && !v.message && hasOwnProperty(v, 'data') )? v : undefined;
+export const responseIsError = <T extends ResponseFetchAny>(v:T): ResponseFetchErrors<T> | undefined =>
+    (v && hasOwnProperty(v, 'errors')) ? v : undefined;
 
-export const responseIsValid = <T extends ResponseFetch<any>>(v): ResponseFetchValid<T> =>
-    (v && !v.errors && !v.loading && !v.message && v) || undefined;
-export const responseIsError = <T extends ResponseFetch<any>>(v): ResponseFetchErrors<T> =>
-    (v && v.errors) || undefined;
-
+// const t = responseIsValid<ResponseFetch<boolean> | null>(null)
+// const t2 = responseIsError<ResponseFetch<boolean> | null>(null)
+    
 const fetchInit: ResponseFetch<any> = { loading: true, data: undefined };
 export const createAPIFetch = <T>(
     endpoint: string,

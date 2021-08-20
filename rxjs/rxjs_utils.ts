@@ -47,13 +47,18 @@ export const responseIsError = <T extends ResponseFetch<any>>(v): ResponseFetchE
 const fetchInit: ResponseFetch<any> = { loading: true, data: undefined };
 export const createAPIFetch = <T>(
     endpoint: string,
-    init?: RequestInit,
-    okReturn?: (res: Response) => Observable<T>
+    options?: {
+        init?: RequestInit,
+        okReturn?: (res: Response) => Observable<T>,
+        baseURL?: string,
+    }
 ): Observable<ResponseFetch<T>> => {
+    // Destruct options
+    const {init, okReturn, baseURL} = options ?? {};
     // Attach / if not present in endpoint
     if (endpoint[0] !== '/') endpoint = '/' + endpoint;
-    if (!process.env.REACT_APP_API_URL) throw new Error(`process.env.REACT_APP_API_URL undefined?`);
-    const url = `${process.env.REACT_APP_API_URL}${endpoint}`;
+    if (!process.env.REACT_APP_API_URL && !baseURL) throw new Error(`process.env.REACT_APP_API_URL undefined?`);
+    const url = `${baseURL ?? process.env.REACT_APP_API_URL}${endpoint}`;
     return fromFetch(url, init).pipe(
         switchMap((res) => {
             // The .split is to handle content types like 'application/json; charset=utf-8'
@@ -67,7 +72,7 @@ export const createAPIFetch = <T>(
                         ? from(res.json())
                         : content_type === 'text/plain'
                         ? from(res.text())
-                        : of(undefined)
+                        : of(true)
                 ).pipe(map((v) => ({ data: v })));
             } else {
                 switch (content_type) {
@@ -75,8 +80,7 @@ export const createAPIFetch = <T>(
                         return from(res.json()).pipe(
                             map((v) => ({
                                 errors: true,
-                                message: String(v?.message) || `Error ${res.status}`,
-                                data: undefined,
+                                message: v ? (v?.errors && (typeof v.errors === 'boolean' ? String(v?.message) : JSON.stringify(v.errors))) || JSON.stringify(v) : `Error ${res.status}`,
                             }))
                         );
                     case 'text/plain':
@@ -92,6 +96,7 @@ export const createAPIFetch = <T>(
             console.error(err);
             return of({ errors: true, message: err.message });
         }),
+        map(v => {console.log("Fetch: ",JSON.stringify(v,null,2));return v;}),
         startWith(fetchInit)
     );
 };
@@ -103,7 +108,7 @@ export const createAPIFetchStatic = <R, D = undefined>(
     defaultValue?: any,
     okReturn?: (res: Response) => Observable<R>
 ): [() => ResponseFetch<R> | D, Observable<ResponseFetch<R>>] => {
-    const o = createAPIFetch<R>(endpoint, init, okReturn).pipe(shareReplay(1));
+    const o = createAPIFetch<R>(endpoint, {init, okReturn}).pipe(shareReplay(1));
     const useO = () => useObservable(o, defaultValue);
     return [useO, o];
 };
@@ -136,7 +141,7 @@ export function createAPIFetchCustom<I extends {}, R, D = undefined>(
 }
 /** To customize how to fetch the API */
 export function createAPIFetchQuery<T extends {}, E = any>(endpoint: string, init?: RequestInit, defaultValue?: any) {
-    return createAPIFetchCustom<T, ResponseFetch<E>>((val: T) => createAPIFetch(endpoint + queryString(val), init), {
+    return createAPIFetchCustom<T, ResponseFetch<E>>((val: T) => createAPIFetch(endpoint + queryString(val), {init}), {
         defaultValue,
     });
 }

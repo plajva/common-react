@@ -15,6 +15,7 @@ import {
 import { combineEvent } from '../../utils';
 import { cloneDeep, get, isEqual, set, setWith } from 'lodash';
 import StateCombineHOC, { StateCombineContext, StateCombineProps } from '../HOC/StateCombineHOC';
+import { useRef } from 'react';
 
 const splitName = (name: string) => {
     return name
@@ -84,6 +85,7 @@ interface FormProps {
     readonly?: boolean;
     onReset?: (v: FormState) => void;
     children?: ReactNode | ((context: FormContextI) => ReactElement);
+    useForm?:boolean
 }
 const isZod = (s: any): boolean => (s?.parse ? true : false);
 const isYup = (s: any): boolean => (s?.validate ? true : false);
@@ -98,6 +100,7 @@ const FormComp = ({
     onSubmit,
     onReset,
     onChange,
+    useForm,
     children,
     ...props
 }: FormProps & StateCombineProps<FormState>) => {
@@ -107,7 +110,10 @@ const FormComp = ({
     //     setState((s) => getInitial(initialState, schema));
     // }
     const resetState = useMemo(() => cloneDeep(_resetState ?? initialState), [initialState, _resetState]);
-
+    const formRef = useRef<HTMLFormElement>(null);
+    // This becomes true when we triggered a <form> submission from this component
+    const formSubmitting = useRef<boolean>(false);
+    
     // Happens on submission
     const getValid = () => {
         const values = state.values;
@@ -237,17 +243,28 @@ const FormComp = ({
             onReset && onReset(resetState);
         },
         submit: () => {
+            // To handle login info saving in the browser
+            if(formRef.current && !formSubmitting.current){ 
+                // Calling submit on the <form> should call this function again
+                formRef.current.submit();
+                return;
+            }
+            // Proceed with submission
             const valid = getValid();
             if (!valid) {
                 console.log('Form not valid: ', state.errors);
             }
             onSubmit && onSubmit(valid);
+            // Reset the switch
+            formSubmitting.current = false;
         },
     };
     // console.log(state);
+    const childrenRender = typeof children === 'function' ? children(context) : children;
     return (
         <FormContext.Provider value={context}>
-            {typeof children === 'function' ? children(context) : children}
+            {useForm ? <form ref={formRef} onSubmit={(e) => {e.preventDefault();formSubmitting.current = true;context.submit()}}>{childrenRender}</form> : 
+            childrenRender}
         </FormContext.Provider>
     );
 };

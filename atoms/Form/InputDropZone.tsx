@@ -52,7 +52,7 @@ const InputDropZone = ({
                                     //         {PickIcon(file.type)}
                                     //     </Avatar>
                                     // </div>
-                                    <div className={classNameFiles}>
+                                    <div className={classNameFiles} key={index}>
                                         <label>{file.name}</label>
                                     </div>
                                 ))}

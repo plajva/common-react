@@ -164,7 +164,7 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
                         {page.map((row: any, i: Number) => {
                             prepareRow(row);
                             return (
-                                <tr {...row.getRowProps()}>
+                                <tr {...row.getRowProps(_getRowProps(row))}>
                                     {row.cells.map((cell: any) => {
                                         let cls = cell['className'] ?? '';
                                         if (!!cell.column.sticky) {

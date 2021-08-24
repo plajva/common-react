@@ -51,7 +51,7 @@ const Notification = (props: NotificationProps) => {
         let timeout: any;
         let timeoutIn: any;
         if (!sticky) {
-            timeout = setTimeout(() => closeNotification(), 3000);
+            timeout = setTimeout(() => closeNotification(), type === 'error' ? 20000 : type === 'warning' ? 10000 : 3000);
         }
 
         timeoutIn = setTimeout(() => {

@@ -173,3 +173,4 @@ export type Entries<T> = {
 export function objectEntries<T>(obj: T): Entries<T> {
     return Object.entries(obj) as any;
 }
+

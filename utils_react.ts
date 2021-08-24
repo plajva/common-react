@@ -82,3 +82,7 @@ export const scrollToElement = (
         }
     }
 };
+
+export const isLogin = () => {
+    return localStorage.getItem("token") !== null;
+};

@@ -244,11 +244,11 @@ const FormComp = ({
         },
         submit: () => {
             // To handle login info saving in the browser
-            if(formRef.current && !formSubmitting.current){ 
-                // Calling submit on the <form> should call this function again
-                formRef.current.submit();
-                return;
-            }
+            // if(formRef.current && !formSubmitting.current){ 
+            //     // Calling submit on the <form> should call this function again
+            //     formRef.current.submit();
+            //     return;
+            // }
             // Proceed with submission
             const valid = getValid();
             if (!valid) {

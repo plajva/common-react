@@ -26,6 +26,7 @@ const Button: FunctionComponent<ButtonProps> = ({ button_type, button_size, ...p
 
     return (
         <button
+            type="button"
             className={className}
             style={{
                 width: button_size ? button_size : undefined,

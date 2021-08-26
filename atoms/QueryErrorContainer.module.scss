@@ -42,3 +42,17 @@
     // 	}
     // }
 }
+
+.loading-container {
+    @include use-theme using ($ts) {
+        // Theme Iterator
+        &#{$ts} {
+            @include background-color(background, $alpha: 0.3);
+            backdrop-filter: blur(4px);
+        }
+        // 	@include use-color using ($cn, $c){
+        // 		// Color Iterator
+        //		&#{$ts}.#{$cn}{}
+        // 	}
+    }
+}

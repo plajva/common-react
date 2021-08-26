@@ -24,7 +24,7 @@ const PrivateRoute = ({ component: Component, children, assert, onAssertFalse, .
 					) : (
 						children
 					)
-				) : typeof onAssertFalse === "string" ? (
+				) : typeof onAssertFalse === "string" || !onAssertFalse ? (
 					<Redirect to={onAssertFalse ? onAssertFalse : "/login"} />
 				) : (
 					onAssertFalse

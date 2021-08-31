@@ -1,4 +1,5 @@
 import {} from '@common/utils';
+import { cloneDeep, flatMap } from 'lodash';
 import { useEffect, useState } from 'react';
 import { catchError, from, map, Observable, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
@@ -68,7 +69,17 @@ export const createAPIFetch = <T>(
     if (endpoint[0] !== '/') endpoint = '/' + endpoint;
     if (!process.env.REACT_APP_API_URL && !baseURL) throw new Error(`process.env.REACT_APP_API_URL undefined?`);
     const url = `${baseURL ?? process.env.REACT_APP_API_URL}${endpoint}`;
-    let o = fromFetch(url, init).pipe(
+
+    let o = new Observable<[any,any]>((sub) => {
+        // Add Auth Token to requests
+        const token = localStorage.getItem('token');
+        let init_ = init ?? {};
+        if(token)init_ = {...init_, headers:{...init_?.headers, "Authorization": `Bearer ${token}`}}
+        
+        sub.next([url, init_]);
+        sub.complete();
+    }).pipe(
+        switchMap(([url, init]):Observable<Response> => fromFetch(url, init)),
         switchMap((res) => {
             // The .split is to handle content types like 'application/json; charset=utf-8'
             let content_type = res.headers.get('Content-type')?.split(';')[0];

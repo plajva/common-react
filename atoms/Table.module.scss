@@ -24,6 +24,21 @@
         }
     }
 
+    tr {
+        & > td:first-of-type {
+            padding-left: 1em;
+            position: relative;
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 0.6em;
+                height: 100%;
+            }
+        }
+    }
+
     .sticky {
         position: -webkit-sticky;
         position: sticky;
@@ -36,28 +51,60 @@
         }
     }
 
+    tr.selected {
+        & > td:first-of-type::after {
+            background: get-color(primary, $alpha: 1);
+        }
+    }
+
     @include use-theme using ($ts) {
         // Theme Iterator
         &#{$ts} {
             th {
                 background: get-color(background, 2, 1);
             }
-            td {
-                background-color: get-color(background);
-            }
             td,
             th {
                 border-right: 1px solid get-color(background, -2, 1);
-                &:last-of-type {
-                    border-right: none;
+                &:first-of-type {
+                    border-left: 1px solid get-color(background, -2, 1);
                 }
             }
-            tbody {
-                tr:hover {
-                    td {
-                        background: get-color(background, -1, 1);
-                    }
+        }
+    }
+
+    &.default {
+        td {
+            background: #f1eff3;
+        }
+        tbody {
+            tr:hover {
+                td {
+                    background: #ece8f0;
                 }
+            }
+        }
+        tr.selected {
+            td {
+                background: #dfd7e7;
+            }
+        }
+    }
+
+    &.dark {
+        td {
+            background: #2d2b2f;
+        }
+        tbody {
+            tr:hover {
+                td {
+                    background: #322e36;
+                }
+            }
+        }
+        tr.selected {
+            td {
+                background: #3a3242;
             }
         }
     }

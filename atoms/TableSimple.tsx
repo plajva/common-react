@@ -1,8 +1,43 @@
-import React, { ReactNode } from 'react';
-import s from './TableSimple.module.scss';
 import { useTheme } from '@common/atoms/Theme';
 import { cnf } from '@common/utils';
-import { Cell, Row, TableOptions, useTable } from 'react-table';
+import React from 'react';
+import { Cell, Column, Row, TableOptions, useTable } from 'react-table';
+import v from 'voca';
+import s from './TableSimple.module.scss';
+
+/**
+ * A quick column maker
+ * @param cols A string for colums in the form of 'accessor/Header, Header, Cell; ...'
+ * @example columnsQuick('rxcui;name;strength;route;')
+ */
+export const columnsQuick = (...cols: (string | Column)[]) => {
+    const transform = (s: string) => {
+        const a = s.split(',');
+        let col: Column = {
+            accessor: a[0],
+            Header: a[1] || v.capitalize(a[0]),
+        };
+        if (a[2]) col['Cell'] = a[2];
+        return col;
+    };
+    // return React.useMemo(() => {
+    const j = cols.reduce((a, v) => {
+        if (typeof v === 'string') {
+            a.push(
+                ...v
+                    .split(';')
+                    .filter((s) => s.match(/[^ ]+/)?.length)
+                    .map(transform)
+            );
+        } else {
+            a.push(v);
+        }
+        return a;
+    }, [] as Column[]);
+
+    return j;
+    // }, [cols])
+};
 
 export interface TableSimpleProps {
     // children?: ReactNode | undefined;

@@ -18,7 +18,7 @@ const Apply: FunctionComponent<ApplyProps & React.HTMLAttributes<HTMLDivElement>
     depth_max,
     ...props
 }) => {
-    if (typeof depth_max === 'undefined') depth_max = 0;
+    depth_max = depth_max ?? 0;
 
     const mergeProps = (child: ReactElement, depth: any): any => {
         const p = child.props;

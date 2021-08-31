@@ -19,7 +19,8 @@ $padding: 0.2em;
 .comp {
     display: inline-flex;
     position: relative;
-    flex: 1 1 250px;
+    flex: 1 1 auto;
+    
     text-align: left;
 
     .label-container {
@@ -29,17 +30,20 @@ $padding: 0.2em;
         position: relative;
         padding-bottom: $padding-bottom;
         padding-top: $padding-top;
+        gap: get-space(2);
         width: 100%;
     }
     .label-text,
     .label-text-bottom {
+        white-space: nowrap;
         line-height: 1;
-        transition: transform 0.4s;
+        transition: all 0.4s;
         position: absolute;
         pointer-events: none;
         box-sizing: border-box;
         // We only have a reserved space under/over fields, label contents can't overflow
         overflow: hidden;
+        max-width: 100%;
     }
     .label-text-bottom {
         display: block;
@@ -55,10 +59,12 @@ $padding: 0.2em;
         color: get-color(error);
     }
     .label-text {
+        width: calc(100% - 2em);
         transform: translate($padding, #{$padding-top + $padding});
         opacity: 0.7;
         line-height: $line-height;
         transform-origin: top left;
+        
         top: 0;
         left: 0;
     }
@@ -71,7 +77,9 @@ $padding: 0.2em;
     .input[data-value]:not([data-value='']) + .label-text,
     .input[type='date'] + .label-text {
         transform: translate($padding - 0.05em, 0) scale(strip-unit(math.div($label-top-size, $label-size)));
+        width: strip-unit(math.div($label-size,$label-top-size)) * 100%;
         opacity: 1;
+        max-width: unset;
     }
     .input {
         line-height: $line-height;

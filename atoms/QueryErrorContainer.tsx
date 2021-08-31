@@ -2,12 +2,13 @@
  * Component renders as a parent <div> and child X when response is loading|error|feedback,
  * or just renders as children when response is valid
  */
-import React, { CSSProperties, ReactNode } from 'react';
-import s from './QueryErrorContainer.module.scss';
+import LoaderReact from '@common/atoms/Loading';
 import { useTheme } from '@common/atoms/Theme';
+import { ResponseFetch, ResponseFetchValid, responseIsValid } from '@common/rxjs/rxjs_utils';
 import { cnf } from '@common/utils';
-import { ResponseFetch, ResponseFetchValid, responseIsError, responseIsValid } from '@common/rxjs/rxjs_utils';
-import LoaderReact from 'react-loading';
+import React from 'react';
+import { useRef } from 'react';
+import s from './QueryErrorContainer.module.scss';
 
 export interface QueryErrorContainerProps<T> {
     response?: T;
@@ -42,6 +43,8 @@ const QueryErrorContainer = <T extends ResponseFetch<any> | undefined | null>({
     ...props
 }: QueryErrorContainerProps<T> & React.HTMLAttributes<HTMLDivElement>) => {
     const theme = useTheme().name;
+    // An idea to keep elements in DOM even when fetch loading
+    // const validResponse = useRef<ResponseFetchValid<T> | undefined>(undefined);
 
     const render = ({ loading, error, children: vchildren, success }: { loading?; error?; children?; success? }) => {
         // const containerStyles: CSSProperties = { textAlign: LOrE ? 'center' : undefined };
@@ -63,7 +66,7 @@ const QueryErrorContainer = <T extends ResponseFetch<any> | undefined | null>({
                         {error ? (
                             error
                         ) : loading ? (
-                            <LoaderReact type="bubbles" height={60} width={60} />
+                            <LoaderReact type='bubbles' height={60} width={60} />
                         ) : feedback ? (
                             vchildren
                         ) : (
@@ -129,12 +132,11 @@ export const QueryLoadingContainer = <T extends ResponseFetch<any> | undefined |
                         // background: '#7b54a371',
                         // backdropFilter: 'blur(2px)',
                     }}
-                    className={cnf(s, "border-radius-2 loading-container", theme)}
+                    className={cnf(s, 'border-radius-2 loading-container', theme)}
                 >
-                    <LoaderReact type="spin" height={size || 30} width={size || 30} />
+                    <LoaderReact type='spin' height={size || 30} width={size || 30} />
                 </div>
             )}
-            
         </div>
     );
 };

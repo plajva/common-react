@@ -16,6 +16,7 @@ $width-o-2: math.div($width, 2);
     border-radius: $width-o-2;
     position: relative;
     &:after {
+        background: currentColor;
         box-sizing: border-box;
         transition: $transition;
         content: '';
@@ -38,9 +39,9 @@ $width-o-2: math.div($width, 2);
     #{$ts}.input + .control {
         border: 2px solid get-color(neutral, -2, 0.8);
         background-color: get-color(neutral, 0, 0.7);
-        &::after {
-            background: get-color(neutral, if(is-dark(), 2, -2));
-        }
+        // &::after {
+        //     background: get-color(neutral, if(is-dark(), 2, -2));
+        // }
     }
     #{$ts}.input:checked + .control {
         border-color: get-color(neutral, -3, 0.9);

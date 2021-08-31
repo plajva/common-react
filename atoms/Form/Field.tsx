@@ -1,6 +1,7 @@
 // This will create the basic state handlers for input elements
 import { Property } from 'csstype';
 import React, { createElement, ReactNode } from 'react';
+import { useState } from 'react';
 import { classNameFind } from '../../utils';
 import { useTheme } from '../Theme';
 import Checkbox, { CheckboxProps } from './Checkbox';
@@ -18,6 +19,18 @@ import Radio, { RadioProps } from './Radio';
 import Select, { SelectProps } from './Select';
 import Toggle, { ToggleProps } from './Toggle';
 
+const InputFile = (props) => {
+    const [state,setState] = useState({files:null as (FileList | null)})
+    const files:(File|null)[]=[];
+    if(state.files){
+        for(let i=0;i<state.files.length;++i)files.push(state.files.item(i));
+    }
+    return (<>
+        <div style={{ padding:'.2em', border:'1px dashed rgba(127,127,127,.7)', textAlign:'center', width:'100%'}}>{(files?.length && files.map((f,i) => f && <>{i && <br/>}{f.name}</>)) || 'Select File'}</div>
+        <input {...props} style={{display:'none'}} type="file" data-value={files.length ? 'true':undefined} onChange={(e) => setState({files: e.target.files})} />
+    </>)
+}
+
 export interface FieldProps {
     type?:
         | 'checkbox'
@@ -30,6 +43,7 @@ export interface FieldProps {
         | 'select'
         | 'textarea'
         | 'toggle'
+        | 'file'
         | 'date';
     children?: ReactNode;
     ref?: any;
@@ -63,7 +77,7 @@ export const Field = ({
     className = classNameFind(s, `comp`, className, 'dup', theme);
 
     const select_or_textarea = ['select', 'textarea'].includes(type || '');
-    const tog_sel_check_radio = ['toggle', 'select', 'checkbox', 'radio'].includes(type || '');
+    const tog_sel_check_radio = ['toggle', 'select', 'checkbox', 'radio', 'file'].includes(type || '');
 
     const el_type =
         type === 'toggle'
@@ -74,6 +88,8 @@ export const Field = ({
             ? Checkbox
             : type === 'radio'
             ? Radio
+            : type === 'file'
+            ? InputFile
             : select_or_textarea
             ? (eprops) => {
                   return FormFieldHOC(createElement(type || 'input', eprops));

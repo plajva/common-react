@@ -271,9 +271,9 @@ const FormComp = ({
 export const UseForm = ({ children, ...props }: { children: (form: { getValueRel? } & FormContextI) => any }) => {
     const name = useFormNameContext();
     const form = useForm();
-    return typeof children === 'function'
+    return (typeof children === 'function'
         ? children({ ...form, getValueRel: (n: string) => form.getValue(name ? name + '.' + n : n) })
-        : children;
+        : children) || null;
 };
 
 export type UseFormFieldProps = { name?: string; value?: any };

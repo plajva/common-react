@@ -68,7 +68,7 @@ export const createAPIFetch = <T>(
     if (endpoint[0] !== '/') endpoint = '/' + endpoint;
     if (!process.env.REACT_APP_API_URL && !baseURL) throw new Error(`process.env.REACT_APP_API_URL undefined?`);
     const url = `${baseURL ?? process.env.REACT_APP_API_URL}${endpoint}`;
-    return fromFetch(url, init).pipe(
+    let o = fromFetch(url, init).pipe(
         switchMap((res) => {
             // The .split is to handle content types like 'application/json; charset=utf-8'
             let content_type = res.headers.get('Content-type')?.split(';')[0];
@@ -104,10 +104,10 @@ export const createAPIFetch = <T>(
         catchError((err) => {
             console.error(err);
             return of({ errors: true, message: err.message });
-        }),
-        map(v => {console.log("Fetch: ",JSON.stringify(v,null,2));return v;}),
-        startWith(fetchInit)
+        })
     );
+    if(['test', 'development'].includes(process.env.NODE_ENV)) o.pipe(map(v => {console.log("FetchResponse: ",JSON.stringify(v,null,2));return v;}));
+    return o.pipe(startWith(fetchInit))
 };
 // ! ---------------------------------
 

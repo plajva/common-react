@@ -1,5 +1,5 @@
 import Backdrop from '../atoms/Backdrop';
-import LoaderReact from 'react-loading';
+import LoaderReact from './Loading';
 
 export interface LoaderOption {
     isLoading: boolean;

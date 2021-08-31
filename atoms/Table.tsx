@@ -67,6 +67,7 @@ export interface TableProps<D extends {}> {
     getColumnProps?: (s?: HeaderGroup<D> | ColumnInstance<D>) => object;
     getRowProps?: (s?: Row<D>) => object;
     getCellProps?: (s?: Cell<D>) => object;
+    selectedRow?: string;
     filters?: any;
     fetchData?: Function;
 }
@@ -80,6 +81,7 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
     options,
     emptyMessage,
     compact,
+    selectedRow,
     filters,
     fetchData,
     pagination,
@@ -164,7 +166,17 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
                         {page.map((row: any, i: Number) => {
                             prepareRow(row);
                             return (
-                                <tr {...row.getRowProps(_getRowProps(row))}>
+                                <tr
+                                    {...row.getRowProps([
+                                        {
+                                            className:
+                                                selectedRow && selectedRow === row?.id
+                                                    ? classNameFind(s, 'selected', theme)
+                                                    : undefined,
+                                        },
+                                        _getRowProps(row),
+                                    ])}
+                                >
                                     {row.cells.map((cell: any) => {
                                         let cls = cell['className'] ?? '';
                                         if (!!cell.column.sticky) {
@@ -201,14 +213,6 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
             {pagination && (
                 <div className='margin-top-2' style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex' }}>
-                        {/* <Button
-                            className='outline'
-                            button_type='icon'
-                            onClick={() => gotoPage(0)}
-                            disabled={!(pageIndex !== 0)}
-                        >
-                            <Icon icon={FaAngleDoubleLeft} />
-                        </Button> */}
                         <div style={{ lineHeight: '2em', margin: 'auto 0.5em' }}>
                             <em>
                                 {page.length === 0 ? 0 : pageIndex * pageSize + 1}
@@ -234,14 +238,6 @@ const Table: FunctionComponent<TableProps<{}> & React.HTMLAttributes<HTMLDivElem
                         >
                             <Icon icon={FaAngleRight} />
                         </Button>
-                        {/* <Button
-                            className='outline'
-                            button_type='icon'
-                            onClick={() => gotoPage(pagination.pageCount - 1)}
-                            disabled={!(pageIndex !== pagination.pageCount - 1 && pagination.pageCount > 0)}
-                        >
-                            <Icon icon={FaAngleDoubleRight} />
-                        </Button> */}
                     </div>
                     <div style={{ float: 'right' }}>
                         <select

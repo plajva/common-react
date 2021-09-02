@@ -1,8 +1,14 @@
-// This will create the basic state handlers for input elements
+/**
+ * This will create the basic state handlers for input elements
+ * This component should be as generic as possible
+ * ! DON'T like: editConfirm
+ * * Could be implemented somewhere else, too much specificity.
+ *  
+ * */ 
 import { Property } from 'csstype';
 import React, { createElement, ReactNode } from 'react';
 import { useState } from 'react';
-import { classNameFind } from '../../utils';
+import { classNameFind, cnf } from '../../utils';
 import { useTheme } from '../Theme';
 import Checkbox, { CheckboxProps } from './Checkbox';
 import s from './Field.module.scss';
@@ -18,20 +24,49 @@ import Input from './Input';
 import Radio, { RadioProps } from './Radio';
 import Select, { SelectProps } from './Select';
 import Toggle, { ToggleProps } from './Toggle';
+import Button from '../Button';
+import { MdCheck, MdEdit } from 'react-icons/md';
 
 const InputFile = (props) => {
-    const [state,setState] = useState({files:null as (FileList | null)})
-    const files:(File|null)[]=[];
-    if(state.files){
-        for(let i=0;i<state.files.length;++i)files.push(state.files.item(i));
+    const [state, setState] = useState({ files: null as FileList | null });
+    const files: (File | null)[] = [];
+    if (state.files) {
+        for (let i = 0; i < state.files.length; ++i) files.push(state.files.item(i));
     }
-    return (<>
-        <div style={{ padding:'.2em', border:'1px dashed rgba(127,127,127,.7)', textAlign:'center', width:'100%'}}>{(files?.length && files.map((f,i) => f && <>{i && <br/>}{f.name}</>)) || 'Select File'}</div>
-        <input {...props} style={{display:'none'}} type="file" data-value={files.length ? 'true':undefined} onChange={(e) => setState({files: e.target.files})} />
-    </>)
-}
+    return (
+        <>
+            <div
+                style={{
+                    padding: '.2em',
+                    border: '1px dashed rgba(127,127,127,.7)',
+                    textAlign: 'center',
+                    width: '100%',
+                }}
+            >
+                {(files?.length &&
+                    files.map(
+                        (f, i) =>
+                            f && (
+                                <>
+                                    {i && <br />}
+                                    {f.name}
+                                </>
+                            )
+                    )) ||
+                    'Select File'}
+            </div>
+            <input
+                {...props}
+                style={{ display: 'none' }}
+                type='file'
+                data-value={files.length ? 'true' : undefined}
+                onChange={(e) => setState({ files: e.target.files })}
+            />
+        </>
+    );
+};
 
-export interface FieldProps {
+export interface _FieldProps {
     type?:
         | 'checkbox'
         | 'email'
@@ -48,6 +83,7 @@ export interface FieldProps {
     children?: ReactNode;
     ref?: any;
     direction?: 'right' | 'left' | 'top' | 'bottom';
+    editConfirm?: boolean;
     label?: ReactNode;
     error?: string;
     id?: string;
@@ -59,6 +95,7 @@ export interface FieldProps {
 
 export type FieldCommon = { name?: string; value?: any; onChange?: (v: any) => void } & UseFormFieldOptions;
 type InputComponentProps = ToggleProps | SelectProps | CheckboxProps | RadioProps;
+type FieldProps = _FieldProps & InputPropsAll & InputComponentProps;
 
 export const Field = ({
     children,
@@ -68,16 +105,19 @@ export const Field = ({
     rootProps,
     className,
     direction,
+    editConfirm,
     error,
     type,
     name,
     ...props
-}: FieldProps & InputPropsAll & InputComponentProps) => {
+}: FieldProps) => {
     const theme = useTheme().name;
     className = classNameFind(s, `comp`, className, 'dup', theme);
 
     const select_or_textarea = ['select', 'textarea'].includes(type || '');
     const tog_sel_check_radio = ['toggle', 'select', 'checkbox', 'radio', 'file'].includes(type || '');
+
+    const [allowEdit, setAllowEdit] = useState(false);
 
     const el_type =
         type === 'toggle'
@@ -126,15 +166,16 @@ export const Field = ({
         className: classNameFind(s, 'input'),
         name,
         ...props,
+        readOnly: editConfirm ? !allowEdit : undefined,
     });
-    const { className: clsLabel, style: styLabel, htmlFor, ...lblProps } = labelProps ?? {};
+    const { className: labelClass, style: labelStyle, ...labelPropsRest } = labelProps ?? {};
     return (
         <div {...rootProps} className={className}>
             <label
+                {...labelPropsRest}
                 htmlFor={props.id}
-                className={classNameFind(s, 'label-container', clsLabel)}
-                style={{ flexDirection, cursor: tog_sel_check_radio ? 'pointer' : undefined, ...styLabel }}
-                {...lblProps}
+                className={classNameFind(s, 'label-container', labelClass)}
+                style={{ flexDirection, cursor: tog_sel_check_radio ? 'pointer' : undefined, ...labelStyle }}
             >
                 {input}
                 <span className={classNameFind(s, labelPersistent ? 'label-text-persitent' : 'label-text')}>
@@ -146,6 +187,20 @@ export const Field = ({
                     >
                         {error || labelBottom}
                     </span>
+                )}
+                {/* Edit Overlay, for Fields that are not automatically editable */}
+                {editConfirm && (
+                    <div className={cnf(s, 'edit-confirm')}>
+                        <Button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setAllowEdit(!allowEdit);
+                            }}
+                            // button_size='.5em'
+                            icon={allowEdit ? MdCheck : MdEdit}
+                            className={cnf(s, 'edit-button')}
+                        />
+                    </div>
                 )}
             </label>
         </div>

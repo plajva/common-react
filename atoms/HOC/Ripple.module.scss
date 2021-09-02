@@ -28,18 +28,6 @@ span.ripple {
         &#{$ts} {
             background: rgba(if(is-dark(), #fff, #000), 0.5);
         }
-
-        // This will loop through all color fields in the theme
-        // In case you want to define color based styles
-        // @each $c in get-theme-field(color-names) {
-        // 	// This will get the color based on the name
-        // 	$color: get-color($c);
-
-        // 	// My component on this theme and color
-        // 	&#{$ts}.#{$c} {
-
-        // 	}
-        // }
     }
     $theme-current: $theme-default;
 }

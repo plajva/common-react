@@ -1,5 +1,5 @@
 import { toUpperCaseFirst } from '../../utils';
-import { FieldProps } from './Field';
+import { _FieldProps } from './Field';
 import { UseFormFieldOptions } from './Form';
 
 /**
@@ -14,13 +14,14 @@ import { UseFormFieldOptions } from './Form';
 export const string_format = function (s: string, ...args) {
     return (
         s
+            // Replacing {0} and {1} with their values in args array.
             .replace(/{(\d+)}/g, function (match, number) {
                 return typeof args[number] != 'undefined' ? args[number] : match;
             })
             // Removing non-matched values
-            .replace(/{(.*{\d+}.*)}\?/g, '')
+            .replace(/{(.*{\d+}.*)}\?/g, '') // removing '{ {1}}?' in  'Joe is{ {1}}? a monkey' -> 'Joe is a monkey'
             // Removing matched values
-            .replace(/{(.*)}\?/g, (match, val) => val)
+            .replace(/{(.*)}\?/g, (match, val) => val) // removing '{}?' in 'Joe is{ not}? a monkey' -> 'Joe is not a monkey'
     );
 };
 
@@ -43,7 +44,7 @@ const regexFormat = (regex: RegExp, input: string, format: string) => {
     }
     return input;
 };
-export const field_utils: { [key: string]: UseFormFieldOptions & FieldProps } = {
+export const field_utils: { [key: string]: UseFormFieldOptions & _FieldProps } = {
     phone: {
         toFormBlur: (e, v?: string) => {
             return v && (regexFormat(regex_dict.phone, v, '{+{0} }?({1})-{2}-{3}') || v);

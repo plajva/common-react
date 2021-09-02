@@ -76,9 +76,23 @@ textarea {
     font: inherit;
     color: inherit;
     border-radius: get-space(1);
-    background: rgba(#000, 0.05);
+    $background: black;
+    background: rgba($background, 0.02);
     &:hover {
-        background: rgba(#000, 0.08);
+        background: rgba($background, 0.08);
+    }
+    &:read-only {
+        background: rgba($background, 0.1);
+        &:hover {
+            background: rgba($background, 0.16);
+        }
+    }
+    &:disabled {
+        cursor: not-allowed;
+        background: rgba($background, 0.2);
+        &:hover {
+            // background: rgba($background, 0.08);
+        }
     }
 }
 input,

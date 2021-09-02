@@ -1,5 +1,6 @@
 import { Location } from 'history';
 import router, { useLocation, useParams, useRouteMatch } from 'react-router-dom';
+import { capitalize } from 'voca';
 
 export const UseMatchParamsLocation = <M extends {} = {}, P extends {} = {}, L extends {} = {}>({
     children,
@@ -24,3 +25,5 @@ export const UseLocation = <T extends {} = {}>({ children }: { children: (locati
     const v = useLocation<T>();
     return children(v);
 };
+
+export const LocationLast = () => <UseLocation>{(l) => <h2>{capitalize(l.pathname.split("/").slice(-1)[0])}</h2>}</UseLocation>;

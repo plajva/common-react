@@ -3,17 +3,23 @@ import { classNameFind } from '../utils';
 import React, { FunctionComponent } from 'react';
 import s from './Button.module.scss';
 import Ripple from './HOC/Ripple';
+import Icon from './Icon';
 
 export interface ButtonCompProps {
     button_type?: 'normal' | 'icon';
     button_size?: string | number;
+    // * Helper prop, includes an icon in content and sets defaults
+    icon?: any,
 }
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & ButtonCompProps;
 // We need to set the className and provide aditinal classnames on component call
 
-const Button: FunctionComponent<ButtonProps> = ({ button_type, button_size, ...props }) => {
+const Button: FunctionComponent<ButtonProps> = ({ button_type, button_size, icon, ...props }) => {
     const theme = useTheme().name;
     let { className, ...others } = props;
+    // Set default button type as icon if icon prop is passed
+    if(icon)button_type = button_type ?? 'icon';
+    
     className = classNameFind(
         s,
         `button`,
@@ -35,6 +41,7 @@ const Button: FunctionComponent<ButtonProps> = ({ button_type, button_size, ...p
             }}
             {...others}
         >
+            {icon && <Icon icon={icon}/>}
             {props.children}
         </button>
     );

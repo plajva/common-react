@@ -42,11 +42,6 @@ const Ripple = <T extends React.HTMLAttributes<HTMLElement>>(
 
         new_ripple.style.animation = `${s['ripple']} ${rprops.ripple_time}ms linear forwards`;
         new_ripple.className = `${s['ripple']}`;
-
-        // let ripple = parent.getElementsByClassName(s['ripple'])[0] as HTMLSpanElement;
-        // if (ripple) {
-        // 	ripple.remove();
-        // }
         parent.appendChild(new_ripple);
 
         // Remove ripple after anim

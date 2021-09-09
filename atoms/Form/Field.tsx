@@ -165,8 +165,8 @@ export const Field = ({
         type,
         className: classNameFind(s, 'input'),
         name,
-        ...props,
         readOnly: editConfirm ? !allowEdit : undefined,
+        ...props,
     });
     const { className: labelClass, style: labelStyle, ...labelPropsRest } = labelProps ?? {};
     return (

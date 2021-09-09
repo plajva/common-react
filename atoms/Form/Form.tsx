@@ -50,7 +50,7 @@ interface FormContextExtra {
     getValue: (name: string) => any;
     getError: () => MyError;
     getTouched: (name: string) => any;
-    getValid: () => any;
+    getValid: () => FormState | undefined;
     submit: () => void;
     reset: () => void;
     touched?: boolean;
@@ -80,12 +80,20 @@ interface FormProps {
     resetState?: FormState;
     /**Accepts a schema from zod/yup */
     validationSchema?: any;
+    /**
+     * Calls this function when values are valid, then resets touched
+     */
     onSubmit?: (v: any) => void;
+    /**
+     * Only works with 1st level currently, no deep object allowed
+     * Values are filtered by wether they were touched or not
+     **/
+    onSubmitChanges?: (v: any) => void;
     onChange?: (v: FormState) => void;
     readonly?: boolean;
     onReset?: (v: FormState) => void;
     children?: ReactNode | ((context: FormContextI) => ReactElement);
-    useForm?:boolean
+    useForm?: boolean;
 }
 const isZod = (s: any): boolean => (s?.parse ? true : false);
 const isYup = (s: any): boolean => (s?.validate ? true : false);
@@ -98,6 +106,7 @@ const FormComp = ({
     resetState: _resetState,
     validationSchema: schema,
     onSubmit,
+    onSubmitChanges,
     onReset,
     onChange,
     useForm,
@@ -113,7 +122,7 @@ const FormComp = ({
     const formRef = useRef<HTMLFormElement>(null);
     // This becomes true when we triggered a <form> submission from this component
     const formSubmitting = useRef<boolean>(false);
-    
+
     // Happens on submission
     const getValid = () => {
         const values = state.values;
@@ -129,10 +138,11 @@ const FormComp = ({
                 return undefined;
             }
         }
+        const touched = state.touched;
         setState((state) => {
             return { ...state, touched: false };
         });
-        return valid;
+        return { values: valid, touched };
     };
 
     useEffect(() => {
@@ -244,17 +254,30 @@ const FormComp = ({
         },
         submit: () => {
             // To handle login info saving in the browser
-            // if(formRef.current && !formSubmitting.current){ 
-            //     // Calling submit on the <form> should call this function again
-            //     formRef.current.submit();
-            //     return;
-            // }
+            if(formRef.current && !formSubmitting.current){
+                // Calling submit on the <form> should call this function again
+                formRef.current.submit();
+                return;
+            }
             // Proceed with submission
-            const valid = getValid();
-            if (!valid) {
+            let valid_s = getValid();
+            if (!valid_s) {
                 console.log('Form not valid: ', state.errors);
             }
-            onSubmit && onSubmit(valid);
+            onSubmit && onSubmit(valid_s?.values);
+            if (onSubmitChanges) {
+                if (valid_s) {
+                    onSubmitChanges(
+                        Object.keys(valid_s)
+                            .filter((key) => valid_s?.touched[key])
+                            .reduce((obj, key) => {
+                                obj[key] = valid_s?.values[key];
+                                return obj;
+                            }, {})
+                    );
+                } else onSubmitChanges(undefined);
+            }
+
             // Reset the switch
             formSubmitting.current = false;
         },
@@ -263,17 +286,31 @@ const FormComp = ({
     const childrenRender = typeof children === 'function' ? children(context) : children;
     return (
         <FormContext.Provider value={context}>
-            {useForm ? <form ref={formRef} onSubmit={(e) => {e.preventDefault();formSubmitting.current = true;context.submit()}}>{childrenRender}</form> : 
-            childrenRender}
+            {useForm ? (
+                <form
+                    ref={formRef}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        formSubmitting.current = true;
+                        context.submit();
+                    }}
+                >
+                    {childrenRender}
+                </form>
+            ) : (
+                childrenRender
+            )}
         </FormContext.Provider>
     );
 };
 export const UseForm = ({ children, ...props }: { children: (form: { getValueRel? } & FormContextI) => any }) => {
     const name = useFormNameContext();
     const form = useForm();
-    return (typeof children === 'function'
-        ? children({ ...form, getValueRel: (n: string) => form.getValue(name ? name + '.' + n : n) })
-        : children) || null;
+    return (
+        (typeof children === 'function'
+            ? children({ ...form, getValueRel: (n: string) => form.getValue(name ? name + '.' + n : n) })
+            : children) || null
+    );
 };
 
 export type UseFormFieldProps = { name?: string; value?: any };

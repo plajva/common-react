@@ -77,7 +77,12 @@ export const responseIsValid = <T extends ResponseFetchAny>(v: T): ResponseFetch
 export const responseIsError = <T extends ResponseFetchAny>(v: T): ResponseFetchErrors<T> | undefined =>
     v && hasOwnProperty(v, 'errors') ? v : undefined;
 
-type FetchOptions<T> = { init?: RequestInit; okReturn?: (res: Response) => Observable<T> };
+type FetchOptions<T> = {
+    /** Init to use, will take precedence over all other options */
+    init?: RequestInit;
+    /** When request succedes, what to do with value?, by default a json will be converted to object, and text to a string */
+    okReturn?: (res: Response) => Observable<T>;
+};
 const fetchDefault: ResponseFetch<any> = { loading: true, data: undefined };
 export const createAPIFetch = <T>({
     url,
@@ -155,7 +160,7 @@ export const createAPIFetchStatic = <R, D = undefined>(
  *  createAPIFetchEventCombine
  *  createAPIFetchEvent
  */
-type FetchEventOptions<D, C extends unknown[] = []> = {
+type FetchEventOptions<D, C extends unknown[]> = {
     defaultValue?: D;
     shareReplay?: boolean;
     combine$?: [...ObservableInputTuple<C>];
@@ -167,9 +172,9 @@ type FetchEventOptions<D, C extends unknown[] = []> = {
  * @type D: Default Value Type
  * @type C: Combine Type
  * */
-export function createAPIFetchEvent<I, R, D = undefined, C extends unknown[] = []>(
+export function createAPIFetchEvent<I,R, C extends unknown[], D = undefined>(
     toFetch: (val: [I, ...C]) => Observable<R>,
-    options?: FetchEventOptions<D, C> & { startWith?: I }
+    options?: FetchEventOptions<D, C> & { startWith?: I, inputType?: I }
 ): [(v: I) => void, () => [I, ...C] | undefined, () => R | D | undefined, Observable<R>] {
     // Making a subject, a new event creator per say
     // Subject will usually have queryString or
@@ -201,7 +206,7 @@ export function createAPIFetchEvent<I, R, D = undefined, C extends unknown[] = [
 export function createAPIFetchChain<R, D = undefined, C extends unknown[] = []>(
     combine$: [...ObservableInputTuple<C>],
     toFetch: (val: [...C]) => Observable<R>,
-    options?: FetchEventOptions<D>
+    options?: FetchEventOptions<D,C>
 ): [() => [...C] | undefined, () => R | D | undefined, Observable<R>] {
     const _shareReplay = options?.shareReplay ?? true;
 
@@ -230,12 +235,19 @@ export const queryString = (v?: any) => {
     }
 };
 type FetchHelperOptions<T> = {
+    /** The endpoint string to use */
     endpoint: string;
+    /** The baseUrl to be used for query URL generation, will be postfixed by 'endpoint' */
     baseUrl?: string;
+    /** The query object to use => ? k=v & k=v */
     query?: object;
+    /** The token to use for Authentication header, will be prefixed by 'Bearer ' */
     token?: string;
+    /** The value of Authentication header, will replace 'token' option */
     auth?: string;
+    /** The body, will be converted JSON string if object */
     body?: string | object;
+    /** 'json': will set method to POST and content type to json */
     type?: 'json';
 } & FetchOptions<T>;
 /**
@@ -287,6 +299,3 @@ export const combineInputs =
                 return a;
             }, {})
         );
-// type type = [{[key:string]:string}];
-// type t = type[keyof type];
-// combineInputs<>(v => {})

@@ -4,10 +4,9 @@
  */
 import LoaderReact from '@common/atoms/Loading';
 import { useTheme } from '@common/atoms/Theme';
-import { ResponseFetch, ResponseFetchValid, responseIsValid } from '@common/rxjs/rxjs_utils';
+import { ResponseFetch, ResponseFetchValid, responseIsError } from '@common/rxjs/rxjs_utils';
 import { cnf } from '@common/utils';
 import React from 'react';
-import { useRef } from 'react';
 import s from './QueryErrorContainer.module.scss';
 
 export interface QueryErrorContainerProps<T> {
@@ -89,8 +88,8 @@ const QueryErrorContainer = <T extends ResponseFetch<any> | undefined | null>({
     if (!response) {
         // error = `Response is '${response}'`;
         return childrenDefault ? render({ children: childrenDefault }) : render({ error });
-    } else if (!responseIsValid(response)) {
-        let { errors, loading, message, ...rest } = response;
+    } else if (responseIsError(response)) {
+        let { errors, loading, message, ...rest } = response as any;
         return render({ loading, error: (errors && message) || undefined });
     } else {
         // let { ...rest } = response;

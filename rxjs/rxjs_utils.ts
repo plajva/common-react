@@ -145,13 +145,17 @@ export const createAPIFetch = <T>({
     return o.pipe(startWith(fetchDefault));
 };
 
-export const createAPIFetchStatic = <R, D = undefined>(
-    options: FetchHelperOptions<R>,
-    defaultValue?: D
+export const createAPIFetchStatic = <R, C extends unknown[], D = undefined>(
+    foptions: FetchHelperOptions<R>,
+    options?: FetchEventOptions<ResponseFetch<R>, D, C>
 ): [() => ResponseFetch<R> | D | undefined, Observable<ResponseFetch<R>>] => {
-    const o = createAPIFetchHelper<R>(options).pipe(shareReplay(1));
-    const useO = () => useObservable(o, defaultValue);
-    return [useO, o];
+    const combineValid$ = options?.combine$ ?? ([of(null)] as unknown as [...ObservableInputTuple<C>]);
+    const [useV, useR, result$] = createAPIFetchChain(
+        combineValid$,
+        (s) => createAPIFetchHelperCall(s, foptions),
+        options
+    );
+    return [useR, result$];
 };
 
 /**
@@ -160,7 +164,8 @@ export const createAPIFetchStatic = <R, D = undefined>(
  *  createAPIFetchEventCombine
  *  createAPIFetchEvent
  */
-type FetchEventOptions<D, C extends unknown[]> = {
+type FetchEventOptions<R, D, C extends unknown[]> = {
+    responseType?: R;
     defaultValue?: D;
     shareReplay?: boolean;
     combine$?: [...ObservableInputTuple<C>];
@@ -172,9 +177,9 @@ type FetchEventOptions<D, C extends unknown[]> = {
  * @type D: Default Value Type
  * @type C: Combine Type
  * */
-export function createAPIFetchEvent<I,R, C extends unknown[], D = undefined>(
+export function createAPIFetchEvent<I, R, C extends unknown[], D = undefined>(
     toFetch: (val: [I, ...C]) => Observable<R>,
-    options?: FetchEventOptions<D, C> & { startWith?: I, inputType?: I }
+    options?: FetchEventOptions<R, D, C> & { startWith?: I; inputType?: I }
 ): [(v: I) => void, () => [I, ...C] | undefined, () => R | D | undefined, Observable<R>] {
     // Making a subject, a new event creator per say
     // Subject will usually have queryString or
@@ -206,7 +211,7 @@ export function createAPIFetchEvent<I,R, C extends unknown[], D = undefined>(
 export function createAPIFetchChain<R, D = undefined, C extends unknown[] = []>(
     combine$: [...ObservableInputTuple<C>],
     toFetch: (val: [...C]) => Observable<R>,
-    options?: FetchEventOptions<D,C>
+    options?:  FetchEventOptions<R, D, C> 
 ): [() => [...C] | undefined, () => R | D | undefined, Observable<R>] {
     const _shareReplay = options?.shareReplay ?? true;
 
@@ -283,6 +288,36 @@ export const createAPIFetchHelper = <T>({
         init = { ...init, headers: { ...init?.headers, Authorization: token ? `Bearer ${token}` : auth || '' } };
     }
     return createAPIFetch<T>({ url, init, ...others });
+};
+
+export type HelperInputTouple<T> = {
+    [K in keyof T]: T[K];
+};
+export type HelperTransformTouple<T, R> = {
+    [K in keyof T]?: (v: T[K]) => Partial<FetchHelperOptions<R>>;
+};
+export const createAPIFetchHelperCombine = <R, A extends unknown[]>(
+    sources: [...HelperInputTouple<A>],
+    ...transform: [...HelperTransformTouple<A, R>]
+) => {
+    const transformed = sources.map((s, i) => {
+        const t = transform[i];
+        return t ? t(s) : (s as FetchHelperOptions<R>);
+    });
+    const combined = transformed.reduce((a, v) => Object.assign(a, v), {} as FetchHelperOptions<R>);
+    return combined;
+};
+/**
+ * An interface to map values, takes in array of values and transform array respectively, returns call to createApiFetchHelper of all transform objects combined
+ * @param sources
+ * @param transform
+ */
+export const createAPIFetchHelperCall = <R, A extends unknown[]>(
+    sources: [...HelperInputTouple<A>],
+    options: FetchHelperOptions<R>,
+    ...transform: [...HelperTransformTouple<A, R>]
+) => {
+    return createAPIFetchHelper<R>({ ...options, ...createAPIFetchHelperCombine(sources, ...transform) });
 };
 
 /**

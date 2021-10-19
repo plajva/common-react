@@ -165,7 +165,7 @@ const FormComp = ({
                     try {
                         values = isZod(schema)
                             ? schema.parse(values)
-                            : schema.validateSync(values, { abortEarly: false });
+                            : schema.validateSync(values, { abortEarly: false, stripUnknown: true});
                     } catch (_error) {
                         errors = [];
 

@@ -4,10 +4,9 @@
  */
 import LoaderReact from '@common/atoms/Loading';
 import { useTheme } from '@common/atoms/Theme';
-import { ResponseFetch, ResponseFetchValid, responseIsValid } from '@common/rxjs/rxjs_utils';
+import { ResponseFetch, ResponseFetchValid, responseIsError, responseIsValid } from '@common/rxjs/rxjs_utils';
 import { cnf } from '@common/utils';
 import React from 'react';
-import { useRef } from 'react';
 import s from './QueryErrorContainer.module.scss';
 
 export interface QueryErrorContainerProps<T> {
@@ -30,6 +29,7 @@ export interface QueryErrorContainerProps<T> {
     childrenDefault?: any;
 }
 
+// ! This code can be done MUCH MUCH CLEANER, maybe not needed at all
 const QueryErrorContainer = <T extends ResponseFetch<any> | undefined | null>({
     className,
     response,
@@ -89,14 +89,14 @@ const QueryErrorContainer = <T extends ResponseFetch<any> | undefined | null>({
     if (!response) {
         // error = `Response is '${response}'`;
         return childrenDefault ? render({ children: childrenDefault }) : render({ error });
-    } else if (!responseIsValid(response)) {
-        let { errors, loading, message, ...rest } = response;
+    } else if (responseIsError(response)) {
+        let { errors, loading, message, ...rest } = response as any;
         return render({ loading, error: (errors && message) || undefined });
-    } else {
-        // let { ...rest } = response;
+    } else if (responseIsValid(response)){
         //@ts-ignore
         return render({ children: children(response), success: true });
     }
+    return render({error})
 };
 
 export interface QueryLoadingContainerProps<T> extends React.HTMLAttributes<HTMLElement> {

@@ -72,8 +72,10 @@ function hasOwnProperty<X extends {}, Y extends PropertyKey>(obj: X, prop: Y): o
     return obj.hasOwnProperty(prop);
 }
 // --------------
+/** Will only be true if response is valid && non-null  */
 export const responseIsValid = <T extends ResponseFetchAny>(v: T): ResponseFetchValid<T> | undefined =>
     v && !v.errors && !v.loading && !v.message && hasOwnProperty(v, 'data') ? v : undefined;
+/** Will only be true if response is of type error && non-null  */
 export const responseIsError = <T extends ResponseFetchAny>(v: T): ResponseFetchErrors<T> | undefined =>
     v && hasOwnProperty(v, 'errors') ? v : undefined;
 

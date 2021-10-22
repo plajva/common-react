@@ -170,10 +170,10 @@ const FormComp = ({
                         errors = [];
 
                         if (isZod(schema)) {
-                            let e = _error; //as z.ZodError;
+                            let e:any = _error; //as z.ZodError;
                             // const e = _error as Omit<z.ZodError, 'issues'> & {issues?:any};
                             // if(e.message)errors.push({path:'', message:e.message});
-                            if (e?.errors.length) {
+                            if (e?.errors?.length) {
                                 errors.push(
                                     ...e.errors.map((issue) => {
                                         return {
@@ -201,7 +201,7 @@ const FormComp = ({
                             }
                             // errors = _errors;
                         } else if (isYup(schema)) {
-                            const e = _error; //as y.ValidationError;
+                            const e:any = _error; //as y.ValidationError;
                             values = e.value;
                             const addError = (
                                 err //: y.ValidationError

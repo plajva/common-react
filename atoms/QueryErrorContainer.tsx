@@ -7,6 +7,7 @@ import { useTheme } from '@common/atoms/Theme';
 import { ResponseFetch, ResponseFetchValid, responseIsError, responseIsValid } from '@common/rxjs/rxjs_utils';
 import { cnf } from '@common/utils';
 import React from 'react';
+import { ReactNode } from 'react';
 import s from './QueryErrorContainer.module.scss';
 
 export interface QueryErrorContainerProps<T> {
@@ -104,7 +105,7 @@ export interface QueryLoadingContainerProps<T> extends React.HTMLAttributes<HTML
     /**
      * Exclude null/undefined and any of the status/loading properties from type
      */
-    children?: (v: T | null | undefined) => any;
+    children?: ((v: T | null | undefined) => any) | ReactNode;
     size?: string | number;
 }
 
@@ -117,7 +118,7 @@ export const QueryLoadingContainer = <T extends ResponseFetch<any> | undefined |
     const theme = useTheme().name;
     return (
         <div {...props} style={{ position: 'relative', ...props.style }}>
-            {children && children(response)}
+            {(typeof children === 'function' && children(response)) || children}
             {response?.loading && (
                 <div
                     style={{

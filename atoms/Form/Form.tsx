@@ -80,6 +80,7 @@ interface FormProps {
     resetState?: FormState;
     /**Accepts a schema from zod/yup */
     validationSchema?: any;
+    validationStrip?: boolean;
     /**
      * Calls this function when values are valid, then resets touched
      */
@@ -105,6 +106,7 @@ const FormComp = ({
     readonly,
     resetState: _resetState,
     validationSchema: schema,
+    validationStrip,
     onSubmit,
     onSubmitChanges,
     onReset,
@@ -129,7 +131,7 @@ const FormComp = ({
         let valid = values;
         if (schema) {
             try {
-                valid = isZod(schema) ? schema.parse(values) : schema.validateSync(values, { abortEarly: false });
+                valid = isZod(schema) ? schema.parse(values) : schema.validateSync(values, { abortEarly: false, stripUnknown: validationStrip ?? false });
             } catch (_error) {
                 // Set touched to true so all errors are shown
                 setState((state) => {
@@ -165,7 +167,7 @@ const FormComp = ({
                     try {
                         values = isZod(schema)
                             ? schema.parse(values)
-                            : schema.validateSync(values, { abortEarly: false, stripUnknown: true});
+                            : schema.validateSync(values, { abortEarly: false, stripUnknown: validationStrip ?? false});
                     } catch (_error) {
                         errors = [];
 

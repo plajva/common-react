@@ -90,7 +90,7 @@ const QueryErrorContainer = <T extends ResponseFetch<any> | undefined | null>({
     if (!response) {
         // error = `Response is '${response}'`;
         return childrenDefault ? render({ children: childrenDefault }) : render({ error });
-    } else if (responseIsError(response)) {
+    } else if (responseIsError(response) || response.loading) {
         let { errors, loading, message, ...rest } = response as any;
         return render({ loading, error: (errors && message) || undefined });
     } else if (responseIsValid(response)){

@@ -67,19 +67,19 @@ const Modal = ({
     return (
         ((isOpen || active) && (
             <Portal id='modals'>
-                <FocusTrap
+                {/* <FocusTrap
                     focusTrapOptions={{
                         preventScroll: true,
                         onDeactivate: () => !isLocked && onClose && onClose(),
                         // clickOutsideDeactivates:true,
                     }}
-                >
+                > */}
                     <Backdrop ref={backdrop} active={isOpen} fixed={true}>
                         <div className={clsContent} {...props}>
                             {typeof children === 'function' ? children() : children}
                         </div>
                     </Backdrop>
-                </FocusTrap>
+                {/* </FocusTrap> */}
             </Portal>
         )) ||
         null

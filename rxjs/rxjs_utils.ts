@@ -1,4 +1,4 @@
-import {} from '@common/utils';
+import { pruneEmpty } from '@common/utils';
 import { useEffect, useState } from 'react';
 import {
     catchError,
@@ -284,7 +284,7 @@ export const createAPIFetchHelper = <T>({
             break;
     }
     if (body) {
-        init = { ...init, body: typeof body === 'object' ? JSON.stringify(body) : body };
+        init = { ...init, body: typeof body === 'object' ? JSON.stringify(pruneEmpty(body)) : body };
     }
     if (auth || token) {
         init = { ...init, headers: { ...init?.headers, Authorization: token ? `Bearer ${token}` : auth || '' } };

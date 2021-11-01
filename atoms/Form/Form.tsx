@@ -52,7 +52,8 @@ interface FormContextExtra {
     getTouched: (name: string) => any;
     getValid: () => FormState | undefined;
     submit: () => void;
-    reset: () => void;
+    reset: (touched?:boolean) => void;
+    clear: () => void;
     touched?: boolean;
     errors?: boolean;
 }
@@ -70,6 +71,7 @@ const FormContext = StateCombineContext<FormState, FormContextExtra>({
     getValid: () => undefined,
     submit: () => {},
     reset: () => {},
+    clear: () => {},
 });
 
 export const useForm = () => useContext(FormContext);
@@ -250,9 +252,13 @@ const FormComp = ({
             return getForm(`touched.${name}`, state);
         },
         getValid,
-        reset: () => {
-            setState(resetState);
-            onReset && onReset(resetState);
+        reset: (touched) => {
+            const rstate = typeof touched !== 'undefined'?{...resetState, touched}:resetState;
+            setState(rstate);
+            onReset && onReset(rstate);
+        },
+        clear: () => {
+            setState({});
         },
         submit: () => {
             // To handle login info saving in the browser
@@ -351,7 +357,7 @@ export const useFormField = (
     const getValue = (name) => {
         let formValue = form.getValue(name);
         // if (_props['type'] === 'date' && typeof formValue === 'string')formValue = new Date(formValue)?.toISOString().substr(0,10) || formValue;
-        return (value ?? formValue) || '';
+        return value ?? formValue ?? '';
     };
     return name
         ? {

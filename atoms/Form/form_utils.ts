@@ -1,3 +1,4 @@
+import accounting from 'accounting';
 import { toUpperCaseFirst } from '../../utils';
 import { _FieldProps } from './Field';
 import { UseFormFieldOptions } from './Form';
@@ -93,11 +94,11 @@ export const field_utils: { [key: string]: UseFormFieldOptions & _FieldProps } =
         },
     },
     money: {
-        toForm: (e, v) => (typeof v === 'string' ? Number(v.replace(/[^\d.]+/g, '')) : v),
-        fromForm: (v) => (typeof v === 'number' ? `$${v.toLocaleString(undefined)}` : v),
+        toForm: (e, v) => (typeof v === 'string' ? (v.length?accounting.unformat(v):undefined) : v),
+        fromForm: (v) => (typeof v === 'number' ? (accounting.formatMoney(v, undefined,0)) : v),
     },
     number: {
-        toForm: (e, v) => (typeof v === 'string' ? Number(v.replace(/[^\d]+/g, '')) : v),
+        toForm: (e, v) => (typeof v === 'string' ? Number(v.replace(/[^\d.]+/g, '')) : v),
         fromForm: (v) => (typeof v === 'number' ? `${v}` : v),
     },
 };

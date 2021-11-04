@@ -445,6 +445,10 @@ export const useFieldValue = (name?: string) => {
 // 	return useFieldValue(props.name);
 // };
 
+export const FieldError = (name) => {
+    
+}
+
 type MapProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
     root_type?: any;
     children?: ((props: { value; index }) => any) | ReactNode;

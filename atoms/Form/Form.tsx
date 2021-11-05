@@ -12,10 +12,11 @@ import {
 } from 'react';
 // import * as y from 'yup';
 // import * as z from 'zod';
-import { combineEvent } from '../../utils';
+import { classNameFind, combineEvent } from '../../utils';
 import { cloneDeep, get, isEqual, set, setWith } from 'lodash';
 import StateCombineHOC, { StateCombineContext, StateCombineProps } from '../HOC/StateCombineHOC';
 import { useRef } from 'react';
+import { useTheme } from '../Theme';
 
 const splitName = (name: string) => {
     return name
@@ -38,11 +39,14 @@ export type InputPropsAll =
     | React.SelectHTMLAttributes<HTMLElement>
     | React.TextareaHTMLAttributes<HTMLElement>;
 
-export interface FormState {
-    values?: any;
+export interface FormState<T = any> {
+    values?: T;
     errors?: MyError;
     touched?: any;
 }
+
+const debugForm = true;
+
 interface FormContextExtra {
     setValue: (name: string, value: any) => void;
     // setError: (name: string, value: any) => void;
@@ -161,8 +165,9 @@ const FormComp = ({
         errors: Boolean(typeof state.errors === 'object' ? Object.keys(state.errors)?.length : state.errors),
         setValue: (name, value) => {
             setState((state) => {
+                console.log("prev: ", JSON.stringify(state.values, undefined, 2))
                 let values = readonly ? state.values : replaceForm(name, value, state.values);
-
+                console.log("after: ", JSON.stringify(values, undefined, 2))
                 // Doing validation
                 let errors: MyError;
                 if (schema) {
@@ -229,6 +234,7 @@ const FormComp = ({
                 }
 
                 const newState = { ...state, values, errors };
+                console.log(JSON.stringify(newState.values, null, 2))
 
                 return newState;
             });
@@ -363,11 +369,9 @@ export const useFormField = (
         ? {
               onChange: combineEvent((e) => {
                   form.setValue(name, toForm ? toForm(e, e.target[valueName]) : e.target[valueName]);
-                  // console.log("OnChange");
                   form.setTouched(name, true);
               }, onChange),
               onBlur: combineEvent((e) => {
-                  // form.setTouched(name, true);
                   if (toFormBlur) form.setValue(name, toFormBlur(e, e.target[valueName]));
               }, onBlur),
               onFocus: combineEvent((e) => {
@@ -417,16 +421,21 @@ export const FormNameProvider = (props: { children?: ReactNode; absolute?: boole
 export const useFieldError = (name?: string) => {
     const form = useForm();
     let error: string | undefined;
-    if (name) {
+    if (typeof name === 'string') {
         name = normalizeName(name);
         const err = form.getError()?.find((e) => e.path === name)?.message;
         error = err && form.getTouched(name) && err;
     }
     return error;
 };
-// export const FieldError = (props: { name: string }) => {
-// 	return useFieldError(props.name);
-// };
+export const FieldError = ({name, noCombine, className, ...props}: { name?: string, noCombine?: boolean} & HTMLAttributes<HTMLElement>) => {
+    const theme = useTheme().name;
+	const _className = classNameFind(undefined, `atom`, 'dup', theme, className);
+    
+    const nameC = useFormNameContextCombine(name);
+    const error = useFieldError(noCombine ? name : nameC);
+	return <>{error && <div className={_className} {...props}>{error}</div>}</>;
+};
 /**
  * Doesn't use the name context
  * @param name

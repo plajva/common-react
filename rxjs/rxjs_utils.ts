@@ -136,13 +136,13 @@ export const createAPIFetch = <T>({
         })
     );
     // Logs all data if in development
-    if (['test', 'development'].includes(process.env.NODE_ENV))
-        o = o.pipe(
-            map((v) => {
-                console.log('FetchResponse: ', JSON.stringify(v, null, 2));
-                return v;
-            })
-        );
+    // if (['test', 'development'].includes(process.env.NODE_ENV))
+    //     o = o.pipe(
+    //         map((v) => {
+    //             console.log('FetchResponse: ', JSON.stringify(v, null, 2));
+    //             return v;
+    //         })
+    //     );
 
     return o.pipe(startWith(fetchDefault));
 };

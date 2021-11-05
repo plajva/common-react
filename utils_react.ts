@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from 'react';
-import { combineEvent, deepMerge, RecursivePartial } from './utils';
+import { combineEvent, deepMerge, jwtParse, RecursivePartial } from './utils';
 
 const getValidState = (ownState, upState) => {
     return typeof ownState === 'object'
@@ -84,5 +84,14 @@ export const scrollToElement = (
 };
 
 export const isLogin = () => {
-    return localStorage.getItem("token") !== null;
+    const token = localStorage.getItem("token");
+    if(token){
+        const jwt = jwtParse(token);
+        if(jwt){
+            const exp = new Date(Number(jwt.exp)*1000);
+            const expired = new Date().getTime() > exp.getTime();
+            return !expired;
+        }
+    }
+    return false;
 };

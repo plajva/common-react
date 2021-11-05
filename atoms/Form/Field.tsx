@@ -108,7 +108,7 @@ export const Field = ({
     editConfirm,
     error,
     type,
-    name,
+    name:_name,
     ...props
 }: FieldProps) => {
     const theme = useTheme().name;
@@ -148,7 +148,7 @@ export const Field = ({
         : 'column';
 
     // Use upper name context if available
-    name = useFormNameContextCombine(name);
+    const name = useFormNameContextCombine(_name);
     // Use a field error
     const fieldError = useFieldError(name);
     error = error || fieldError;

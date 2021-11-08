@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import 'type_check';
 
 /// Prints a map as a CSS rule
@@ -111,7 +113,7 @@
 /// @return {Number} - Unitless number
 @function strip-unit($number) {
     @if type-of($number) == 'number' and not unitless($number) {
-        @return $number / ($number * 0 + 1);
+        @return math.div($number, $number * 0 + 1);
     }
 
     @return $number;

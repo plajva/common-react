@@ -165,9 +165,9 @@ const FormComp = ({
         errors: Boolean(typeof state.errors === 'object' ? Object.keys(state.errors)?.length : state.errors),
         setValue: (name, value) => {
             setState((state) => {
-                console.log("prev: ", JSON.stringify(state.values, undefined, 2))
+                // console.log("prev: ", JSON.stringify(state.values, undefined, 2))
                 let values = readonly ? state.values : replaceForm(name, value, state.values);
-                console.log("after: ", JSON.stringify(values, undefined, 2))
+                // console.log("after: ", JSON.stringify(values, undefined, 2))
                 // Doing validation
                 let errors: MyError;
                 if (schema) {
@@ -234,7 +234,7 @@ const FormComp = ({
                 }
 
                 const newState = { ...state, values, errors };
-                console.log(JSON.stringify(newState.values, null, 2))
+                // console.log(JSON.stringify(newState.values, null, 2))
 
                 return newState;
             });

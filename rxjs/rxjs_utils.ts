@@ -83,7 +83,7 @@ type FetchOptions<T> = {
     /** Init to use, will take precedence over all other options */
     init?: RequestInit;
     /** When request succedes, what to do with value?, by default a json will be converted to object, and text to a string */
-    okReturn?: (res: Response) => Observable<T>;
+    okReturn?: (value: any) => T;
 };
 const fetchDefault: ResponseFetch<any> = { loading: true, data: undefined };
 export const createAPIFetch = <T>({
@@ -95,16 +95,17 @@ export const createAPIFetch = <T>({
         switchMap((res) => {
             // The .split is to handle content types like 'application/json; charset=utf-8'
             let content_type = res.headers.get('Content-type')?.split(';')[0];
+            
             // let content_size = res.headers.get
             if (res.ok) {
+                const r = content_type === 'application/json'
+                ? from(res.json())
+                : content_type === 'text/plain'
+                ? from(res.text())
+                : of(true);
+                
                 return (
-                    okReturn
-                        ? okReturn(res)
-                        : content_type === 'application/json'
-                        ? from(res.json())
-                        : content_type === 'text/plain'
-                        ? from(res.text())
-                        : of(true)
+                    okReturn ? (r.pipe(map(okReturn))) : r
                 ).pipe(map((v) => ({ data: v })));
             } else {
                 switch (content_type) {

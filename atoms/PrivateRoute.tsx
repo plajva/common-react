@@ -47,11 +47,11 @@ export interface PrivateRouteProps {
 
 type PrivateProps = PrivateRouteProps & (PathRouteProps | LayoutRouteProps | IndexRouteProps);
 
-const PrivateElement: React.FC<PrivateProps> = ({ assert, onAssertFalse, element }) => {
+export const PrivateElement: React.FC<PrivateRouteProps> = ({ assert, onAssertFalse, children }) => {
   const valid = assert();
 
   if (valid) {
-    return element ?? null
+    return <>{children}</> ?? null
   }
 
   return typeof onAssertFalse === "string" || !onAssertFalse ? (
@@ -61,12 +61,13 @@ const PrivateElement: React.FC<PrivateProps> = ({ assert, onAssertFalse, element
 	)
 }
 
-export const PrivateRoute: React.FC<PrivateProps> = ({ element, assert, onAssertFalse, ...rest }) => {
-  return <Route {...rest} element={<PrivateElement element={element} assert={assert} onAssertFalse={onAssertFalse}  />} />
-}
+// export const PrivateRoute: React.FC<PrivateProps> = ({ element, assert, onAssertFalse, ...rest }) => {
+//   console.log('Returning private route')
+  // return <Route {...rest} element={<PrivateElement children={element} assert={assert} onAssertFalse={onAssertFalse}  />} />
+// }
 
 // export const PrivateOutletHOC = () => {
 // 	return 
 // }
 
-export default PrivateRoute;
+// export default PrivateRoute;

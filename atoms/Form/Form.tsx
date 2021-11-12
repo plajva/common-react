@@ -33,7 +33,7 @@ type Issue = {
 };
 
 type MyError = Issue[] | undefined;
-export type InputPropsAll =
+export type InputPropsAll = 
     | React.InputHTMLAttributes<HTMLElement>
     | React.SelectHTMLAttributes<HTMLElement>
     | React.TextareaHTMLAttributes<HTMLElement>;
@@ -313,7 +313,7 @@ export const UseForm = ({ children, ...props }: { children: (form: { getValueRel
     );
 };
 
-export type UseFormFieldProps = { name?: string; value?: any };
+export type UseFormFieldProps = { name?: string; value?: any, valueForm?: any };
 export interface UseFormFieldOptions {
     /**
      * to use another value from element to set the form
@@ -347,25 +347,27 @@ export const useFormField = (
     const form = useForm();
     const valueName = _valueName ? _valueName : 'value';
     const getValue = (name) => {
-        let formValue = form.getValue(name);
+        let valueForm = form.getValue(name);
         // if (_props['type'] === 'date' && typeof formValue === 'string')formValue = new Date(formValue)?.toISOString().substr(0,10) || formValue;
-        return (value ?? formValue) || '';
+        return value ?? valueForm ?? '';
     };
+    
     return name
         ? {
               onChange: combineEvent((e) => {
-                  form.setValue(name, toForm ? toForm(e, e.target[valueName]) : e.target[valueName]);
+                  form.setValue(name, toForm ? toForm(e, value ?? e.target[valueName]) : value ?? e.target[valueName]);
                   // console.log("OnChange");
                   form.setTouched(name, true);
               }, onChange),
               onBlur: combineEvent((e) => {
                   // form.setTouched(name, true);
-                  if (toFormBlur) form.setValue(name, toFormBlur(e, e.target[valueName]));
+                  if (toFormBlur) form.setValue(name, toFormBlur(e, value ?? e.target[valueName]));
               }, onBlur),
               onFocus: combineEvent((e) => {
                   //   form.setTouched(name, true);
                   // if(toFormBlur)form.setValue(name, toFormBlur(e,e.target[valueName]));
               }, onBlur),
+              valueForm: form.getValue(name),
               ...Object.fromEntries([[valueName, fromForm ? fromForm(getValue(name)) : getValue(name)]]),
               ..._props,
           }

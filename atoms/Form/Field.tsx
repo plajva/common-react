@@ -8,7 +8,7 @@
 import { Property } from 'csstype';
 import React, { createElement, ReactNode } from 'react';
 import { useState } from 'react';
-import { classNameFind, cnf } from '../../utils';
+import { classNameFind, cnf, DistributiveOmit } from '../../utils';
 import { useTheme } from '../Theme';
 import Checkbox, { CheckboxProps } from './Checkbox';
 import s from './Field.module.scss';
@@ -95,7 +95,7 @@ export interface _FieldProps {
 
 export type FieldCommon = { name?: string; value?: any; onChange?: (v: any) => void } & UseFormFieldOptions;
 type InputComponentProps = ToggleProps | SelectProps | CheckboxProps | RadioProps;
-type FieldProps = _FieldProps & InputPropsAll & InputComponentProps;
+type FieldProps = _FieldProps & InputComponentProps & DistributiveOmit<InputPropsAll, 'value'>;
 
 export const Field = ({
     children,
@@ -159,7 +159,8 @@ export const Field = ({
         labelBottom = labelBottom(fieldValue);
         // console.log("Label bottom: ", labelBottom);
     }
-
+    
+    //@ts-ignore
     const input = createElement(el_type, {
         children: select_or_textarea ? children : undefined,
         type,

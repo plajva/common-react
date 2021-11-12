@@ -138,6 +138,14 @@ const Demo = (props) => {
                             First is {form.state.values['first']}
                         </div>
                         <div className='col-6'>
+                            <h4>{`<Input>`}</h4>
+                            <Field type="radio" name='sex' label='Male' value={true} />
+                            <Field type="radio" name='sex' label='Female' value={false} />
+                            {/* <Field type="radio" name='sex' label='Bisexual' value="bi" /> */}
+                            Sex is type: {typeof form.state.values['sex']}, value: {form.state.values['sex']?'true':'false'}
+                            <textarea value={JSON.stringify(form.state.values, undefined, 2)}/>
+                        </div>
+                        <div className='col-6'>
                             <h4>{`<Field>`}</h4>
                             <Field name='last' placeholder='Last Name' />
                             Last is {form.state.values['last']}
@@ -149,7 +157,7 @@ const Demo = (props) => {
                             <Input placeholder='Type Awesomeness' />
                         </div>
                         <div className='col-6'>
-                            <Field checked={theme.name === 'default'} type='toggle' onChange={() => theme.next()}>
+                            <Field  checked={theme.name === 'default'} type='toggle' onChange={() => theme.next()}>
                                 {theme.name[0].toUpperCase() + theme.name.substring(1)}
                             </Field>
                         </div>

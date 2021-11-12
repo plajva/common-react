@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export type Range = [number | undefined, number | undefined];
 export * from './utils_react';
 
@@ -10,7 +12,7 @@ export interface AtomProps {
  * @param s The module stylesheet
  * @param classNames All the classnames to parse, pass 'dup' to toggle duplication, starts disabled false
  */
-export function classNameFind(s: any, ...classNames: (string | undefined)[]) {
+export function classNameFind(s?: object | undefined, ...classNames: (string | undefined)[]) {
     let dup = false;
     // const filter = (c?:string) => c;
     return classNames?.length
@@ -23,7 +25,7 @@ export function classNameFind(s: any, ...classNames: (string | undefined)[]) {
                       dup = !dup;
                       return '';
                   }
-                  return s[c] ? s[c] + (dup ? ' ' + c : '') : c;
+                  return s && s[c] ? s[c] + (dup ? ' ' + c : '') : c;
               })
               .filter((c) => c)
               .join(' ')

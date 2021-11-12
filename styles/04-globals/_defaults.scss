@@ -165,12 +165,7 @@ $sindex: 0;
         box-shadow: 0 0 7px 0 #{color.change(invert(get-color(background)), $alpha: 0.15)};
     }
     @include use-color using ($cn, $c) {
-        #{$ts}.#{$cn} {
-            color: get-color($cn);
-        }
-        #{$ts}.#{$cn}-active {
-            @include active-color($cn);
-        }
+        
         #{$ts}.#{$cn}-border {
             border: 1px solid get-color($cn);
         }
@@ -203,6 +198,13 @@ $sindex: 0;
         // WIll set background and text, also for hover and active, but will also set text color
         #{$ts}.#{$cn}-background-active-text {
             @include backgound-active-color($bc, $color-text: true);
+        }
+        
+        #{$ts}.#{$cn} {
+            color: get-color($cn);
+        }
+        #{$ts}.#{$cn}-active {
+            @include active-color($cn);
         }
     }
 

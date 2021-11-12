@@ -12,10 +12,11 @@ import {
 } from 'react';
 // import * as y from 'yup';
 // import * as z from 'zod';
-import { combineEvent } from '../../utils';
+import { classNameFind, combineEvent } from '../../utils';
 import { cloneDeep, get, isEqual, set, setWith } from 'lodash';
 import StateCombineHOC, { StateCombineContext, StateCombineProps } from '../HOC/StateCombineHOC';
 import { useRef } from 'react';
+import { useTheme } from '../Theme';
 
 const splitName = (name: string) => {
     return name
@@ -38,11 +39,14 @@ export type InputPropsAll =
     | React.SelectHTMLAttributes<HTMLElement>
     | React.TextareaHTMLAttributes<HTMLElement>;
 
-export interface FormState {
-    values?: any;
+export interface FormState<T = any> {
+    values?: T;
     errors?: MyError;
     touched?: any;
 }
+
+const debugForm = true;
+
 interface FormContextExtra {
     setValue: (name: string, value: any) => void;
     // setError: (name: string, value: any) => void;
@@ -52,7 +56,8 @@ interface FormContextExtra {
     getTouched: (name: string) => any;
     getValid: () => FormState | undefined;
     submit: () => void;
-    reset: () => void;
+    reset: (touched?:boolean) => void;
+    clear: () => void;
     touched?: boolean;
     errors?: boolean;
 }
@@ -70,6 +75,7 @@ const FormContext = StateCombineContext<FormState, FormContextExtra>({
     getValid: () => undefined,
     submit: () => {},
     reset: () => {},
+    clear: () => {},
 });
 
 export const useForm = () => useContext(FormContext);
@@ -80,6 +86,7 @@ interface FormProps {
     resetState?: FormState;
     /**Accepts a schema from zod/yup */
     validationSchema?: any;
+    validationStrip?: boolean;
     /**
      * Calls this function when values are valid, then resets touched
      */
@@ -105,6 +112,7 @@ const FormComp = ({
     readonly,
     resetState: _resetState,
     validationSchema: schema,
+    validationStrip,
     onSubmit,
     onSubmitChanges,
     onReset,
@@ -129,7 +137,7 @@ const FormComp = ({
         let valid = values;
         if (schema) {
             try {
-                valid = isZod(schema) ? schema.parse(values) : schema.validateSync(values, { abortEarly: false });
+                valid = isZod(schema) ? schema.parse(values) : schema.validateSync(values, { abortEarly: false, stripUnknown: validationStrip ?? false });
             } catch (_error) {
                 // Set touched to true so all errors are shown
                 setState((state) => {
@@ -157,23 +165,24 @@ const FormComp = ({
         errors: Boolean(typeof state.errors === 'object' ? Object.keys(state.errors)?.length : state.errors),
         setValue: (name, value) => {
             setState((state) => {
+                // console.log("prev: ", JSON.stringify(state.values, undefined, 2))
                 let values = readonly ? state.values : replaceForm(name, value, state.values);
-
+                // console.log("after: ", JSON.stringify(values, undefined, 2))
                 // Doing validation
                 let errors: MyError;
                 if (schema) {
                     try {
                         values = isZod(schema)
                             ? schema.parse(values)
-                            : schema.validateSync(values, { abortEarly: false });
+                            : schema.validateSync(values, { abortEarly: false, stripUnknown: validationStrip ?? false});
                     } catch (_error) {
                         errors = [];
 
                         if (isZod(schema)) {
-                            let e = _error; //as z.ZodError;
+                            let e:any = _error; //as z.ZodError;
                             // const e = _error as Omit<z.ZodError, 'issues'> & {issues?:any};
                             // if(e.message)errors.push({path:'', message:e.message});
-                            if (e?.errors.length) {
+                            if (e?.errors?.length) {
                                 errors.push(
                                     ...e.errors.map((issue) => {
                                         return {
@@ -201,7 +210,7 @@ const FormComp = ({
                             }
                             // errors = _errors;
                         } else if (isYup(schema)) {
-                            const e = _error; //as y.ValidationError;
+                            const e:any = _error; //as y.ValidationError;
                             values = e.value;
                             const addError = (
                                 err //: y.ValidationError
@@ -225,6 +234,7 @@ const FormComp = ({
                 }
 
                 const newState = { ...state, values, errors };
+                // console.log(JSON.stringify(newState.values, null, 2))
 
                 return newState;
             });
@@ -248,9 +258,13 @@ const FormComp = ({
             return getForm(`touched.${name}`, state);
         },
         getValid,
-        reset: () => {
-            setState(resetState);
-            onReset && onReset(resetState);
+        reset: (touched) => {
+            const rstate = typeof touched !== 'undefined'?{...resetState, touched}:resetState;
+            setState(rstate);
+            onReset && onReset(rstate);
+        },
+        clear: () => {
+            setState({});
         },
         submit: () => {
             // To handle login info saving in the browser
@@ -411,16 +425,21 @@ export const FormNameProvider = (props: { children?: ReactNode; absolute?: boole
 export const useFieldError = (name?: string) => {
     const form = useForm();
     let error: string | undefined;
-    if (name) {
+    if (typeof name === 'string') {
         name = normalizeName(name);
         const err = form.getError()?.find((e) => e.path === name)?.message;
         error = err && form.getTouched(name) && err;
     }
     return error;
 };
-// export const FieldError = (props: { name: string }) => {
-// 	return useFieldError(props.name);
-// };
+export const FieldError = ({name, noCombine, className, ...props}: { name?: string, noCombine?: boolean} & HTMLAttributes<HTMLElement>) => {
+    const theme = useTheme().name;
+	const _className = classNameFind(undefined, `atom`, 'dup', theme, className);
+    
+    const nameC = useFormNameContextCombine(name);
+    const error = useFieldError(noCombine ? name : nameC);
+	return <>{error && <div className={_className} {...props}>{error}</div>}</>;
+};
 /**
  * Doesn't use the name context
  * @param name

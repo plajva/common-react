@@ -173,6 +173,7 @@ type FetchEventOptions<R, D, C extends unknown[]> = {
     shareReplay?: boolean;
     combine$?: [...ObservableInputTuple<C>];
 };
+const logFetch = false;
 /**
  * Creates event and chains with other events/obserables, then turns into something usable by React
  * @type I: Input Type
@@ -187,16 +188,17 @@ export function createAPIFetchEvent<I, R, C extends unknown[], D = undefined>(
     // Making a subject, a new event creator per say
     // Subject will usually have queryString or
     const subject$ = new Subject<I>();
-    const setValue = (v: I) => subject$.next(v);
+    const setValue = (v: I) => {if(logFetch)console.log('New fetch event', v, 'observed :',subject$.observed);subject$.next(v)};
     const subjectO$ = options?.startWith ? subject$.pipe(startWith(options.startWith)) : subject$;
     // Binding an obserable to events/obserables
-    const chain$ = (
+    let chain$ = (
         options?.combine$
             ? combineLatest<[I, ...C]>([subjectO$, ...options?.combine$])
             : subjectO$.pipe(map((v): [I] => [v]))
     ) as Observable<[I, ...C]>;
     const useValue = () => useObservable<[I, ...C]>(chain$, undefined);
     // Map event to fetch
+    if(logFetch) chain$ = chain$.pipe(map(v => {console.log('Fetch event has:',v);return v}));
     let result$ = chain$.pipe(switchMap(toFetch));
     // Replay the result
     if (options?.shareReplay ?? true) result$ = result$.pipe(shareReplay(1));

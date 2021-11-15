@@ -37,7 +37,7 @@ export const regex_dict = {
 };
 
 // const sd = (s, f: (s) => string, sdef?) => (s || typeof sdef != 'undefined' ? f(s || sdef) : '');
-const regexFormat = (regex: RegExp, input: string, format: string) => {
+export const regexFormat = (regex: RegExp, input: string, format: string) => {
     const g = regex.exec(input);
     if (g) {
         g.shift();

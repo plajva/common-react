@@ -145,9 +145,9 @@ export const removeDuplicates = <T extends {}>(v: T[], criteria: string, any = f
  * @param wait in ms
  * @returns
  */
-export const debounceCreator = <T extends Function>(callback: T, wait: number = 0) => {
+export const debounceCreatorCallback = <T extends (...args: any) => any>(callback: T, wait: number = 0) => {
 	let timeout: NodeJS.Timeout;
-	return (...args: any[]) => {
+	return (...args: Parameters<T>) => {
 		const context = this;
 		clearTimeout(timeout);
 		if (wait > 0) {
@@ -157,6 +157,7 @@ export const debounceCreator = <T extends Function>(callback: T, wait: number = 
 		}
 	};
 };
+export const debounceCreator = (wait: number) => debounceCreatorCallback((f: () => void) => f(), wait)
 
 export type RecursivePartial<T> = {
 	[P in keyof T]?: RecursivePartial<T[P]>;

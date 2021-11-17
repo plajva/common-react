@@ -45,7 +45,9 @@ export const regexFormat = (regex: RegExp, input: string, format: string) => {
     }
     return input;
 };
-export const field_utils: { [key: string]: UseFormFieldOptions & _FieldProps } = {
+export const field_utils
+: { [key: string]: UseFormFieldOptions & _FieldProps } 
+= {
     phone: {
         toFormBlur: (e, v?: string) => {
             return v && (regexFormat(regex_dict.phone, v, '{+{0} }?({1})-{2}-{3}') || v);
@@ -94,9 +96,14 @@ export const field_utils: { [key: string]: UseFormFieldOptions & _FieldProps } =
         },
     },
     money: {
-        toForm: (e, v) => (typeof v === 'string' ? (v.length?accounting.unformat(v):undefined) : v),
-        fromForm: (v) => (typeof v === 'number' ? (accounting.formatMoney(v, undefined,0)) : v),
+        // toForm: (e,v) => String(v),
+        toFormBlur: (e, v) => (typeof v === 'string' ? (v.length?accounting.unformat(v):undefined) : v),
+        fromForm: (v) => (typeof v === 'number' ? accounting.formatMoney(v) : v),
     },
+    // money_format: () => ({
+    //     toForm: (e, v) => (typeof v === 'string' ? (v.length?accounting.unformat(v):undefined) : v),
+    //     fromForm: (v) => (typeof v === 'number' ? (accounting.formatMoney(v, undefined,0)) : v),
+    // }),
     number: {
         toForm: (e, v) => (typeof v === 'string' ? Number(v.replace(/[^\d.]+/g, '')) : v),
         fromForm: (v) => (typeof v === 'number' ? `${v}` : v),

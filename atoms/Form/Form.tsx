@@ -45,7 +45,7 @@ export interface FormState<T = any> {
     touched?: any;
 }
 
-const debugForm = true;
+const debugForm = false;
 
 interface FormContextExtra {
     setValue: (name: string, value: any) => void;
@@ -164,6 +164,7 @@ const FormComp = ({
         touched: Boolean(typeof state.touched === 'object' ? Object.keys(state.touched)?.length : state.touched),
         errors: Boolean(typeof state.errors === 'object' ? Object.keys(state.errors)?.length : state.errors),
         setValue: (name, value) => {
+            if(debugForm)console.log(`FormSetValue: ${name}: ${value} <${typeof value}>`)
             setState((state) => {
                 // console.log("prev: ", JSON.stringify(state.values, undefined, 2))
                 let values = readonly ? state.values : replaceForm(name, value, state.values);
@@ -234,6 +235,8 @@ const FormComp = ({
                 }
 
                 const newState = { ...state, values, errors };
+                if(debugForm)console.log(newState)
+                
                 // console.log(JSON.stringify(newState.values, null, 2))
 
                 return newState;
@@ -347,6 +350,8 @@ export interface UseFormFieldOptions {
     valueName?: string;
     /**to use another value as elements controlled value*/
     fromForm?: (v: any) => string;
+    /**to use another value as elements controlled value*/
+    // fromFormBlur?: (v: any) => string;
 }
 /**
  * Returns the handlers for fields using the FormContext to set/get values
@@ -359,30 +364,34 @@ export const useFormField = (
 ): InputPropsAll & UseFormFieldProps => {
     const { onBlur, onChange, valueName: _valueName, toForm, toFormBlur, fromForm, value, name, ..._props } = props;
     const form = useForm();
-    const valueName = _valueName ? _valueName : 'value';
+    const valueName = _valueName ?? 'value';
     const getValue = (name) => {
         let valueForm = form.getValue(name);
-        // if (_props['type'] === 'date' && typeof formValue === 'string')formValue = new Date(formValue)?.toISOString().substr(0,10) || formValue;
         return value ?? valueForm ?? '';
     };
+    
+    const fieldValue = fromForm ? fromForm(getValue(name)) : getValue(name);
     
     return name
         ? {
               onChange: combineEvent((e) => {
-                  form.setValue(name, toForm ? toForm(e, value ?? e.target[valueName]) : value ?? e.target[valueName]);
-                  // console.log("OnChange");
+                  const v = toForm ? toForm(e, value ?? e.target[valueName]) : value ?? e.target[valueName];
+                  if(debugForm)console.log(`OnChange ${name}: ${v} <${typeof v}>`);
+                  form.setValue(name, v);
                   form.setTouched(name, true);
               }, onChange),
               onBlur: combineEvent((e) => {
-                  // form.setTouched(name, true);
-                  if (toFormBlur) form.setValue(name, toFormBlur(e, value ?? e.target[valueName]));
+                if (toFormBlur){
+                    const v = toFormBlur(e, value ?? e.target[valueName]);
+                    if(debugForm)console.log(`OnBlur ${name}: ${v} <${typeof v}>`);
+                    form.setValue(name, v);
+                }
               }, onBlur),
               onFocus: combineEvent((e) => {
                   //   form.setTouched(name, true);
-                  // if(toFormBlur)form.setValue(name, toFormBlur(e,e.target[valueName]));
+                //   if(toFormBlur)form.setValue(name, toFormBlur(e,e.target[valueName]));
               }, onBlur),
-              valueForm: form.getValue(name),
-              ...Object.fromEntries([[valueName, fromForm ? fromForm(getValue(name)) : getValue(name)]]),
+              ...Object.fromEntries([[valueName, fieldValue]]),
               ..._props,
           }
         : props;

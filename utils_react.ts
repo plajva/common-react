@@ -83,8 +83,8 @@ export const scrollToElement = (
     }
 };
 
-export const isLogin = () => {
-    const token = localStorage.getItem("token");
+export const isLogin = (_token?:string) => {
+    const token = _token ?? localStorage.getItem("token");
     if(token){
         const jwt = jwtParse(token);
         if(jwt){

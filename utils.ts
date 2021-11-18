@@ -179,9 +179,10 @@ export function objectEntries<T>(obj: T): Entries<T> {
 
 export const jwtParse = (token) => {
 	try {
-		return JSON.parse(atob(token.split('.')[1]));
+		if (!token)throw Error("Token false");
+		return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
 	} catch (e) {
-		return null;
+		return undefined;
 	}
 };
 

@@ -9,8 +9,8 @@ import usePortal from './Hooks/usePortal';
  * </Portal>
  */
 const Portal: FunctionComponent<{ id: string } & React.HTMLAttributes<HTMLElement>> = ({ id, children, ...props }) => {
-    const target = usePortal(id);
-    return createPortal(children, target);
+	const target = usePortal(id);
+	return createPortal(children, target);
 };
 
 export default Portal;

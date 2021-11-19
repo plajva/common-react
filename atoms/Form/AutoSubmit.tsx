@@ -5,22 +5,22 @@ import { useCallback, useEffect, useState } from 'react';
 export interface AutoSubmitProps {}
 
 const AutoSubmit = (props: AutoSubmitProps) => {
-    const { submit, state } = useForm();
-    const [first, setFirts] = useState(true);
+	const { submit, state } = useForm();
+	const [first, setFirts] = useState(true);
 
-    const triggerSubmit = useCallback(
-        debounce(() => {
-            submit();
-        }, 500),
-        []
-    );
+	const triggerSubmit = useCallback(
+		debounce(() => {
+			submit();
+		}, 500),
+		[]
+	);
 
-    useEffect(() => {
-        !first && triggerSubmit();
-        setFirts(false);
-    }, [state.values, first, triggerSubmit]);
+	useEffect(() => {
+		!first && triggerSubmit();
+		setFirts(false);
+	}, [state.values, first, triggerSubmit]);
 
-    return null;
+	return null;
 };
 
 export default AutoSubmit;

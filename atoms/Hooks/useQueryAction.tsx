@@ -8,13 +8,13 @@ import {
 import { useEffect } from 'react';
 
 interface QueryActionOptions<T> {
-    /** On valid */
+	/** On valid */
 	onValid?: (v: ResponseFetchValid<T>) => void;
-    /** On error */
+	/** On error */
 	onError?: (v: ResponseFetchErrors<T>) => void;
-    /** If not valid, or error */
+	/** If not valid, or error */
 	onDefault?: (v: T) => void;
-    /** Always gets executed when query returns */
+	/** Always gets executed when query returns */
 	onResponse?: (v: T) => void;
 }
 export const useQueryAction = <T extends ResponseFetch<any> | undefined>(
@@ -22,7 +22,7 @@ export const useQueryAction = <T extends ResponseFetch<any> | undefined>(
 	options?: QueryActionOptions<T>
 ) => {
 	useEffect(() => {
-        options?.onResponse && options.onResponse(response);
+		options?.onResponse && options.onResponse(response);
 		if (response) {
 			const valid = responseIsValid(response);
 			if (valid) {

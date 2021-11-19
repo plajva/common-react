@@ -3,67 +3,67 @@
 // @import '~react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 html {
-    // scrollbar-width: thin;
-    // scroll-behavior: smooth;
-    overflow-x: hidden;
-    // height: 100vh;
+	// scrollbar-width: thin;
+	// scroll-behavior: smooth;
+	overflow-x: hidden;
+	// height: 100vh;
 }
 body {
-    // margin: 0 0 -8px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-        'Droid Sans', 'Helvetica Neue', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    // overflow-x: hidden;
+	// margin: 0 0 -8px;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+		'Droid Sans', 'Helvetica Neue', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	// overflow-x: hidden;
 }
 
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 /* apply a natural box layout model to all elements, but allowing components to change */
 html {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 *,
 *:before,
 *:after {
-    box-sizing: inherit;
+	box-sizing: inherit;
 }
 
 .flex-vcenter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    & > * {
-        flex: 0 1 auto;
-    }
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	& > * {
+		flex: 0 1 auto;
+	}
 }
 
 button {
-    padding: get-space(4);
+	padding: get-space(4);
 }
 button,
 input[type='button'],
 input[type='submit'] {
-    cursor: pointer;
+	cursor: pointer;
 
-    &:active {
-        background: rgba(#000, 0.1);
-    }
+	&:active {
+		background: rgba(#000, 0.1);
+	}
 }
 
 //***Removing arrow in number input
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+	-webkit-appearance: none;
+	margin: 0;
 }
 
 /* Firefox */
 input[type='number'] {
-    -moz-appearance: textfield;
+	-moz-appearance: textfield;
 }
 //***
 
@@ -71,151 +71,151 @@ button,
 input,
 select,
 textarea {
-    min-width: 30px;
-    border: none;
-    font: inherit;
-    color: inherit;
-    border-radius: get-space(1);
-    $background: black;
-    background: rgba($background, 0.02);
-    &:hover {
-        background: rgba($background, 0.08);
-    }
-    &:read-only {
-        background: rgba($background, 0.1);
-        &:hover {
-            background: rgba($background, 0.16);
-        }
-    }
-    &:disabled {
-        cursor: not-allowed;
-        background: rgba($background, 0.2);
-        &:hover {
-            // background: rgba($background, 0.08);
-        }
-    }
+	min-width: 30px;
+	border: none;
+	font: inherit;
+	color: inherit;
+	border-radius: get-space(1);
+	$background: black;
+	background: rgba($background, 0.02);
+	&:hover {
+		background: rgba($background, 0.08);
+	}
+	&:read-only {
+		background: rgba($background, 0.1);
+		&:hover {
+			background: rgba($background, 0.16);
+		}
+	}
+	&:disabled {
+		cursor: not-allowed;
+		background: rgba($background, 0.2);
+		&:hover {
+			// background: rgba($background, 0.08);
+		}
+	}
 }
 input,
 select,
 textarea {
-    width: 100%;
-    // max-width: 300px;
+	width: 100%;
+	// max-width: 300px;
 }
 input,
 select {
-    height: fit-content;
+	height: fit-content;
 }
 
 .card {
-    transition: box-shadow 0.3s, background 0.3s;
-    background: rgba(white, 0.1);
-    border-radius: get-space(3);
-    box-shadow: get-theme-field(shadows, default);
-    padding: get-space(4);
+	transition: box-shadow 0.3s, background 0.3s;
+	background: rgba(white, 0.1);
+	border-radius: get-space(3);
+	box-shadow: get-theme-field(shadows, default);
+	padding: get-space(4);
 }
 
 .card-active {
-    &:hover {
-        background: rgba(white, 0.15);
-        // box-shadow: get-theme-field(shadows, large);
-    }
-    border: 4px solid rgba(white, 0);
-    &.card-on {
-        border: 4px solid rgba(get-color(primary), 0.7);
-    }
+	&:hover {
+		background: rgba(white, 0.15);
+		// box-shadow: get-theme-field(shadows, large);
+	}
+	border: 4px solid rgba(white, 0);
+	&.card-on {
+		border: 4px solid rgba(get-color(primary), 0.7);
+	}
 }
 
 .tag {
-    padding: 4px;
-    margin: 5px;
-    border-radius: 9999px;
+	padding: 4px;
+	margin: 5px;
+	border-radius: 9999px;
 }
 
 .block {
-    display: block;
+	display: block;
 }
 
 .full-width,
 .width-full {
-    width: 100%;
+	width: 100%;
 }
 .full-height,
 .height-full {
-    min-height: 100%;
+	min-height: 100%;
 }
 
 footer {
-    font-size: 0.8em;
-    margin: get-space(4) auto 0;
-    // max-width: 800px;
-    // box-sizing: content-box;
-    padding: get-space(3) 5%;
-    padding-bottom: get-space(7);
-    background: get-color(primary, -4, 0.8);
-    color: white;
+	font-size: 0.8em;
+	margin: get-space(4) auto 0;
+	// max-width: 800px;
+	// box-sizing: content-box;
+	padding: get-space(3) 5%;
+	padding-bottom: get-space(7);
+	background: get-color(primary, -4, 0.8);
+	color: white;
 }
 
 .border {
-    border: 1px solid get-color(neutral, $alpha: 0.5);
+	border: 1px solid get-color(neutral, $alpha: 0.5);
 }
 @each $dir in ('-top', '-bottom', '-left', '-right') {
-    .border#{$dir} {
-        border#{$dir}: 1px solid get-color(neutral, $alpha: 0.5);
-    }
+	.border#{$dir} {
+		border#{$dir}: 1px solid get-color(neutral, $alpha: 0.5);
+	}
 }
 
 .disclosure {
-    font-size: 0.7em;
-    color: rgba(127, 127, 127, 1);
+	font-size: 0.7em;
+	color: rgba(127, 127, 127, 1);
 }
 .center-div {
-    width: fit-content;
-    margin: auto;
+	width: fit-content;
+	margin: auto;
 }
 .text-align-center {
-    text-align: center;
+	text-align: center;
 }
 
 .space {
-    display: block;
-    content: ' ';
-    clear: both;
+	display: block;
+	content: ' ';
+	clear: both;
 }
 .clickable {
-    cursor: pointer;
+	cursor: pointer;
 }
 .nowrap {
-    white-space: nowrap;
+	white-space: nowrap;
 }
 .flex-no-shrink {
-    flex-shrink: 0;
+	flex-shrink: 0;
 }
 
 h1 {
-    margin: 1em;
+	margin: 1em;
 }
 h2,
 h3,
 h4,
 h5 {
-    margin: 0.7em 0;
+	margin: 0.7em 0;
 }
 
 code {
-    padding: 0.3em;
-    background: get-color(neutral, $alpha: 0.1);
+	padding: 0.3em;
+	background: get-color(neutral, $alpha: 0.1);
 }
 
 a {
-    color: inherit;
-    text-decoration: underline;
-    cursor: pointer;
+	color: inherit;
+	text-decoration: underline;
+	cursor: pointer;
 }
 img {
-    max-width: 100%;
-    max-height: 100%;
+	max-width: 100%;
+	max-height: 100%;
 }
 table th {
-    font-weight: 600;
+	font-weight: 600;
 }
 @import '@common/styles/04-globals/defaults';

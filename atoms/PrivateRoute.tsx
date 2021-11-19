@@ -2,8 +2,8 @@
 /**
  * Updated private route, previous private route wasn't working with 'component' prop
  */
-import React from "react";
-import { Route, Navigate, IndexRouteProps, LayoutRouteProps, PathRouteProps, Outlet } from "react-router-dom";
+import React from 'react';
+import { Route, Navigate, IndexRouteProps, LayoutRouteProps, PathRouteProps, Outlet } from 'react-router-dom';
 
 export interface PrivateRouteProps {
 	assert: () => boolean;
@@ -25,7 +25,7 @@ export interface PrivateRouteProps {
 // 	) : (
 // 		onAssertFalse
 // 	)
-	
+
 // 	return (
 // 		// Show the component or children only when assert is true
 // 		// Otherwise, redirect the user to /signin page
@@ -48,26 +48,26 @@ export interface PrivateRouteProps {
 type PrivateProps = PrivateRouteProps & (PathRouteProps | LayoutRouteProps | IndexRouteProps);
 
 export const PrivateElement: React.FC<PrivateRouteProps> = ({ assert, onAssertFalse, children }) => {
-  const valid = assert();
+	const valid = assert();
 
-  if (valid) {
-    return <>{children}</> ?? null
-  }
+	if (valid) {
+		return <>{children}</> ?? null;
+	}
 
-  return typeof onAssertFalse === "string" || !onAssertFalse ? (
-		<Navigate to={onAssertFalse ?? "/login"} />
+	return typeof onAssertFalse === 'string' || !onAssertFalse ? (
+		<Navigate to={onAssertFalse ?? '/login'} />
 	) : (
 		onAssertFalse ?? null
-	)
-}
+	);
+};
 
 // export const PrivateRoute: React.FC<PrivateProps> = ({ element, assert, onAssertFalse, ...rest }) => {
 //   console.log('Returning private route')
-  // return <Route {...rest} element={<PrivateElement children={element} assert={assert} onAssertFalse={onAssertFalse}  />} />
+// return <Route {...rest} element={<PrivateElement children={element} assert={assert} onAssertFalse={onAssertFalse}  />} />
 // }
 
 // export const PrivateOutletHOC = () => {
-// 	return 
+// 	return
 // }
 
 // export default PrivateRoute;

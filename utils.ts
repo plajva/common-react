@@ -157,7 +157,7 @@ export const debounceCreatorCallback = <T extends (...args: any) => any>(callbac
 		}
 	};
 };
-export const debounceCreator = (wait: number) => debounceCreatorCallback((f: () => void) => f(), wait)
+export const debounceCreator = (wait: number) => debounceCreatorCallback((f: () => void) => f(), wait);
 
 export type RecursivePartial<T> = {
 	[P in keyof T]?: RecursivePartial<T[P]>;
@@ -179,7 +179,7 @@ export function objectEntries<T>(obj: T): Entries<T> {
 
 export const jwtParse = (token) => {
 	try {
-		if (!token)throw Error("Token false");
+		if (!token) throw Error('Token false');
 		return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
 	} catch (e) {
 		return undefined;

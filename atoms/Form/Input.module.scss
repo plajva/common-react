@@ -2,56 +2,54 @@
 @import './atom_common';
 
 .atom {
-    // My definitions by default
-    flex: 1 1 auto;
-    width: 100%;
-    min-width: 30px;
+	// My definitions by default
+	flex: 1 1 auto;
+	width: 100%;
+	min-width: 30px;
 
-    padding-inline: $padding;
-    line-height: $line-height;
+	padding-inline: $padding;
+	line-height: $line-height;
 
-    height: $height;
-    &[type='range'] {
-        padding: 0;
-    }
-    &:disabled{
-        
-    }
-    &:read-only{
-        
-    }
+	height: $height;
+	&[type='range'] {
+		padding: 0;
+	}
+	&:disabled {
+	}
+	&:read-only {
+	}
 
-    &::placeholder {
-        color: get-color(neutral, $alpha: 0.6);
-    }
-    // max-width: 100%;
-    // max-height: 100%;
+	&::placeholder {
+		color: get-color(neutral, $alpha: 0.6);
+	}
+	// max-width: 100%;
+	// max-height: 100%;
 
-    // You can define theme based classes in this loop
-    // This will loop through all themes
-    // $ts (Theme Selector)
-    // @each $theme in $theme-names-with-empty {
-    // 	$theme-current: $theme !global;
-    // 	$ts: theme-selector(
-    // 		$class: true,
-    // 	);
+	// You can define theme based classes in this loop
+	// This will loop through all themes
+	// $ts (Theme Selector)
+	// @each $theme in $theme-names-with-empty {
+	// 	$theme-current: $theme !global;
+	// 	$ts: theme-selector(
+	// 		$class: true,
+	// 	);
 
-    // 	// My component on this theme
-    // 	&#{$ts}{
+	// 	// My component on this theme
+	// 	&#{$ts}{
 
-    // 	}
+	// 	}
 
-    // 	// This will loop through all color fields in the theme
-    // 	// In case you want to define color based styles
-    // 	@each $c in get-theme-field(color-names) {
-    // 		// This will get the color based on the name
-    // 		$color: get-color($c);
+	// 	// This will loop through all color fields in the theme
+	// 	// In case you want to define color based styles
+	// 	@each $c in get-theme-field(color-names) {
+	// 		// This will get the color based on the name
+	// 		$color: get-color($c);
 
-    // 		// My component on this theme and color
-    // 		&#{$ts}.#{$c} {
+	// 		// My component on this theme and color
+	// 		&#{$ts}.#{$c} {
 
-    // 		}
-    // 	}
-    // }
-    // $theme-current: $theme-default;
+	// 		}
+	// 	}
+	// }
+	// $theme-current: $theme-default;
 }

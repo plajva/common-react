@@ -4,52 +4,52 @@
 @import './atom_common';
 
 .atom {
-    flex: 1 1 auto;
-    width: 100%;
-    min-width: 30px;
+	flex: 1 1 auto;
+	width: 100%;
+	min-width: 30px;
 
-    padding: $padding;
-    line-height: $line-height;
-    border: 1px solid get-color(neutral, $alpha: 0.5);
+	padding: $padding;
+	line-height: $line-height;
+	border: 1px solid get-color(neutral, $alpha: 0.5);
 
-    &::placeholder {
-        color: get-color(neutral, $alpha: 0.6);
-    }
+	&::placeholder {
+		color: get-color(neutral, $alpha: 0.6);
+	}
 
-    @include use-theme using ($ts) {
-        // Theme Iterator
+	@include use-theme using ($ts) {
+		// Theme Iterator
 
-        &#{$ts} {
-            $color: color-text(get-color(background));
+		&#{$ts} {
+			$color: color-text(get-color(background));
 
-            &:focus-visible {
-                border: 1px solid color-text(background);
-            }
-            border: 1px solid color.change(color-text(background), $alpha: if(is-dark(), 0.3, 0.4));
-        }
-    }
+			&:focus-visible {
+				border: 1px solid color-text(background);
+			}
+			border: 1px solid color.change(color-text(background), $alpha: if(is-dark(), 0.3, 0.4));
+		}
+	}
 }
 
 @include use-theme using ($ts) {
-    #{$ts} {
-        $color: color-text(get-color(background));
+	#{$ts} {
+		$color: color-text(get-color(background));
 
-        .overlay {
-            color: $color;
-            background-color: get-color(background, 1, 1);
+		.overlay {
+			color: $color;
+			background-color: get-color(background, 1, 1);
 
-            div[role='gridcell'] {
-                &[aria-selected='false'] {
-                    &:hover {
-                        background-color: get-color(background, 0, 1) !important;
-                        color: color-text(get-color(background, 0.1, 0.1)) !important;
-                    }
-                }
-                &[aria-selected='true'] {
-                    background-color: darken(get-color(background, 0, 1), 20) !important;
-                    color: color-text(get-color(background, 0.1, 0.1)) !important;
-                }
-            }
-        }
-    }
+			div[role='gridcell'] {
+				&[aria-selected='false'] {
+					&:hover {
+						background-color: get-color(background, 0, 1) !important;
+						color: color-text(get-color(background, 0.1, 0.1)) !important;
+					}
+				}
+				&[aria-selected='true'] {
+					background-color: darken(get-color(background, 0, 1), 20) !important;
+					color: color-text(get-color(background, 0.1, 0.1)) !important;
+				}
+			}
+		}
+	}
 }

@@ -18,8 +18,8 @@ import router, { useLocation, useParams } from 'react-router-dom';
 //     return children(v);
 // };
 export const UseParams = ({ children }: { children: (params) => any }) => {
-    const v = useParams();
-    return children(v);
+	const v = useParams();
+	return children(v);
 };
 // export const UseLocation = <T extends {} = {}>({ children }: { children: (location: Location<T>) => any }) => {
 //     const v = useLocation<T>();

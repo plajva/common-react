@@ -2,129 +2,129 @@
 
 $bw: 1px;
 @include use-theme('-') using ($ts) {
-    @keyframes pulse-success#{$ts} {
-        from {
-            border: $bw solid transparent;
-        }
-        to {
-            border: $bw solid get-color(primary, if(is-dark(), -1, -4));
-        }
-    }
-    @keyframes pulse-warn#{$ts} {
-        from {
-            border: $bw solid transparent;
-        }
-        to {
-            border: $bw solid get-color(warn, -1);
-        }
-    }
-    @keyframes pulse-error#{$ts} {
-        from {
-            border: $bw solid transparent;
-        }
-        to {
-            border: $bw solid get-color(#e53935, -1);
-        }
-    }
+	@keyframes pulse-success#{$ts} {
+		from {
+			border: $bw solid transparent;
+		}
+		to {
+			border: $bw solid get-color(primary, if(is-dark(), -1, -4));
+		}
+	}
+	@keyframes pulse-warn#{$ts} {
+		from {
+			border: $bw solid transparent;
+		}
+		to {
+			border: $bw solid get-color(warn, -1);
+		}
+	}
+	@keyframes pulse-error#{$ts} {
+		from {
+			border: $bw solid transparent;
+		}
+		to {
+			border: $bw solid get-color(#e53935, -1);
+		}
+	}
 }
 
 .atom {
-    min-width: 15em;
-    max-width: 40vw;
-    border-radius: get-space(2);
-    position: relative;
+	min-width: 15em;
+	max-width: 40vw;
+	border-radius: get-space(2);
+	position: relative;
 
-    // * Frosty background
-    // $background: get-color(neutral, -2);
-    // @include background-color($background);
-    // @include background-blur(get-color($background, -1, if(is-dark(), 0.8, 0.7)));
-    @include use-theme('') using ($ts) {
-        &#{'.' + $ts} {
-            $background: get-color(background, if(is-dark(), -3, -5));
-            @include background-color($background);
-            @include background-blur(get-color($background, -1, 0.4));
-            @if (is-dark()) {
-                // Border animation if dark
-                &.success {
-                    animation: pulse-success#{'-' + $ts} 1s alternate infinite;
-                }
-                &.warning {
-                    color: get-color(warn);
-                    animation: pulse-warn#{'-' + $ts} 1s alternate infinite;
-                }
-                &.error {
-                    color: get-color(error);
-                    animation: pulse-error#{'-' + $ts} 1s alternate infinite;
-                }
-            } @else {
-                // Background color if not
-                &.success {
-                    $background: get-color(primary, -3);
-                    @include background-color($background);
-                    @include background-blur(get-color($background, -1, 0.4));
-                }
-                &.warning {
-                    $background: get-color(warn, -3);
-                    @include background-color($background);
-                    @include background-blur(get-color($background, -1, 0.4));
-                }
-                &.error {
-                    $background: get-color(error, -3);
-                    @include background-color($background);
-                    @include background-blur(get-color($background, -1, 0.4));
-                }
-            }
-        }
-    }
+	// * Frosty background
+	// $background: get-color(neutral, -2);
+	// @include background-color($background);
+	// @include background-blur(get-color($background, -1, if(is-dark(), 0.8, 0.7)));
+	@include use-theme('') using ($ts) {
+		&#{'.' + $ts} {
+			$background: get-color(background, if(is-dark(), -3, -5));
+			@include background-color($background);
+			@include background-blur(get-color($background, -1, 0.4));
+			@if (is-dark()) {
+				// Border animation if dark
+				&.success {
+					animation: pulse-success#{'-' + $ts} 1s alternate infinite;
+				}
+				&.warning {
+					color: get-color(warn);
+					animation: pulse-warn#{'-' + $ts} 1s alternate infinite;
+				}
+				&.error {
+					color: get-color(error);
+					animation: pulse-error#{'-' + $ts} 1s alternate infinite;
+				}
+			} @else {
+				// Background color if not
+				&.success {
+					$background: get-color(primary, -3);
+					@include background-color($background);
+					@include background-blur(get-color($background, -1, 0.4));
+				}
+				&.warning {
+					$background: get-color(warn, -3);
+					@include background-color($background);
+					@include background-blur(get-color($background, -1, 0.4));
+				}
+				&.error {
+					$background: get-color(error, -3);
+					@include background-color($background);
+					@include background-blur(get-color($background, -1, 0.4));
+				}
+			}
+		}
+	}
 
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: left;
-    align-items: center;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: left;
+	align-items: center;
 
-    // padding: get-space(1);
+	// padding: get-space(1);
 
-    transform: translateX(150%);
-    transition: all cubic-bezier(0.455, 0.03, 0.515, 0.955) 150ms;
+	transform: translateX(150%);
+	transition: all cubic-bezier(0.455, 0.03, 0.515, 0.955) 150ms;
 
-    &.in {
-        transform: none;
-    }
+	&.in {
+		transform: none;
+	}
 
-    .icon {
-        flex: 0 0 auto;
-        // min-width: 2em;
-        // padding-top: 1.25em;
-        // overflow: hidden;
-        // text-align: center;
-    }
+	.icon {
+		flex: 0 0 auto;
+		// min-width: 2em;
+		// padding-top: 1.25em;
+		// overflow: hidden;
+		// text-align: center;
+	}
 
-    .content {
-        flex: 1 1 auto;
-        // width: 100%;
-        // padding-left: 0.7em;
-        text-align: justify;
-        // &.hasIcon {
-        //     padding-left: 0;
-        // }
-    }
+	.content {
+		flex: 1 1 auto;
+		// width: 100%;
+		// padding-left: 0.7em;
+		text-align: justify;
+		// &.hasIcon {
+		//     padding-left: 0;
+		// }
+	}
 
-    .close {
-        flex: 0 0 auto;
-        // justify-self: end;
-        // margin: 1em 0.35em;
-    }
+	.close {
+		flex: 0 0 auto;
+		// justify-self: end;
+		// margin: 1em 0.35em;
+	}
 
-    // .close-icon {
-    //     font-size: 1em;
-    //     cursor: pointer;
-    //     border-radius: 50%;
-    //     padding: 0.25em;
-    //     height: 1.5em;
-    //     width: 1.5em;
+	// .close-icon {
+	//     font-size: 1em;
+	//     cursor: pointer;
+	//     border-radius: 50%;
+	//     padding: 0.25em;
+	//     height: 1.5em;
+	//     width: 1.5em;
 
-    //     &:hover {
-    //         background-color: rgba(0, 0, 0, 0.05);
-    //     }
-    // }
+	//     &:hover {
+	//         background-color: rgba(0, 0, 0, 0.05);
+	//     }
+	// }
 }

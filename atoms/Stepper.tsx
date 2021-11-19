@@ -18,12 +18,12 @@ import s from './Stepper.module.scss';
  */
 
 export interface StepperProps {
-    step?: number | string;
-    setStep?: any;
-    showSteps?: boolean;
-    steps: { header?: string; value: ReactNode }[];
-    /** Animaiton time, in seconds */
-    animTime?: number;
+	step?: number | string;
+	setStep?: any;
+	showSteps?: boolean;
+	steps: { header?: string; value: ReactNode }[];
+	/** Animaiton time, in seconds */
+	animTime?: number;
 }
 
 /**
@@ -34,192 +34,199 @@ export interface StepperProps {
  * @param props
  */
 const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElement>> = (props) => {
-    const stepToNumber = (step?: number | string) => {
-        return typeof step === 'string' ? props.steps.findIndex((s) => s.header === step) : step;
-    };
+	const stepToNumber = (step?: number | string) => {
+		return typeof step === 'string' ? props.steps.findIndex((s) => s.header === step) : step;
+	};
 
-    let { className, step: _step, setStep: _setStep, steps, showSteps: _showSteps, animTime, ...others } = props;
-    // This is the wanted step
-    const [stepWanted, setStepWanted] = useStateCombine(0, stepToNumber(_step), _setStep);
-    // This is the step cache, doesn't change until animation is done
-    const [stepPrev, setStepLast] = useState<number>(stepToNumber(_step) || 0);
+	let { className, step: _step, setStep: _setStep, steps, showSteps: _showSteps, animTime, ...others } = props;
+	// This is the wanted step
+	const [stepWanted, setStepWanted] = useStateCombine(0, stepToNumber(_step), _setStep);
+	// This is the step cache, doesn't change until animation is done
+	const [stepPrev, setStepLast] = useState<number>(stepToNumber(_step) || 0);
 
-    const scrollerRef = useRef<HTMLDivElement>(null);
-    const section = useRef<HTMLElement | null>(null);
-    const lastHeight = useRef<number | undefined>(undefined);
+	const scrollerRef = useRef<HTMLDivElement>(null);
+	const section = useRef<HTMLElement | null>(null);
+	const lastHeight = useRef<number | undefined>(undefined);
 
-    const theme = useTheme().name;
-    const showSteps = _showSteps ?? true;
-    className = classNameFind(s, `atom`, 'dup', theme, className);
-    const scrollerClass = classNameFind(s, `scroller`, 'dup');
-    animTime = animTime ?? 1;
+	const theme = useTheme().name;
+	const showSteps = _showSteps ?? true;
+	className = classNameFind(s, `atom`, 'dup', theme, className);
+	const scrollerClass = classNameFind(s, `scroller`, 'dup');
+	animTime = animTime ?? 1;
 
-    // Effects run after Render of the component
-    // If nextStep != step, mount nextStep
-    useEffect(() => {
-        // The timeout to remove from DOM
-        if (stepWanted === stepPrev) return; // Prevent calling timeout
+	// Effects run after Render of the component
+	// If nextStep != step, mount nextStep
+	useEffect(() => {
+		// The timeout to remove from DOM
+		if (stepWanted === stepPrev) return; // Prevent calling timeout
 
-        let tid = 0;
-        if (animTime) {
-            tid = setTimeout(() => {
-                setStepLast(stepWanted);
-            }, (animTime || 1) * 1000) as any as number;
-        } else setStepLast(stepWanted);
+		let tid = 0;
+		if (animTime) {
+			tid = setTimeout(() => {
+				setStepLast(stepWanted);
+			}, (animTime || 1) * 1000) as any as number;
+		} else setStepLast(stepWanted);
 
-        const handleResize = () => {
-            // console.log(`Handled resize ${section?.current}`)
-            if (stepPrev === stepWanted) {
-                setHeight(0);
-            } else if (section.current) {
-                setHeight(section.current.scrollHeight);
-            }
-        };
-        // if(section.current)setHeight(section.current.offsetHeight);
-        window.addEventListener('resize', handleResize);
-        // if(lastHeight.current)setHeight(lastHeight.current)
+		const handleResize = () => {
+			// console.log(`Handled resize ${section?.current}`)
+			if (stepPrev === stepWanted) {
+				setHeight(0);
+			} else if (section.current) {
+				setHeight(section.current.scrollHeight);
+			}
+		};
+		// if(section.current)setHeight(section.current.offsetHeight);
+		window.addEventListener('resize', handleResize);
+		// if(lastHeight.current)setHeight(lastHeight.current)
 
-        handleResize();
+		handleResize();
 
-        return () => {
-            if (tid) clearTimeout(tid);
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [animTime, stepWanted, stepPrev]);
+		return () => {
+			if (tid) clearTimeout(tid);
+			window.removeEventListener('resize', handleResize);
+		};
+	}, [animTime, stepWanted, stepPrev]);
 
-    // Sets scroller height
-    const setHeight = (height: number) => {
-        if (scrollerRef.current) {
-            if (height) {
-                scrollerRef.current.style.height = `${height}px`;
-                lastHeight.current = height;
-            } else scrollerRef.current.style.height = '';
-        }
-    };
+	// Sets scroller height
+	const setHeight = (height: number) => {
+		if (scrollerRef.current) {
+			if (height) {
+				scrollerRef.current.style.height = `${height}px`;
+				lastHeight.current = height;
+			} else scrollerRef.current.style.height = '';
+		}
+	};
 
-    const nextRefCallback = (ref: HTMLElement | null) => {
-        // console.log(`Ref called: ${ref?.offsetHeight}`);
-        if (ref) {
-            section.current = ref;
-        }
-    };
+	const nextRefCallback = (ref: HTMLElement | null) => {
+		// console.log(`Ref called: ${ref?.offsetHeight}`);
+		if (ref) {
+			section.current = ref;
+		}
+	};
 
-    // console.log(props.children);
-    // let children =
-    //     // React.Children.toArray(props.children)
-    //     props.steps;
-    let render_array = steps.reduce<ReactNode[]>((arr, step, i) => {
-        let child = step.value;
-        let right = stepWanted > stepPrev;
-        let dirAndTiming = right ? 'normal ease-out' : 'reverse ease-in';
-        let done = stepPrev === stepWanted;
-        let out_anim = done ? '' : `${s.out} ${animTime}s ${dirAndTiming} forwards`,
-            in_anim = done ? '' : `${s.in} ${animTime}s ${dirAndTiming} forwards `;
+	// console.log(props.children);
+	// let children =
+	//     // React.Children.toArray(props.children)
+	//     props.steps;
+	let render_array = steps.reduce<ReactNode[]>((arr, step, i) => {
+		let child = step.value;
+		let right = stepWanted > stepPrev;
+		let dirAndTiming = right ? 'normal ease-out' : 'reverse ease-in';
+		let done = stepPrev === stepWanted;
+		let out_anim = done ? '' : `${s.out} ${animTime}s ${dirAndTiming} forwards`,
+			in_anim = done ? '' : `${s.in} ${animTime}s ${dirAndTiming} forwards `;
 
-        if (i === stepWanted || i === stepPrev) {
-            if (React.isValidElement(child)) {
-                // Animation is done, and we are rendering just this element
-                if (stepWanted === stepPrev) {
-                    arr.push(
-                        // React.cloneElement(child, {
-                        //     ref: nextRefCallback,
-                        //     style: { ...child.props.style, position: 'relative' },
-                        //     key: i,
-                        // })
-                        // Create child underneath a div
-                        <div ref={nextRefCallback} style={{ ...child.props.style, position: 'relative' }} key={i}>
-                            {child}
-                        </div>
-                    );
-                    return arr;
-                }
-                // We are rendering 2 elements stepWanted and stepLast
-                if (i === stepWanted)
-                    arr.push(
-                        // React.cloneElement(child, {
-                        //     style: {
-                        //         ...child.props.style,
-                        //         animation: right ? in_anim : out_anim,
-                        //         transform: 'translateZ(0)',
-                        //     },
-                        //     ref: nextRefCallback,
-                        //     key: i,
-                        // })
-                        <div ref={nextRefCallback} style={{
-                            ...child.props.style,
-                            animation: right ? in_anim : out_anim,
-                            transform: 'translateZ(0)',
-                        }} key={i}>
-                            {child}
-                        </div>
-                    );
-                else {
-                    arr.push(
-                        // React.cloneElement(child, {
-                        //     style: {
-                        //         ...child.props.style,
-                        //         animation: right ? out_anim : in_anim,
-                        //         transform: 'translateZ(0)',
-                        //     },
-                        //     key: i,
-                        // })
-                        <div style={{
-                            ...child.props.style,
-                            animation: right ? out_anim : in_anim,
-                            transform: 'translateZ(0)',
-                        }} key={i}>
-                            {child}
-                        </div>
-                    );
-                }
-            }
-        }
-        return arr;
-    }, []);
+		if (i === stepWanted || i === stepPrev) {
+			if (React.isValidElement(child)) {
+				// Animation is done, and we are rendering just this element
+				if (stepWanted === stepPrev) {
+					arr.push(
+						// React.cloneElement(child, {
+						//     ref: nextRefCallback,
+						//     style: { ...child.props.style, position: 'relative' },
+						//     key: i,
+						// })
+						// Create child underneath a div
+						<div ref={nextRefCallback} style={{ ...child.props.style, position: 'relative' }} key={i}>
+							{child}
+						</div>
+					);
+					return arr;
+				}
+				// We are rendering 2 elements stepWanted and stepLast
+				if (i === stepWanted)
+					arr.push(
+						// React.cloneElement(child, {
+						//     style: {
+						//         ...child.props.style,
+						//         animation: right ? in_anim : out_anim,
+						//         transform: 'translateZ(0)',
+						//     },
+						//     ref: nextRefCallback,
+						//     key: i,
+						// })
+						<div
+							ref={nextRefCallback}
+							style={{
+								...child.props.style,
+								animation: right ? in_anim : out_anim,
+								transform: 'translateZ(0)',
+							}}
+							key={i}
+						>
+							{child}
+						</div>
+					);
+				else {
+					arr.push(
+						// React.cloneElement(child, {
+						//     style: {
+						//         ...child.props.style,
+						//         animation: right ? out_anim : in_anim,
+						//         transform: 'translateZ(0)',
+						//     },
+						//     key: i,
+						// })
+						<div
+							style={{
+								...child.props.style,
+								animation: right ? out_anim : in_anim,
+								transform: 'translateZ(0)',
+							}}
+							key={i}
+						>
+							{child}
+						</div>
+					);
+				}
+			}
+		}
+		return arr;
+	}, []);
 
-    const stepsShow = steps.reduce<ReactNode[]>((arr, child, i) => {
-        arr.push(child.header || i + 1);
-        return arr;
-    }, []);
+	const stepsShow = steps.reduce<ReactNode[]>((arr, child, i) => {
+		arr.push(child.header || i + 1);
+		return arr;
+	}, []);
 
-    // Updating to last height when transitioning, so there's no jump in scrolling
-    if (stepPrev !== stepWanted) {
-        if (lastHeight.current) setHeight(lastHeight.current);
-    } else {
-        setHeight(0);
-    }
+	// Updating to last height when transitioning, so there's no jump in scrolling
+	if (stepPrev !== stepWanted) {
+		if (lastHeight.current) setHeight(lastHeight.current);
+	} else {
+		setHeight(0);
+	}
 
-    return (
-        <div className={className} {...others}>
-            <table></table>
-            {(showSteps && (
-                <div className={classNameFind(s, `stepper`)}>
-                    {stepsShow.reduce<ReactNode[]>((a, stepNode, i) => {
-                        a.push(
-                            <div className={classNameFind(s, `item`)} key={i}>
-                                <Button
-                                    ripple_type='center'
-                                    className={`circular ${stepWanted === i && 'primary-background'}`}
-                                    onClick={() => {
-                                        if (setStepWanted) setStepWanted(i);
-                                    }}
-                                >
-                                    {stepNode}
-                                </Button>
-                            </div>
-                        );
-                        if (i < steps.length - 1)
-                            a.push(<Divider className={classNameFind(s, `thinner item divider grow`)} key={-i - 1} />);
-                        return a;
-                    }, [])}
-                </div>
-            )) ||
-                ''}
-            <div ref={scrollerRef} style={{ transition: `height ${animTime}s` }} className={scrollerClass}>
-                {render_array}
-            </div>
-        </div>
-    );
+	return (
+		<div className={className} {...others}>
+			<table></table>
+			{(showSteps && (
+				<div className={classNameFind(s, `stepper`)}>
+					{stepsShow.reduce<ReactNode[]>((a, stepNode, i) => {
+						a.push(
+							<div className={classNameFind(s, `item`)} key={i}>
+								<Button
+									ripple_type='center'
+									className={`circular ${stepWanted === i && 'primary-background'}`}
+									onClick={() => {
+										if (setStepWanted) setStepWanted(i);
+									}}
+								>
+									{stepNode}
+								</Button>
+							</div>
+						);
+						if (i < steps.length - 1)
+							a.push(<Divider className={classNameFind(s, `thinner item divider grow`)} key={-i - 1} />);
+						return a;
+					}, [])}
+				</div>
+			)) ||
+				''}
+			<div ref={scrollerRef} style={{ transition: `height ${animTime}s` }} className={scrollerClass}>
+				{render_array}
+			</div>
+		</div>
+	);
 };
 
 export default Stepper;

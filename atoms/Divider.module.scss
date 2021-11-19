@@ -2,73 +2,73 @@
 @import '../styles/globals';
 
 .divider {
-    // My definitions by default
+	// My definitions by default
 
-    @include use-theme using ($ts) {
-        &#{$ts} {
-            $color: color-text(get-color(background));
-            $b: 4px solid color.change($color, $alpha: 0.2);
-            border-top: $b;
-            // border-bottom: $b;
-            &.thin {
-                $b: 2px solid color.change($color, $alpha: 0.2);
-                border-top: $b;
-                // border-bottom: $b;
-            }
-            &.thinner {
-                $b: 1px solid color.change($color, $alpha: 0.2);
-                border-top: $b;
-            }
-        }
-    }
+	@include use-theme using ($ts) {
+		&#{$ts} {
+			$color: color-text(get-color(background));
+			$b: 4px solid color.change($color, $alpha: 0.2);
+			border-top: $b;
+			// border-bottom: $b;
+			&.thin {
+				$b: 2px solid color.change($color, $alpha: 0.2);
+				border-top: $b;
+				// border-bottom: $b;
+			}
+			&.thinner {
+				$b: 1px solid color.change($color, $alpha: 0.2);
+				border-top: $b;
+			}
+		}
+	}
 
-    $color: color-text(get-color(background));
-    $b: 4px solid color.change($color, $alpha: 0.2);
-    border: none;
-    border-top: $b;
-    // border-bottom: $b;
-    // border-radius: get-space(2);
-    // margin: get-space(6) 5%;
-    &.thin {
-        $b: 2px solid color.change($color, $alpha: 0.2);
-        border-top: $b;
-        // border-bottom: $b;
-        // border-radius: 0;
-        // margin: get-space(5) 15%;
-    }
-    &.thinner {
-        $b: 1px solid color.change($color, $alpha: 0.2);
-        border-top: $b;
-        // border-bottom: none;
-        // border-radius: 0;
-        // margin: get-space(5) 20%;
-    }
+	$color: color-text(get-color(background));
+	$b: 4px solid color.change($color, $alpha: 0.2);
+	border: none;
+	border-top: $b;
+	// border-bottom: $b;
+	// border-radius: get-space(2);
+	// margin: get-space(6) 5%;
+	&.thin {
+		$b: 2px solid color.change($color, $alpha: 0.2);
+		border-top: $b;
+		// border-bottom: $b;
+		// border-radius: 0;
+		// margin: get-space(5) 15%;
+	}
+	&.thinner {
+		$b: 1px solid color.change($color, $alpha: 0.2);
+		border-top: $b;
+		// border-bottom: none;
+		// border-radius: 0;
+		// margin: get-space(5) 20%;
+	}
 
-    // // You can define theme based classes in this loop
-    // // This will loop through all themes
-    // // $ts (Theme Selector)
-    // @each $theme in $theme-names-with-empty {
-    // 	$theme-current: $theme !global;
-    // 	$ts: theme-selector(
-    // 		$class: true,
-    // 	);
+	// // You can define theme based classes in this loop
+	// // This will loop through all themes
+	// // $ts (Theme Selector)
+	// @each $theme in $theme-names-with-empty {
+	// 	$theme-current: $theme !global;
+	// 	$ts: theme-selector(
+	// 		$class: true,
+	// 	);
 
-    // 	// My component on this theme
-    // 	&#{$ts}{
+	// 	// My component on this theme
+	// 	&#{$ts}{
 
-    // 	}
+	// 	}
 
-    // 	// This will loop through all color fields in the theme
-    // 	// In case you want to define color based styles
-    // 	@each $c in get-theme-field(color-names) {
-    // 		// This will get the color based on the name
-    // 		$color: get-color($c);
+	// 	// This will loop through all color fields in the theme
+	// 	// In case you want to define color based styles
+	// 	@each $c in get-theme-field(color-names) {
+	// 		// This will get the color based on the name
+	// 		$color: get-color($c);
 
-    // 		// My component on this theme and color
-    // 		&#{$ts}.#{$c} {
+	// 		// My component on this theme and color
+	// 		&#{$ts}.#{$c} {
 
-    // 		}
-    // 	}
-    // }
-    // $theme-current: $theme-default;
+	// 		}
+	// 	}
+	// }
+	// $theme-current: $theme-default;
 }

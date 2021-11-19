@@ -34,17 +34,12 @@ $bw: 1px;
 	border-radius: get-space(2);
 	position: relative;
 
-	// * Frosty background
-	// $background: get-color(neutral, -2);
-	// @include background-color($background);
-	// @include background-blur(get-color($background, -1, if(is-dark(), 0.8, 0.7)));
 	@include use-theme('') using ($ts) {
 		&#{'.' + $ts} {
 			$background: get-color(background, if(is-dark(), -3, -5));
 			@include background-color($background);
 			@include background-blur(get-color($background, -1, 0.4));
 			@if (is-dark()) {
-				// Border animation if dark
 				&.success {
 					animation: pulse-success#{'-' + $ts} 1s alternate infinite;
 				}
@@ -57,7 +52,6 @@ $bw: 1px;
 					animation: pulse-error#{'-' + $ts} 1s alternate infinite;
 				}
 			} @else {
-				// Background color if not
 				&.success {
 					$background: get-color(primary, -3);
 					@include background-color($background);
@@ -82,8 +76,6 @@ $bw: 1px;
 	justify-content: left;
 	align-items: center;
 
-	// padding: get-space(1);
-
 	transform: translateX(150%);
 	transition: all cubic-bezier(0.455, 0.03, 0.515, 0.955) 150ms;
 
@@ -93,38 +85,15 @@ $bw: 1px;
 
 	.icon {
 		flex: 0 0 auto;
-		// min-width: 2em;
-		// padding-top: 1.25em;
-		// overflow: hidden;
-		// text-align: center;
 	}
 
 	.content {
 		flex: 1 1 auto;
-		// width: 100%;
-		// padding-left: 0.7em;
+
 		text-align: justify;
-		// &.hasIcon {
-		//     padding-left: 0;
-		// }
 	}
 
 	.close {
 		flex: 0 0 auto;
-		// justify-self: end;
-		// margin: 1em 0.35em;
 	}
-
-	// .close-icon {
-	//     font-size: 1em;
-	//     cursor: pointer;
-	//     border-radius: 50%;
-	//     padding: 0.25em;
-	//     height: 1.5em;
-	//     width: 1.5em;
-
-	//     &:hover {
-	//         background-color: rgba(0, 0, 0, 0.05);
-	//     }
-	// }
 }

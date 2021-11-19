@@ -209,7 +209,7 @@ const Demo = (props) => {
 							<Field name='sticky' type='checkbox' label='Sticky' />
 							<Field name='icon' type='checkbox' label='Icon' />
 							<Field name='text' />
-							<Button onClick={() => notifications.addNotification(form.state.values)}>Test Notification</Button>
+							<Button onClick={() => notifications.add(form.state.values)}>Test Notification</Button>
 						</>
 					)}
 				</Form>

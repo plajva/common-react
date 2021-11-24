@@ -16,14 +16,15 @@ const mapIcons = {
 export interface NotificationProps {
 	id?: string;
 	icon?: boolean;
-	value: string;
+	value?: string;
 	type?: 'error' | 'warning' | 'success';
 	sticky?: boolean;
+	action?: () => void;
 }
 
-const Notification = ({ icon, type, value, sticky, id }: NotificationProps) => {
+const Notification = ({ icon, type, value, sticky, id, action }: NotificationProps) => {
 	const [inNoty, setInNoty] = useState(false);
-	
+
 	type = type ?? 'success';
 
 	const className = classNameFind(
@@ -68,6 +69,11 @@ const Notification = ({ icon, type, value, sticky, id }: NotificationProps) => {
 
 			<div className={cnf(s, 'content padding-1', icon ? 'hasIcon' : '')}>{value}</div>
 
+			{action && (
+				<Button button_type='icon' className={cnf(s, 'close')} onClick={action}>
+					<Icon icon={FaCheck} />
+				</Button>
+			)}
 			<Button button_type='icon' className={cnf(s, 'close')} onClick={remove}>
 				<Icon icon={FaTimes} />
 			</Button>

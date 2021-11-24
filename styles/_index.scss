@@ -190,6 +190,15 @@ footer {
 .flex-no-shrink {
 	flex-shrink: 0;
 }
+.build{
+	opacity: 0;
+	z-index: 100;
+	color: rgb(127,127,127);
+	transition: 5s all;
+	&:hover{
+		opacity: 1;
+	}
+}
 
 h1 {
 	margin: 1em;

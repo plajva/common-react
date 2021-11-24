@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { combineEvent, deepMerge, jwtParse, RecursivePartial } from './utils';
 
 const getValidState = (ownState, upState) => {
@@ -95,3 +95,25 @@ export const isLogin = (_token?: string) => {
 	}
 	return false;
 };
+
+
+export function useInterval(callback, {delay, onStart}) {
+  const savedCallback = useRef<any>();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current?.();
+    }
+    if (delay !== null) {
+			if(onStart)tick();
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}

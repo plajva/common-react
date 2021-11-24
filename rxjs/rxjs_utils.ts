@@ -12,6 +12,7 @@ import {
 	startWith,
 	Subject,
 	switchMap,
+	withLatestFrom,
 } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
 
@@ -83,7 +84,7 @@ type FetchOptions<T> = {
 	/** Init to use, will take precedence over all other options */
 	init?: RequestInit;
 	/** When request succedes, what to do with value?, by default a json will be converted to object, and text to a string */
-	okReturn?: (value: any) => T;
+	okReturn?: (value: T) => T;
 };
 const fetchDefault: ResponseFetch<any> = { loading: true, data: undefined };
 export const createAPIFetch = <T>({
@@ -103,7 +104,7 @@ export const createAPIFetch = <T>({
 						? from(res.json())
 						: content_type === 'text/plain'
 						? from(res.text())
-						: of(true);
+						: from(res.blob());
 
 				return (okReturn ? r.pipe(map(okReturn)) : r).pipe(map((v) => ({ data: v })));
 			} else {
@@ -142,13 +143,15 @@ export const createAPIFetch = <T>({
 	return o.pipe(startWith(fetchDefault));
 };
 
-export const createAPIFetchStatic = <R, C extends unknown[], D = undefined>(
+export const createAPIFetchStatic = <R, C extends unknown[], W extends unknown[], D = undefined>(
 	foptions: FetchHelperOptions<R>,
-	options?: FetchEventOptions<ResponseFetch<R>, D, C>
+	options?: FetchEventOptions<ResponseFetch<R>, D, C, W>
 ): [() => ResponseFetch<R> | D | undefined, Observable<ResponseFetch<R>>] => {
-	const combineValid$ = options?.combine$ ?? ([of(null)] as unknown as [...ObservableInputTuple<C>]);
+	// Set default [of(null)] observable array if no combine$ is 
+	const combineValid$ = options?.combineLatest$ ?? ([of(null)] as unknown as [...ObservableInputTuple<C>]);
 	const [useV, useR, result$] = createAPIFetchChain(
 		combineValid$,
+		//@ts-ignore
 		(s) => createAPIFetchHelperCall(s, foptions),
 		options
 	);
@@ -161,11 +164,20 @@ export const createAPIFetchStatic = <R, C extends unknown[], D = undefined>(
  *  createAPIFetchEventCombine
  *  createAPIFetchEvent
  */
-type FetchEventOptions<R, D, C extends unknown[]> = {
+type FetchEventOptions<R, D, C extends unknown[], W extends unknown[]> = {
 	responseType?: R;
 	defaultValue?: D;
 	shareReplay?: boolean;
-	combine$?: [...ObservableInputTuple<C>];
+	/**
+	 * Combine with other observables,
+	 * needs at least 1 value, will retrigger on any new value by any combine observable
+	 */
+	combineLatest$?: [...ObservableInputTuple<C>];
+	/**
+	 * Combine with other observables,
+	 * needs at least 1 value, will NOT retrigger on any new value by these observables
+	 */
+	withLatestFrom$?: [...ObservableInputTuple<W>];
 };
 const logFetch = false;
 /**
@@ -175,10 +187,10 @@ const logFetch = false;
  * @type D: Default Value Type
  * @type C: Combine Type
  * */
-export function createAPIFetchEvent<I, R, C extends unknown[], D = undefined>(
-	toFetch: (val: [I, ...C]) => Observable<R>,
-	options?: FetchEventOptions<R, D, C> & { startWith?: I; inputType?: I }
-): [(v: I) => void, () => [I, ...C] | undefined, () => R | D | undefined, Observable<R>] {
+export function createAPIFetchEvent<I, R, C extends unknown[], W extends unknown[], D = undefined>(
+	toFetch: (val: [I, ...C, ...W]) => Observable<R>,
+	options?: FetchEventOptions<R, D, C, W> & { startWith?: I; inputType?: I }
+): [(v: I) => void, () => [I, ...C, ...W] | undefined, () => R | D | undefined, Observable<R>] {
 	// Making a subject, a new event creator per say
 	// Subject will usually have queryString or
 	const subject$ = new Subject<I>();
@@ -188,12 +200,23 @@ export function createAPIFetchEvent<I, R, C extends unknown[], D = undefined>(
 	};
 	const subjectO$ = options?.startWith ? subject$.pipe(startWith(options.startWith)) : subject$;
 	// Binding an obserable to events/obserables
-	let chain$ = (
-		options?.combine$
-			? combineLatest<[I, ...C]>([subjectO$, ...options?.combine$])
+	const chain_$ = (
+		options?.combineLatest$
+			? combineLatest<[I, ...C]>([subjectO$, ...options?.combineLatest$])
 			: subjectO$.pipe(map((v): [I] => [v]))
 	) as Observable<[I, ...C]>;
-	const useValue = () => useObservable<[I, ...C]>(chain$, undefined);
+	// Binding the chain to withLatest from
+	let chain$ = (
+		options?.withLatestFrom$
+			? chain_$.pipe(
+					withLatestFrom(...options.withLatestFrom$),
+					// WithLatest from to the values we want
+					map(([f, ...o]) => [...f, ...o])
+			  )
+			: chain_$
+	) as Observable<[I, ...C, ...W]>;
+
+	const useValue = () => useObservable(chain$, undefined);
 	// Map event to fetch
 	if (logFetch)
 		chain$ = chain$.pipe(
@@ -212,18 +235,27 @@ export function createAPIFetchEvent<I, R, C extends unknown[], D = undefined>(
 }
 /**
  * Chains with other events/obserables, then turns into something usable by React
+ * Replaces combineLatest$ option with combine$ (making it required), also uses withLatestFrom$ if present
  * @type R: Response Type
  * @type D: Default Value Type
  * @type C: Combine Type
  * */
-export function createAPIFetchChain<R, D = undefined, C extends unknown[] = []>(
+export function createAPIFetchChain<R, D = undefined, C extends unknown[] = [], W extends unknown[] = []>(
 	combine$: [...ObservableInputTuple<C>],
-	toFetch: (val: [...C]) => Observable<R>,
-	options?: FetchEventOptions<R, D, C>
-): [() => [...C] | undefined, () => R | D | undefined, Observable<R>] {
+	toFetch: (val: [...C, ...W]) => Observable<R>,
+	options?: FetchEventOptions<R, D, C, W>
+): [() => [...C, ...W] | undefined, () => R | D | undefined, Observable<R>] {
 	const _shareReplay = options?.shareReplay ?? true;
 
-	const chain$ = combineLatest<[...C]>([...combine$]);
+	const chain_$ = combineLatest<[...C]>([...combine$]);
+	const chain$ = (
+		options?.withLatestFrom$
+			? chain_$.pipe(
+					withLatestFrom(...options.withLatestFrom$),
+					map(([f, ...o]) => [...f, ...o])
+			  )
+			: chain_$
+	) as Observable<[...C, ...W]>;
 	// Binding an obserable to event created
 	const useValue = () => useObservable(chain$, undefined);
 	// Map event to fetch
@@ -241,7 +273,7 @@ export const queryString = (v?: any) => {
 	else {
 		return (
 			'?' +
-			Object.entries(v)
+			Object.entries(pruneEmpty(v))
 				.map(([k, v]) => `${k}=${v}`)
 				.join('&')
 		);
@@ -324,9 +356,7 @@ export const createAPIFetchHelperCall = <R, A extends unknown[]>(
 	sources: [...HelperInputTouple<A>],
 	options: FetchHelperOptions<R>,
 	...transform: [...HelperTransformTouple<A, R>]
-) => {
-	return createAPIFetchHelper<R>({ ...options, ...createAPIFetchHelperCombine(sources, ...transform) });
-};
+) => createAPIFetchHelper<R>({ ...options, ...createAPIFetchHelperCombine(sources, ...transform) })
 
 /**
  * Converts input array into an object, and executes toCall with that object

@@ -41,7 +41,7 @@ export const columnsQuick = <D extends object = {}>(...cols: (string | Column<D>
 
 export interface TableSimpleProps<D extends object = {}> {
 	// children?: ReactNode | undefined;
-	options: TableOptions<D>;
+	options: TableOptions<D> & {[k:string]:any};
 	tableProps?: any;
 	tableBodyProps?: any;
 	rowProps?: (v: Row) => any;

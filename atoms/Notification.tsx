@@ -18,12 +18,14 @@ export interface NotificationProps {
 	icon?: boolean;
 	value?: string;
 	type?: 'error' | 'warning' | 'success';
-	sticky?: boolean;
+	timeout?: number;
 	action?: () => void;
 }
 
-const Notification = ({ icon, type, value, sticky, id, action }: NotificationProps) => {
+const Notification = ({ icon, type, value, timeout, id, action }: NotificationProps) => {
 	const [inNoty, setInNoty] = useState(false);
+	
+	timeout = timeout ?? (type === 'error' ? 20000 : type === 'warning' ? 10000 : 3000);
 
 	type = type ?? 'success';
 
@@ -49,8 +51,8 @@ const Notification = ({ icon, type, value, sticky, id, action }: NotificationPro
 	useEffect(() => {
 		let t: any;
 		let t_in: any;
-		if (!sticky) {
-			t = setTimeout(remove, type === 'error' ? 20000 : type === 'warning' ? 10000 : 3000);
+		if (timeout && timeout > 0) {
+			t = setTimeout(remove, timeout);
 		}
 
 		t_in = setTimeout(() => {
@@ -61,7 +63,7 @@ const Notification = ({ icon, type, value, sticky, id, action }: NotificationPro
 			clearTimeout(t);
 			clearTimeout(t_in);
 		};
-	}, [remove, removeNotification, sticky, type]);
+	}, [remove, removeNotification, timeout, type]);
 
 	return (
 		<div className={className}>

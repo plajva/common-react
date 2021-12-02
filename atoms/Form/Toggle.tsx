@@ -20,7 +20,7 @@ const Toggle = forwardRef<HTMLInputElement, ToggleProps & React.InputHTMLAttribu
 		return (
 			<>
 				<input {...props} ref={ref} type='checkbox' hidden className={className} />
-				<div className={classFind(s, 'control')}></div>
+				<div tabIndex={0} className={classFind(s, 'control')}></div>
 			</>
 		);
 	}

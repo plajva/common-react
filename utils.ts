@@ -194,7 +194,7 @@ export function pruneEmpty(obj) {
 				_.isNull(value) ||
 				_.isNaN(value) ||
 				(_.isString(value) && _.isEmpty(value)) ||
-				(_.isObject(value) && _.isEmpty(prune(value)))
+				(_.isObject(value) && !Array.isArray(value) && _.isEmpty(prune(value)))
 			) {
 				delete current[key];
 			}

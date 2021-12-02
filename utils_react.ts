@@ -96,7 +96,6 @@ export const isLogin = (_token?: string) => {
 	return false;
 };
 
-
 export function useInterval(callback, {delay, onStart}) {
   const savedCallback = useRef<any>();
 

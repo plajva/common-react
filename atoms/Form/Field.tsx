@@ -16,7 +16,9 @@ import {
 	FormFieldHOC,
 	InputPropsAll,
 	useFieldError,
+	useFieldTouched,
 	useFieldValue,
+	useForm,
 	UseFormFieldOptions,
 	useFormNameContextCombine,
 } from './Form';
@@ -91,6 +93,7 @@ export interface _FieldProps {
 	rootProps?: object;
 	labelProps?: React.LabelHTMLAttributes<HTMLLabelElement>;
 	labelBottom?: ((v: any) => any) | any;
+	touchedShow?: boolean,
 }
 
 export type FieldCommon = { name?: string; value?: any; onChange?: (v: any) => void } & UseFormFieldOptions;
@@ -108,7 +111,8 @@ export const Field = ({
 	editConfirm,
 	error,
 	type,
-	name: _name,
+	touchedShow,
+	name,
 	...props
 }: FieldProps) => {
 	const theme = useTheme().name;
@@ -148,16 +152,18 @@ export const Field = ({
 		: 'column';
 
 	// Use upper name context if available
-	const name = useFormNameContextCombine(_name);
+	const _name = useFormNameContextCombine(name);
 	// Use a field error
-	const fieldError = useFieldError(name);
-	error = error || fieldError;
-
-	const fieldValue = useFieldValue(name);
+	const fieldError = useFieldError(_name);
+	error = error ?? fieldError;
+	const fieldValue = useFieldValue(_name);
+	const fieldTouched = useFieldTouched(_name);
+	
+	const form = useForm();
+	const touched = (touchedShow ?? form.touchedShow) && fieldTouched;
 	// Define labelBottom if function
 	if (typeof labelBottom === 'function') {
 		labelBottom = labelBottom(fieldValue);
-		// console.log("Label bottom: ", labelBottom);
 	}
 
 	//@ts-ignore
@@ -179,7 +185,7 @@ export const Field = ({
 				style={{ flexDirection, cursor: tog_sel_check_radio ? 'pointer' : undefined, ...labelStyle }}
 			>
 				{input}
-				<span className={classNameFind(s, labelPersistent ? 'label-text-persitent' : 'label-text')}>
+				<span className={classNameFind(s, labelPersistent ? 'label-text-persitent' : 'label-text', touched ? 'touched':'')}>
 					{label} {props.required ? <span style={{ color: 'red' }}>*</span> : ''}
 				</span>
 				{(error || labelBottom) && (

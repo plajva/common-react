@@ -15,7 +15,7 @@ export interface QueryErrorContainerProps<T> {
 	/**
 	 * Exclude null/undefined and any of the status/loading properties from type
 	 */
-	children?: (v: ResponseFetchValid<T>) => any;
+	children?: ((v: ResponseFetchValid<T>) => any) | ReactNode;
 	inline?: boolean;
 	minWidth?: number;
 	minHeight?: number;
@@ -95,7 +95,7 @@ const QueryErrorContainer = <T extends ResponseFetch<any> | undefined | null>({
 		return render({ loading, error: (errors && message) || undefined });
 	} else if (responseIsValid(response)) {
 		//@ts-ignore
-		return render({ children: children(response), success: true });
+		return render({ children: typeof children === 'function'? children(response):children, success: true });
 	}
 	return render({ error });
 };

@@ -52,12 +52,13 @@ interface FormContextExtra {
 	// setError: (name: string, value: any) => void;
 	setTouched: (name: string, value: any) => void;
 	getValue: (name: string) => any;
-	getError: () => MyError;
+	getError: (name?) => MyError | string;
 	getTouched: (name: string) => any;
 	getValid: () => FormState | undefined;
 	submit: () => void;
 	reset: (touched?: boolean) => void;
 	clear: () => void;
+	touchedShow?: boolean;
 	touched?: boolean;
 	errors?: boolean;
 }
@@ -101,6 +102,7 @@ interface FormProps {
 	onReset?: (v: FormState) => void;
 	children?: ReactNode | ((context: FormContextI) => ReactElement);
 	useForm?: boolean;
+	touchedShow?: boolean;
 }
 const isZod = (s: any): boolean => (s?.parse ? true : false);
 const isYup = (s: any): boolean => (s?.validate ? true : false);
@@ -119,6 +121,7 @@ const FormComp = ({
 	onChange,
 	useForm,
 	children,
+	touchedShow,
 	...props
 }: FormProps & StateCombineProps<FormState>) => {
 	// Will always re-render if schema & state=initialState bc we need to set default values from schema
@@ -165,8 +168,10 @@ const FormComp = ({
 		setState,
 		touched: Boolean(typeof state.touched === 'object' ? Object.keys(state.touched)?.length : state.touched),
 		errors: Boolean(typeof state.errors === 'object' ? Object.keys(state.errors)?.length : state.errors),
+		touchedShow,
 		setValue: (name, value) => {
 			if (debugForm) console.log(`FormSetValue: ${name}: ${value} <${typeof value}>`);
+			if (typeof name === 'undefined' || name === null)return;
 			setState((state) => {
 				// console.log("prev: ", JSON.stringify(state.values, undefined, 2))
 				let values = readonly ? state.values : replaceForm(name, value, state.values);
@@ -252,8 +257,9 @@ const FormComp = ({
 		getValue: (name) => {
 			return getForm(`values.${name}`, state);
 		},
-		getError: () => {
-			return getForm(`errors`, state) as MyError;
+		getError: (name?) => {
+			const errors = getForm(`errors`, state) as MyError;
+			return name ? errors?.find((e) => e.path === name)?.message : errors;
 		},
 		getTouched: (name) => {
 			// Return true if showing all errors
@@ -320,12 +326,17 @@ const FormComp = ({
 		</FormContext.Provider>
 	);
 };
-export const UseForm = ({ children, ...props }: { children: (form: { getValueRel? } & FormContextI) => any }) => {
+export const UseForm = ({ children, ...props }: { children: (form: { getValueRel?, setValueRel?,setTouchedRel? } & FormContextI) => any }) => {
 	const name = useFormNameContext();
 	const form = useForm();
 	return (
 		(typeof children === 'function'
-			? children({ ...form, getValueRel: (n: string) => form.getValue(name ? name + '.' + n : n) })
+			? children({
+					...form,
+					getValueRel: (n: string) => form.getValue(nameCombine(name, n)),
+					setValueRel: (n: string, v: any) => form.setValue(nameCombine(name, n), v),
+					setTouchedRel: (n: string, v?: boolean) => form.setTouched(nameCombine(name, n), v ?? true),
+			  })
 			: children) || null
 	);
 };
@@ -355,43 +366,46 @@ export interface UseFormFieldOptions {
 }
 /**
  * Returns the handlers for fields using the FormContext to set/get values
- * @param props, consumes (onBlur, onChange, value, name)
+ * @param props, consumes (onBlur, onChange, valueName, toForm, toFormBlur, fromForm, value, name)
  * @param opts
- * @returns newProps (onBlur, onChange, {valueName}) if name is valid, else just props
+ * @returns newProps (onBlur, onChange, {valueName:---}) if name is true, else just mirrors props
  */
 export const useFormField = (
 	props: InputPropsAll & UseFormFieldProps & UseFormFieldOptions
 ): InputPropsAll & UseFormFieldProps => {
 	const { onBlur, onChange, valueName: _valueName, toForm, toFormBlur, fromForm, value, name, ..._props } = props;
+	
+	const _name = useFormNameContextCombine(name)
 	const form = useForm();
 	const valueName = _valueName ?? 'value';
-	const getValue = (name) => {
-		let valueForm = form.getValue(name);
+	
+	const getValue = (n) => {
+		let valueForm = form.getValue(n);
 		return value ?? valueForm ?? '';
 	};
-
-	const fieldValue = fromForm ? fromForm(getValue(name)) : getValue(name);
 
 	return name
 		? {
 				onChange: combineEvent((e) => {
 					const v = toForm ? toForm(e, value ?? e.target[valueName]) : value ?? e.target[valueName];
-					if (debugForm) console.log(`OnChange ${name}: ${v} <${typeof v}>`);
-					form.setValue(name, v);
-					form.setTouched(name, true);
+					if (debugForm) console.log(`OnChange ${_name}: ${v} <${typeof v}>`);
+					form.setValue(_name, v);
+					form.setTouched(_name, true);
 				}, onChange),
+				/** Adds a function */
 				onBlur: combineEvent((e) => {
 					if (toFormBlur) {
 						const v = toFormBlur(e, value ?? e.target[valueName]);
-						if (debugForm) console.log(`OnBlur ${name}: ${v} <${typeof v}>`);
-						form.setValue(name, v);
+						if (debugForm) console.log(`OnBlur ${_name}: ${v} <${typeof v}>`);
+						form.setValue(_name, v);
 					}
 				}, onBlur),
 				onFocus: combineEvent((e) => {
 					//   form.setTouched(name, true);
 					//   if(toFormBlur)form.setValue(name, toFormBlur(e,e.target[valueName]));
 				}, onBlur),
-				...Object.fromEntries([[valueName, fieldValue]]),
+				/** Creating an object so we can make key dynamic */
+				...Object.fromEntries([[/** Field value name */ valueName, /** Field Value */  fromForm ? fromForm(getValue(_name)) : getValue(_name)  ]]),
 				..._props,
 		  }
 		: props;
@@ -408,9 +422,10 @@ export const useFormNameContext = () => useContext(FormNameContext);
 /**
  * Combines a previously set name context with the value provided
  * */
+const nameCombine = (a?: string, b?: string) => a && b ? a + '.' + b : a ? a : b ? b : '';
 export const useFormNameContextCombine = (n?: string) => {
 	const nc = useFormNameContext();
-	return nc && n ? nc + '.' + n : nc ? nc : n ? n : '';
+	return nameCombine(nc, n);
 };
 /**
  * Provides a name context to be used by Field/FieldArray/UseForm
@@ -436,7 +451,7 @@ export const useFieldError = (name?: string) => {
 	let error: string | undefined;
 	if (typeof name === 'string') {
 		name = normalizeName(name);
-		const err = form.getError()?.find((e) => e.path === name)?.message;
+		const err = form.getError(name);
 		error = err && form.getTouched(name) && err;
 	}
 	return error;
@@ -476,27 +491,42 @@ export const useFieldValue = (name?: string) => {
 	}
 	return value;
 };
+/**
+ * Doesn't use the name context
+ * @param name
+ * @returns
+ */
+export const useFieldTouched = (name?: string) => {
+	const form = useForm();
+	let touched: string | undefined;
+	if (name) {
+		name = normalizeName(name);
+		touched = form.getTouched(name);
+	}
+	return touched;
+};
 // export const FieldValue = (props: { name: string }) => {
 // 	return useFieldValue(props.name);
 // };
 
 type MapProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
 	root_type?: any;
+	keyName?: string;
 	children?: ((props: { value; index }) => any) | ReactNode;
 };
 export interface FieldArrayProps<T> {
 	name: string;
-	children: (props: { arr: T[]; push; insert; remove; clear; Map: (props: MapProps) => any }) => any;
+	children: (props: { arr: T[]; push:(v)=>void; insert:(i,v)=>void; remove:(i)=>void; clear:()=>void; Map: (props: MapProps) => any }) => any;
 }
 const Map =
 	(arr: any[], arr_name) =>
-	({ children, root_type, ...props }: MapProps) => {
+	({ children, root_type, keyName, ...props }: MapProps) => {
 		// const nameContext = useFormNameContext();
 		return (
 			arr?.map((v, i) =>
 				createElement(
 					root_type || 'div',
-					{ key: i, ...props },
+					{ key: v[keyName || ''] ?? v._id ?? v.id ?? i, ...props },
 					<FormNameProvider name={`${arr_name}[${i}]`} absolute>
 						{typeof children === 'function' ? children({ value: v, index: i }) : children}
 					</FormNameProvider>
@@ -505,34 +535,38 @@ const Map =
 		);
 	};
 export const FieldArray = <T extends {}>({ name, children }: FieldArrayProps<T>) => {
-	let arr_name = useFormNameContextCombine(name);
+	let _name = useFormNameContextCombine(name);
 	const form = useForm();
-	const _arr = form.getValue(arr_name) as any[],
+	const _arr = form.getValue(_name) as any[],
 		exists = Array.isArray(_arr);
-	const push = (val) => {
+	const touch = () => form.setTouched(_name, true);
+	const push = (v) => {
 		if (!exists) {
-			form.setValue(arr_name, [val]);
+			form.setValue(_name, [v]);
 		} else {
-			_arr.push(val);
-			form.setValue(arr_name, _arr);
+			_arr.push(v);
+			form.setValue(_name, _arr);
 		}
+		touch();
 	};
-	const insert = (index, val) => {
+	const insert = (i, v) => {
 		if (!exists) {
-			form.setValue(`${arr_name}[${index}]`, val);
+			form.setValue(`${_name}[${i}]`, v);
 		} else {
-			_arr.splice(index, 0, val);
-			form.setValue(arr_name, _arr);
+			_arr.splice(i, 0, v);
+			form.setValue(_name, _arr);
 		}
+		touch();
 	};
-	const remove = (index) => {
+	const remove = (i) => {
 		if (exists) {
-			_arr.splice(index, 1);
-			form.setValue(arr_name, _arr);
+			_arr.splice(i, 1);
+			form.setValue(_name, _arr);
 		}
+		touch();
 	};
-
-	const clear = () => form.setValue(arr_name, []);
+	const clear = () => {form.setValue(_name, []); touch();};
+	
 	return (
 		<FormNameProvider name={name}>
 			{children({
@@ -540,7 +574,7 @@ export const FieldArray = <T extends {}>({ name, children }: FieldArrayProps<T>)
 				push,
 				insert,
 				remove,
-				Map: Map(_arr, arr_name),
+				Map: Map(_arr, _name),
 				clear,
 			})}
 		</FormNameProvider>
@@ -561,7 +595,7 @@ const getInitial = (initialState?: FormState, schema?: any) => {
 	}
 
 	return {
-		touched: [],
+		// touched: [],
 		...initialState,
 		values,
 	};

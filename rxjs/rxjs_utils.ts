@@ -291,7 +291,8 @@ type FetchHelperOptions<T> = {
 	/** The value of Authentication header, will replace 'token' option */
 	auth?: string;
 	/** The body, will be converted JSON string if object */
-	body?: string | object;
+	body?: BodyInit | object;
+	bodyRaw?: boolean;
 	/** 'json': will set method to POST and content type to json */
 	type?: 'json';
 } & FetchOptions<T>;
@@ -306,6 +307,7 @@ export const createAPIFetchHelper = <T>({
 	init: _init,
 	query,
 	token,
+	bodyRaw,
 	auth,
 	body,
 	type,
@@ -322,7 +324,7 @@ export const createAPIFetchHelper = <T>({
 			break;
 	}
 	if (body) {
-		init = { ...init, body: typeof body === 'object' ? JSON.stringify(pruneEmpty(body)) : body };
+		init = { ...init, body: typeof body === 'object' && !bodyRaw ? JSON.stringify(pruneEmpty(body)) : body as BodyInit };
 	}
 	if (auth || token) {
 		init = { ...init, headers: { ...init?.headers, Authorization: token ? `Bearer ${token}` : auth || '' } };
@@ -344,7 +346,7 @@ export const createAPIFetchHelperCombine = <R, A extends unknown[]>(
 		const t = transform[i];
 		return t ? t(s) : (s as FetchHelperOptions<R>);
 	});
-	const combined = transformed.reduce((a, v) => Object.assign(a, v), {} as FetchHelperOptions<R>);
+	const combined = transformed.reduce((a, v) => typeof v==='object' ?Object.assign(a, v):a, {} as FetchHelperOptions<R>);
 	return combined;
 };
 /**

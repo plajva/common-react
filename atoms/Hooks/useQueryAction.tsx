@@ -22,20 +22,20 @@ export const useQueryAction = <T extends ResponseFetch<any> | undefined>(
 	options?: QueryActionOptions<T>
 ) => {
 	useEffect(() => {
-		options?.onResponse && options.onResponse(response);
+		options?.onResponse?.(response);
 		if (response) {
 			const valid = responseIsValid(response);
 			if (valid) {
-				options?.onValid && options.onValid(valid);
+				options?.onValid?.(valid);
 				return;
 			}
 			const error = responseIsError(response);
 			if (error) {
-				options?.onError && options.onError(error);
+				options?.onError?.(error);
 				return;
 			}
 		}
-		options?.onDefault && options.onDefault(response);
+		options?.onDefault?.(response);
 		return;
 	}, [response]);
 };

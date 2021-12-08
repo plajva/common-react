@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useRef } from 'react';
+import React, { ReactNode, useContext, useEffect, useRef } from 'react';
 import { BiRightArrow } from 'react-icons/bi';
 import { classNameFind, separateChildren } from '../utils';
 import s from './Collapsible.module.scss';
@@ -38,6 +38,16 @@ const Collapsible = ({
 
 	const [child_first, child_rest, renderChild] = separateChildren(children, state, setState);
 
+	useEffect(() => {
+		if (content.current) {
+			content.current.style.maxHeight = state.open
+				? content.current
+					? `${content.current.scrollHeight}px`
+					: '0px'
+				: '0px';
+		}
+	}, [state.open]);
+
 	return (
 		<div className={className} {...props}>
 			<div
@@ -47,12 +57,8 @@ const Collapsible = ({
 				{renderChild(child_first)}
 			</div>
 
-			{canCollapse && (
-				<div
-					ref={content}
-					style={{ maxHeight: state.open ? (content.current ? content.current.scrollHeight : undefined) : 0 }}
-					className={classNameFind(s, 'content')}
-				>
+			{canCollapse && state.open && (
+				<div ref={content} style={{}} className={classNameFind(s, 'content')}>
 					{renderChild(child_rest)}
 				</div>
 			)}

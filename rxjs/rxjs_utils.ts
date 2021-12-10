@@ -12,6 +12,8 @@ import {
 	startWith,
 	Subject,
 	switchMap,
+	take,
+	timeout,
 	withLatestFrom,
 } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
@@ -147,7 +149,7 @@ export const createAPIFetchStatic = <R, C extends unknown[], W extends unknown[]
 	foptions: FetchHelperOptions<R>,
 	options?: FetchEventOptions<ResponseFetch<R>, D, C, W>
 ): [() => ResponseFetch<R> | D | undefined, Observable<ResponseFetch<R>>] => {
-	// Set default [of(null)] observable array if no combine$ is 
+	// Set default [of(null)] observable array if no combine$ is
 	const combineValid$ = options?.combineLatest$ ?? ([of(null)] as unknown as [...ObservableInputTuple<C>]);
 	const [useV, useR, result$] = createAPIFetchChain(
 		combineValid$,
@@ -180,6 +182,9 @@ type FetchEventOptions<R, D, C extends unknown[], W extends unknown[]> = {
 	withLatestFrom$?: [...ObservableInputTuple<W>];
 };
 const logFetch = false;
+
+/** Fixing ->   Type 'T & Function' has no call signatures.  when setting value with a function*/
+type InputUnion<I> = I | ((v: I) => I);
 /**
  * Creates event and chains with other events/obserables, then turns into something usable by React
  * @type I: Input Type
@@ -187,18 +192,22 @@ const logFetch = false;
  * @type D: Default Value Type
  * @type C: Combine Type
  * */
-export function createAPIFetchEvent<I, R, C extends unknown[], W extends unknown[], D = undefined>(
+export function createAPIFetchEvent<I extends Exclude<any,Function>, R, C extends unknown[], W extends unknown[], D = undefined>(
 	toFetch: (val: [I, ...C, ...W]) => Observable<R>,
 	options?: FetchEventOptions<R, D, C, W> & { startWith?: I; inputType?: I }
-): [(v: I) => void, () => [I, ...C, ...W] | undefined, () => R | D | undefined, Observable<R>] {
+): [(v: InputUnion<I>) => void, () => [I, ...C, ...W] | undefined, () => R | D | undefined, Observable<R>] {
 	// Making a subject, a new event creator per say
 	// Subject will usually have queryString or
 	const subject$ = new Subject<I>();
-	const setValue = (v: I) => {
-		if (logFetch) console.log('New fetch event', v, 'observed :', subject$.observed);
-		subject$.next(v);
+	const subjectO$ = (options?.startWith ? subject$.pipe(startWith(options.startWith)) : subject$).pipe(shareReplay(1));
+	/** If v is function, will wait from value from */
+	const setValue = (v: InputUnion<I>) => {
+		if (logFetch) console.log('Next triggered: ', v, ' observed: ', subject$.observed);
+		typeof v === 'function'
+			? subjectO$.pipe(take(1), timeout(1000)).subscribe((p) => subject$.next((v as Function)(p)))
+			: subject$.next(v);
 	};
-	const subjectO$ = options?.startWith ? subject$.pipe(startWith(options.startWith)) : subject$;
+
 	// Binding an obserable to events/obserables
 	const chain_$ = (
 		options?.combineLatest$
@@ -324,7 +333,10 @@ export const createAPIFetchHelper = <T>({
 			break;
 	}
 	if (body) {
-		init = { ...init, body: typeof body === 'object' && !bodyRaw ? JSON.stringify(pruneEmpty(body)) : body as BodyInit };
+		init = {
+			...init,
+			body: typeof body === 'object' && !bodyRaw ? JSON.stringify(pruneEmpty(body)) : (body as BodyInit),
+		};
 	}
 	if (auth || token) {
 		init = { ...init, headers: { ...init?.headers, Authorization: token ? `Bearer ${token}` : auth || '' } };
@@ -346,11 +358,14 @@ export const createAPIFetchHelperCombine = <R, A extends unknown[]>(
 		const t = transform[i];
 		return t ? t(s) : (s as FetchHelperOptions<R>);
 	});
-	const combined = transformed.reduce((a, v) => typeof v==='object' ?Object.assign(a, v):a, {} as FetchHelperOptions<R>);
+	const combined = transformed.reduce(
+		(a, v) => (typeof v === 'object' ? Object.assign(a, v) : a),
+		{} as FetchHelperOptions<R>
+	);
 	return combined;
 };
 /**
- * An interface to map values, takes in array of values and transform array respectively, returns call to createApiFetchHelper of all transform objects combined
+ * An interface to map values, takes in array of values and transform array respectively, returns call to createApiFetchHelper of all transformed values
  * @param sources
  * @param transform
  */
@@ -358,7 +373,7 @@ export const createAPIFetchHelperCall = <R, A extends unknown[]>(
 	sources: [...HelperInputTouple<A>],
 	options: FetchHelperOptions<R>,
 	...transform: [...HelperTransformTouple<A, R>]
-) => createAPIFetchHelper<R>({ ...options, ...createAPIFetchHelperCombine(sources, ...transform) })
+) => createAPIFetchHelper<R>({ ...options, ...createAPIFetchHelperCombine(sources, ...transform) });
 
 /**
  * Converts input array into an object, and executes toCall with that object

@@ -105,13 +105,19 @@ export interface QueryLoadingContainerProps<T> extends React.HTMLAttributes<HTML
 	/**
 	 * Exclude null/undefined and any of the status/loading properties from type
 	 */
+	
 	children?: ((v: T | null | undefined) => any) | ReactNode;
+	/**
+	 * Check to make sure response.loading actually means this is loading
+	 */
+	assert?: (v?:T) => boolean,
 	size?: string | number;
 }
 
 export const QueryLoadingContainer = <T extends ResponseFetch<any> | undefined | null>({
 	response,
 	children,
+	assert,
 	size,
 	...props
 }: QueryLoadingContainerProps<T>) => {
@@ -119,7 +125,7 @@ export const QueryLoadingContainer = <T extends ResponseFetch<any> | undefined |
 	return (
 		<div {...props} style={{ position: 'relative', ...props.style }}>
 			{(typeof children === 'function' && children(response)) || children}
-			{response?.loading && (
+			{response?.loading && (assert ? assert(response) : true) && (
 				<div
 					style={{
 						display: 'flex',

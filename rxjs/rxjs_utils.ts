@@ -23,6 +23,7 @@ export interface ResponseFetch<T> {
 	message?: string;
 	loading?: boolean;
 	data?: T;
+	res?: Response;
 }
 // type Test = ResponseFetchValid<ResponseFetch<{id:string} | undefined>>;
 type ResponseFetchAny = ResponseFetch<any> | undefined | null;
@@ -85,6 +86,7 @@ export const responseIsError = <T extends ResponseFetchAny>(v: T): ResponseFetch
 type FetchOptions<T> = {
 	/** Init to use, will take precedence over all other options */
 	init?: RequestInit;
+	force?: 'text' | 'arrayBuffer' | 'formData' | 'json' | 'blob';
 	/** When request succedes, what to do with value?, by default a json will be converted to object, and text to a string */
 	okReturn?: (value: T) => T;
 };
@@ -92,6 +94,7 @@ const fetchDefault: ResponseFetch<any> = { loading: true, data: undefined };
 export const createAPIFetch = <T>({
 	url,
 	init,
+	force,
 	okReturn,
 }: { url: string } & FetchOptions<T>): Observable<ResponseFetch<T>> => {
 	let o = fromFetch(url, init).pipe(
@@ -101,14 +104,34 @@ export const createAPIFetch = <T>({
 
 			// let content_size = res.headers.get
 			if (res.ok) {
-				const r =
-					content_type === 'application/json'
-						? from(res.json())
-						: content_type === 'text/plain'
-						? from(res.text())
-						: from(res.blob());
+				const r = from(
+					force
+						? force === 'blob'
+							? res.blob()
+							: force === 'json'
+							? res.json()
+							: force === 'arrayBuffer'
+							? res.arrayBuffer()
+							: force === 'formData'
+							? res.formData()
+							: res.text()
+						: content_type
+						? content_type === 'application/json'
+							? res.json()
+							: content_type.includes('text/')
+							? res.text()
+							: res.blob()
+						: res.text()
+				).pipe(map((v) => ({ data: v, res })));
 
-				return (okReturn ? r.pipe(map(okReturn)) : r).pipe(map((v) => ({ data: v })));
+				return okReturn
+					? r.pipe(
+							map((d) => {
+								d.data = okReturn(d.data);
+								return d;
+							})
+					  )
+					: r;
 			} else {
 				switch (content_type) {
 					case 'application/json':
@@ -192,19 +215,26 @@ type InputUnion<I> = I | ((v: I) => I);
  * @type D: Default Value Type
  * @type C: Combine Type
  * */
-export function createAPIFetchEvent<I extends Exclude<any,Function>, R, C extends unknown[], W extends unknown[], D = undefined>(
+export function createAPIFetchEvent<
+	I extends Exclude<any, Function>,
+	R,
+	C extends unknown[],
+	W extends unknown[],
+	D = undefined
+>(
 	toFetch: (val: [I, ...C, ...W]) => Observable<R>,
 	options?: FetchEventOptions<R, D, C, W> & { startWith?: I; inputType?: I }
 ): [(v: InputUnion<I>) => void, () => [I, ...C, ...W] | undefined, () => R | D | undefined, Observable<R>] {
 	// Making a subject, a new event creator per say
 	// Subject will usually have queryString or
 	const subject$ = new Subject<I>();
-	const subjectO$ = (options?.startWith ? subject$.pipe(startWith(options.startWith)) : subject$).pipe(shareReplay(1));
+	const subjectO$ = options?.startWith ? subject$.pipe(startWith(options.startWith)) : subject$;
+	const subjectOHot$ = subjectO$.pipe(shareReplay(1));
 	/** If v is function, will wait from value from */
 	const setValue = (v: InputUnion<I>) => {
-		if (logFetch) console.log('Next triggered: ', v, ' observed: ', subject$.observed);
+		if (logFetch) console.log('Next started: ', v, ' observed: ', subject$.observed);
 		typeof v === 'function'
-			? subjectO$.pipe(take(1), timeout(1000)).subscribe((p) => subject$.next((v as Function)(p)))
+			? subjectOHot$.pipe(take(1), timeout(1000)).subscribe((p) => subject$.next((v as Function)(p)))
 			: subject$.next(v);
 	};
 

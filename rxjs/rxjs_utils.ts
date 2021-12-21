@@ -1,4 +1,5 @@
 import { pruneEmpty } from '@common/utils';
+import { useStateObject } from '@common/utils_react';
 import { useEffect, useState } from 'react';
 import {
 	catchError,
@@ -11,6 +12,7 @@ import {
 	shareReplay,
 	startWith,
 	Subject,
+	Subscription,
 	switchMap,
 	take,
 	timeout,
@@ -53,6 +55,28 @@ export const useObservable = <T, D = undefined>(observable: Observable<T>, defau
 
 	return state;
 };
+
+export const useObservableObject = <T>(os: { [k: string]: Observable<T> } | undefined) => {
+	const [state, setState] = useState<{[k: string]: T}>({});
+
+	useEffect(() => {
+		if(!os)return;
+		const sub = Object.entries(os).reduce((a, [k, v]) => {
+			a[k] = v.subscribe((vs) =>
+				setState((s) => {
+					s[k] = vs;
+					return {...s};
+				})
+			);
+			return a;
+		}, {} as { [k: string]: Subscription });
+		// const sub = os.subscribe(setState);
+		return () => Object.entries(sub).forEach(([k, v]) => v.unsubscribe());
+	}, [os]);
+
+	return state;
+};
+
 /**
  * You can use this function IF and only IF onEvent uses references/values that won't change
  *

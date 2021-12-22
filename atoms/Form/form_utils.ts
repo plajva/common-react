@@ -1,4 +1,5 @@
 import accounting from 'accounting';
+import { round } from 'lodash';
 import { toUpperCaseFirst } from '../../utils';
 import { _FieldProps } from './Field';
 import { UseFormFieldOptions } from './Form';
@@ -45,65 +46,75 @@ export const regexFormat = (regex: RegExp, input: string, format: string) => {
 	}
 	return input;
 };
-export const field_utils: { [key: string]: UseFormFieldOptions & _FieldProps } = {
-	phone: {
-		toFormBlur: (e, v?: string) => {
-			return v && (regexFormat(regex_dict.phone, v, '{+{0} }?({1})-{2}-{3}') || v);
+export const field_utils =
+	// : {[key: string]: (UseFormFieldOptions & _FieldProps) | ((...l) => UseFormFieldOptions & _FieldProps);}
+	{
+		phone: {
+			toFormBlur: (e, v?: string) => {
+				return v && (regexFormat(regex_dict.phone, v, '{+{0} }?({1})-{2}-{3}') || v);
 
-			// const g = regex_dict.phoneRegex.exec(v);
-			// if (g) {
-			// 	console.log(g);
-			// 	let i = 1;
-			// 	const nv = `${sd(g[i++], (s) => `+${s} `)}${sd(g[i++], (s) => `(${s})-`)}${sd(g[i++], (s) => `${s}-`)}${sd(
-			// 		g[i++],
-			// 		(s) => `${s}`
-			// 	)}`;
-			// 	console.log(nv);
-			// 	return nv;
-			// }
+				// const g = regex_dict.phoneRegex.exec(v);
+				// if (g) {
+				// 	console.log(g);
+				// 	let i = 1;
+				// 	const nv = `${sd(g[i++], (s) => `+${s} `)}${sd(g[i++], (s) => `(${s})-`)}${sd(g[i++], (s) => `${s}-`)}${sd(
+				// 		g[i++],
+				// 		(s) => `${s}`
+				// 	)}`;
+				// 	console.log(nv);
+				// 	return nv;
+				// }
+			},
 		},
-	},
-	ssn: {
-		toFormBlur: (e, v?: string) => {
-			return v && regexFormat(regex_dict.ssn, v, '{0}-{1}-{2}');
+		ssn: {
+			toFormBlur: (e, v?: string) => {
+				return v && regexFormat(regex_dict.ssn, v, '{0}-{1}-{2}');
+			},
 		},
-	},
-	card_number: {
-		toForm: (e, v) => (typeof v === 'string' ? v.replace(/[^\d]+/g, '') : v),
-		labelBottom: (v) => {
-			if (typeof v === 'string') {
-				const match = regex_dict.card_number.exec(v);
-				if (match?.groups) {
-					// console.log(JSON.stringify(match.groups));
-					const validGroup = Object.entries(match.groups).find(([k, v]) => typeof v !== 'undefined');
-					if (validGroup) {
-						return toUpperCaseFirst(validGroup[0]);
+		card_number: {
+			toForm: (e, v) => (typeof v === 'string' ? v.replace(/[^\d]+/g, '') : v),
+			labelBottom: (v) => {
+				if (typeof v === 'string') {
+					const match = regex_dict.card_number.exec(v);
+					if (match?.groups) {
+						// console.log(JSON.stringify(match.groups));
+						const validGroup = Object.entries(match.groups).find(([k, v]) => typeof v !== 'undefined');
+						if (validGroup) {
+							return toUpperCaseFirst(validGroup[0]);
+						}
 					}
 				}
-			}
+			},
 		},
-	},
-	card_expiration: {
-		toFormBlur: (e, v?: string) => {
-			return v && regexFormat(regex_dict.card_expiration, v, '{0}/{1}');
+		card_expiration: {
+			toFormBlur: (e, v?: string) => {
+				return v && regexFormat(regex_dict.card_expiration, v, '{0}/{1}');
+			},
 		},
-	},
-	card_cvv: {
-		toFormBlur: (e, v?: string) => {
-			return v && regexFormat(regex_dict.card_cvv, v, '{0}');
+		card_cvv: {
+			toFormBlur: (e, v?: string) => {
+				return v && regexFormat(regex_dict.card_cvv, v, '{0}');
+			},
 		},
-	},
-	money: {
-		// toForm: (e,v) => String(v),
-		toFormBlur: (e, v) => (typeof v === 'string' ? (v.length ? accounting.unformat(v) : undefined) : v),
-		fromForm: (v) => (typeof v === 'number' ? accounting.formatMoney(v) : v),
-	},
-	// money_format: () => ({
-	//     toForm: (e, v) => (typeof v === 'string' ? (v.length?accounting.unformat(v):undefined) : v),
-	//     fromForm: (v) => (typeof v === 'number' ? (accounting.formatMoney(v, undefined,0)) : v),
-	// }),
-	number: {
-		toForm: (e, v) => (typeof v === 'string' ? Number(v.replace(/[^\d.]+/g, '')) : v),
-		fromForm: (v) => (typeof v === 'number' ? `${v}` : v),
-	},
-};
+		money: {
+			// toForm: (e,v) => String(v),
+			toFormBlur: (e, v) => (typeof v === 'string' ? (v.length ? accounting.unformat(v) : undefined) : v),
+			fromForm: (v) => (typeof v === 'number' ? accounting.formatMoney(v) : v),
+		},
+		moneyFunc: (precision?: number) => ({
+			toFormBlur: (e, v) => (typeof v === 'string' ? (v.length ? accounting.unformat(v) : undefined) : v),
+			fromForm: (v) => (typeof v === 'number' ? accounting.formatMoney(v, undefined, precision) : v),
+		}),
+		// money_format: () => ({
+		//     toForm: (e, v) => (typeof v === 'string' ? (v.length?accounting.unformat(v):undefined) : v),
+		//     fromForm: (v) => (typeof v === 'number' ? (accounting.formatMoney(v, undefined,0)) : v),
+		// }),
+		integer: {
+			toForm: (e, v) => (typeof v === 'string' ? Number(v.replace(/[^\d]+/g, '')) : v),
+			fromForm: (v) => (typeof v === 'number' ? `${v}` : v),
+		},
+		numberFunc: (precision?: number) => ({
+			toFormBlur: (e, v) => (typeof v === 'string' ? round(Number(v.replace(/[^\d.]+/g, '')), precision) : v),
+			fromForm: (v) => (typeof v === 'number' ? `${v}` : v),
+		}),
+	};

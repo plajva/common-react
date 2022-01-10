@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ReactElement, useContext, useEffect, useState } from 'react';
-import { combineEvent } from '../utils';
+import { cnf, combineEvent } from '../utils';
 
 export interface ThemeProviderProps {}
 
@@ -70,5 +70,10 @@ const ThemeProvider: FunctionComponent<ThemeProviderProps & React.HTMLAttributes
 		</ThemeContext.Provider>
 	);
 };
+
+export const DivThemed = (props: React.HTMLAttributes<HTMLDivElement>) => {
+	const theme = useTheme();
+	return <div {...props} className={cnf(undefined, theme.name, props.className)}/>
+}
 
 export default ThemeProvider;

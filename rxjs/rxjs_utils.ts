@@ -28,7 +28,7 @@ export interface ResponseFetch<T> {
 	res?: Response;
 }
 // type Test = ResponseFetchValid<ResponseFetch<{id:string} | undefined>>;
-type ResponseFetchAny = ResponseFetch<any> | undefined | null;
+export type ResponseFetchAny = ResponseFetch<any> | undefined | null;
 type Define<T> = Exclude<T, undefined | null>;
 export type ResponseFetchValid<T extends ResponseFetchAny> = Required<Pick<Define<T>, 'data'>>;
 export type ResponseFetchErrors<T extends ResponseFetchAny> = Required<Pick<Define<T>, 'errors'>> &
@@ -76,6 +76,9 @@ export const useObservableObject = <T>(os: { [k: string]: Observable<T> } | unde
 
 	return state;
 };
+
+export const fetchEventsAll=new Subject<ResponseFetchAny>();
+
 
 /**
  * You can use this function IF and only IF onEvent uses references/values that won't change
@@ -163,8 +166,7 @@ export const createAPIFetch = <T>({
 							map((v) => ({
 								errors: true,
 								message: v
-									? (v?.errors && (typeof v.errors === 'boolean' ? String(v?.message) : JSON.stringify(v.errors))) ||
-									  JSON.stringify(v)
+									?  v?.message ?? v?.Message ?? JSON.stringify(v.errors)
 									: `Error ${res.status}`,
 							}))
 						);
@@ -289,6 +291,8 @@ export function createAPIFetchEvent<
 			})
 		);
 	let result$ = chain$.pipe(switchMap(toFetch));
+	// Make any event trigger all events global Subject
+	result$ = result$.pipe(map(v => {fetchEventsAll.next(v);return v;}));
 	// Replay the result
 	if (options?.shareReplay ?? true) result$ = result$.pipe(shareReplay(1));
 	// Bind to result
@@ -323,6 +327,8 @@ export function createAPIFetchChain<R, D = undefined, C extends unknown[] = [], 
 	const useValue = () => useObservable(chain$, undefined);
 	// Map event to fetch
 	let result$ = chain$.pipe(switchMap(toFetch));
+	// Make any event trigger all events global Subject
+	result$ = result$.pipe(map(v => {fetchEventsAll.next(v);return v;}));
 	// Replay the result
 	if (_shareReplay) result$ = result$.pipe(shareReplay(1));
 	// Bind to result

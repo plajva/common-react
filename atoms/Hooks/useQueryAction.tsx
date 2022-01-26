@@ -4,6 +4,7 @@ import {
 	ResponseFetch,
 	ResponseFetchValid,
 	ResponseFetchErrors,
+	ResponseFetchAny,
 } from '@common/rxjs/rxjs_utils';
 import { useEffect } from 'react';
 
@@ -17,7 +18,7 @@ interface QueryActionOptions<T> {
 	/** Always gets executed when query returns */
 	onResponse?: (v: T) => void;
 }
-export const useQueryAction = <T extends ResponseFetch<any> | undefined>(
+export const useQueryAction = <T extends ResponseFetchAny>(
 	response: T,
 	options?: QueryActionOptions<T>
 ) => {

@@ -52,7 +52,7 @@ export const field_utils =
 		phone: {
 			toFormBlur: (e, v?: string) => {
 				return v && (regexFormat(regex_dict.phone, v, '{+{0} }?({1})-{2}-{3}') || v);
-
+			
 				// const g = regex_dict.phoneRegex.exec(v);
 				// if (g) {
 				// 	console.log(g);
@@ -117,4 +117,8 @@ export const field_utils =
 			toFormBlur: (e, v) => (typeof v === 'string' ? round(Number(v.replace(/[^\d.]+/g, '')), precision) : v),
 			fromForm: (v) => (typeof v === 'number' ? `${v}` : v),
 		}),
+		percent: {
+			toFormBlur: (e, v) => (typeof v === 'string' ? (v.length ? (/%$/.exec(v) ? Number(v)/100 : Number(v)) : undefined) : v),
+			fromForm: (v) => (typeof v === 'number' ? v.toFixed(2)+'%' : v),
+		},
 	};

@@ -25,7 +25,7 @@ export const useStateCombine = <T>(
 	return [getValidState(s, upState), combineEvent(upSetState, upState ? undefined : ss)];
 };
 
-// Like useState but will merge when setState called, if u need to use object states in function components
+// Like useState but will deepMerge (lodash) when setState called, if u need to use object states in function components
 export const useStateObject = <T extends object>(
 	d: T
 ): [T, React.Dispatch<React.SetStateAction<RecursivePartial<T>>>] => {

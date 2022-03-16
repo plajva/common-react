@@ -45,6 +45,7 @@ export const responseSelector = <T>(response: T, selector: (v: ResponseFetchVali
 	}
 };
 
+/** Use this function to listen an obserable in a React Component */
 export const useObservable = <T, D = undefined>(observable: Observable<T>, defaultValue: D) => {
 	const [state, setState] = useState<T | D>(defaultValue);
 
@@ -56,6 +57,7 @@ export const useObservable = <T, D = undefined>(observable: Observable<T>, defau
 	return state;
 };
 
+/** Use this function to listen to an observables object with {key:string, value: obserable} in a React Component */
 export const useObservableObject = <T>(os: { [k: string]: Observable<T> } | undefined) => {
 	const [state, setState] = useState<{[k: string]: T}>({});
 
@@ -359,8 +361,9 @@ type FetchHelperOptions<T> = {
 	token?: string;
 	/** The value of Authentication header, will replace 'token' option */
 	auth?: string;
-	/** The body, will be converted JSON string if object */
+	/** The body, will be pruned of empty values and converted to JSON string if object */
 	body?: BodyInit | object;
+	/** If true, body won't be pruned or converted, but will be passed to fetch exactly as is */
 	bodyRaw?: boolean;
 	/** 'json': will set method to POST and content type to json */
 	type?: 'json';
@@ -426,6 +429,15 @@ export const createAPIFetchHelperCombine = <R, A extends unknown[]>(
 };
 /**
  * An interface to map values, takes in array of values and transform array respectively, returns call to createApiFetchHelper of all transformed values
+ * @example createAPIFetchHelperCall (
+ * 		s: an array of input values,
+ * 		options: default fetch options {endpoint: "/example_endpoint"}
+ * 		...transformations: (s[0]) => null, (s[1]) => {endpoint:'//'}
+ * )
+ * 
+ * Note: Transformation objects will override previous transformations
+ * Note: Undefined transformations will be used from input as is, so don't be scared to leave them empty
+ * 
  * @param sources
  * @param transform
  */

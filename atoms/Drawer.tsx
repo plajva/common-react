@@ -25,7 +25,8 @@ export interface DrawerContextItems {
 export interface DrawerProps extends DrawerContextItems {
 	// Animation time in seconds
 	animTime?: number;
-	maxWidth?: any;
+	widthOpen?: number;
+	widthClosed?: number;
 	drawer: ReactNode;
 	fixed?: boolean;
 	floating?: boolean;
@@ -81,7 +82,8 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 	fixed,
 	sticky,
 	background,
-	maxWidth,
+	widthOpen,
+	widthClosed,
 	contentProps,
 	drawerProps,
 	...props
@@ -126,8 +128,8 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 	};
 	const menu_style: CSSProperties = visible_always
 		? open
-			? { maxWidth: 240 }
-			: { maxWidth: 60 }
+			? { maxWidth: widthOpen ?? 240 }
+			: { maxWidth: widthClosed ?? 60 }
 		: open
 		? {
 				transform: `translate(${!right ? '0' : '0'},${floating ? '-50%' : '0'})`,
@@ -137,7 +139,7 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 				transform: `translate(${!right ? '-100%' : '100%'},${floating ? '-50%' : '0'})`,
 				opacity: 0,
 		  };
-	const content_styles: CSSProperties = visible_always ? (open ? { marginLeft: 240 } : { marginLeft: 60 }) : {};
+	const content_styles: CSSProperties = visible_always ? (open ? { marginLeft: widthOpen ?? 240 } : { marginLeft: widthClosed ?? 60 }) : {};
 
 	// if(Object.entries(contentData.current).length)
 	console.log('Rendering drawer');
@@ -177,7 +179,6 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 							)}
 							ref={menu}
 							style={{
-								maxWidth: maxWidth,
 								...menu_style,
 								...mb_styles,
 								...drawerProps?.style,

@@ -12,12 +12,12 @@ export interface AtomProps {
  * @param s The module stylesheet
  * @param classNames All the classnames to parse, pass 'dup' to toggle duplication, starts disabled false
  */
-export function classNameFind(s?: object | undefined, ...classNames: (string | undefined)[]) {
+export function classNameFind(s?: object | undefined, ...classNames: (string | undefined | boolean)[]) {
 	let dup = false;
 	// const filter = (c?:string) => c;
 	return classNames?.length
 		? classNames
-				.filter((c) => c)
+				.filter((c) => c && typeof c === 'string')
 				.join(' ')
 				.split(' ')
 				.map((c) => {

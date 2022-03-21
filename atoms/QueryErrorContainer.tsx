@@ -2,6 +2,7 @@
  * Component renders as a parent <div> and child X when response is loading|error|feedback,
  * or just renders as children when response is valid
  */
+import Loading from '@common/atoms/Loading';
 import LoaderReact from '@common/atoms/Loading';
 import { useTheme } from '@common/atoms/Theme';
 import { ResponseFetch, ResponseFetchValid, responseIsError, responseIsValid } from '@common/rxjs/rxjs_utils';
@@ -95,9 +96,30 @@ const QueryErrorContainer = <T extends ResponseFetch<any> | undefined | null>({
 		return render({ loading, error: (errors && message) || undefined });
 	} else if (responseIsValid(response)) {
 		//@ts-ignore
-		return render({ children: typeof children === 'function'? children(response):children, success: true });
+		return render({ children: typeof children === 'function' ? children(response) : children, success: true });
 	}
 	return render({ error });
+};
+
+export const QueryErrorContainer2 = <T extends ResponseFetch<any> | undefined | null>({
+	children,
+	response: r,
+	childrenDefault,
+}: QueryErrorContainerProps<T> & React.HTMLAttributes<HTMLDivElement>) => {
+	const valid = responseIsValid(r);
+	return (
+		(valid ? (
+			typeof children === 'function' ? (
+				children(valid)
+			) : (
+				children
+			)
+		) : r?.loading ? (
+			<Loading />
+		) : (
+			childrenDefault
+		)) ?? null
+	);
 };
 
 export interface QueryLoadingContainerProps<T> extends React.HTMLAttributes<HTMLElement> {
@@ -105,12 +127,12 @@ export interface QueryLoadingContainerProps<T> extends React.HTMLAttributes<HTML
 	/**
 	 * Exclude null/undefined and any of the status/loading properties from type
 	 */
-	
+
 	children?: ((v: T | null | undefined) => any) | ReactNode;
 	/**
 	 * Check to make sure response.loading actually means this is loading
 	 */
-	assert?: (v?:T) => boolean,
+	assert?: (v?: T) => boolean;
 	size?: string | number;
 }
 

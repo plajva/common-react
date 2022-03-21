@@ -18,10 +18,7 @@ interface QueryActionOptions<T> {
 	/** Always gets executed when query returns */
 	onResponse?: (v: T) => void;
 }
-export const useQueryAction = <T extends ResponseFetchAny>(
-	response: T,
-	options?: QueryActionOptions<T>
-) => {
+export const useQueryAction = <T extends ResponseFetchAny>(response: T, options?: QueryActionOptions<T>) => {
 	useEffect(() => {
 		options?.onResponse?.(response);
 		if (response) {

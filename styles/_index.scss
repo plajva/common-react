@@ -168,7 +168,8 @@ footer {
 	font-size: 0.7em;
 	color: rgba(127, 127, 127, 1);
 }
-.center-div,.div-center {
+.center-div,
+.div-center {
 	width: fit-content;
 	margin: auto;
 }
@@ -190,12 +191,12 @@ footer {
 .flex-no-shrink {
 	flex-shrink: 0;
 }
-.build{
+.build {
 	opacity: 0;
 	z-index: 100;
-	color: rgb(127,127,127);
+	color: rgb(127, 127, 127);
 	transition: 5s all;
-	&:hover{
+	&:hover {
 		opacity: 1;
 	}
 }

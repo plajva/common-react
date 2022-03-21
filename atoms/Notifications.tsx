@@ -7,7 +7,7 @@ import Portal from './Portal';
 export const contextInitial = {
 	add: (n: NotificationProps) => {},
 	remove: (id: string) => {},
-}
+};
 export type NotificationContext = typeof contextInitial;
 const context = createContext(contextInitial);
 

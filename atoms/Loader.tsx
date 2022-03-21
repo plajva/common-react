@@ -19,4 +19,4 @@
 
 // export default Loader;
 
-export {}
+export {};

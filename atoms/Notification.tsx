@@ -24,7 +24,7 @@ export interface NotificationProps {
 
 const Notification = ({ icon, type, value, timeout, id, action }: NotificationProps) => {
 	const [inNoty, setInNoty] = useState(false);
-	
+
 	timeout = timeout ?? (type === 'error' ? 20000 : type === 'warning' ? 10000 : 3000);
 
 	type = type ?? 'success';

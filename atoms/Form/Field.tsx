@@ -93,7 +93,7 @@ export interface _FieldProps {
 	rootProps?: object;
 	labelProps?: React.LabelHTMLAttributes<HTMLLabelElement>;
 	labelBottom?: ((v: any) => any) | any;
-	touchedShow?: boolean,
+	touchedShow?: boolean;
 }
 
 export type FieldCommon = { name?: string; value?: any; onChange?: (v: any) => void } & UseFormFieldOptions;
@@ -158,7 +158,7 @@ export const Field = ({
 	error = error ?? fieldError;
 	const fieldValue = useFieldValue(_name);
 	const fieldTouched = useFieldTouched(_name);
-	
+
 	const form = useForm();
 	const touched = (touchedShow ?? form.touchedShow) && fieldTouched;
 	// Define labelBottom if function
@@ -185,7 +185,13 @@ export const Field = ({
 				style={{ flexDirection, cursor: tog_sel_check_radio ? 'pointer' : undefined, ...labelStyle }}
 			>
 				{input}
-				<span className={classNameFind(s, labelPersistent ? 'label-text-persitent' : 'label-text', touched ? 'touched':'')}>
+				<span
+					className={classNameFind(
+						s,
+						labelPersistent ? 'label-text-persitent' : 'label-text',
+						touched ? 'touched' : ''
+					)}
+				>
 					{label} {props.required ? <span style={{ color: 'red' }}>*</span> : ''}
 				</span>
 				{(error || labelBottom) && (

@@ -171,7 +171,7 @@ const FormComp = ({
 		touchedShow,
 		setValue: (name, value) => {
 			if (debugForm) console.log(`FormSetValue: ${name}: ${value} <${typeof value}>`);
-			if (typeof name === 'undefined' || name === null)return;
+			if (typeof name === 'undefined' || name === null) return;
 			setState((state) => {
 				// console.log("prev: ", JSON.stringify(state.values, undefined, 2))
 				let values = readonly ? state.values : replaceForm(name, value, state.values);
@@ -326,7 +326,12 @@ const FormComp = ({
 		</FormContext.Provider>
 	);
 };
-export const UseForm = ({ children, ...props }: { children: (form: { getValueRel?, setValueRel?,setTouchedRel? } & FormContextI) => any }) => {
+export const UseForm = ({
+	children,
+	...props
+}: {
+	children: (form: { getValueRel?; setValueRel?; setTouchedRel? } & FormContextI) => any;
+}) => {
 	const name = useFormNameContext();
 	const form = useForm();
 	return (
@@ -374,11 +379,11 @@ export const useFormField = (
 	props: InputPropsAll & UseFormFieldProps & UseFormFieldOptions
 ): InputPropsAll & UseFormFieldProps => {
 	const { onBlur, onChange, valueName: _valueName, toForm, toFormBlur, fromForm, value, name, ..._props } = props;
-	
-	const _name = useFormNameContextCombine(name)
+
+	const _name = useFormNameContextCombine(name);
 	const form = useForm();
 	const valueName = _valueName ?? 'value';
-	
+
 	const getValue = (n) => {
 		let valueForm = form.getValue(n);
 		return value ?? valueForm ?? '';
@@ -405,7 +410,12 @@ export const useFormField = (
 					//   if(toFormBlur)form.setValue(name, toFormBlur(e,e.target[valueName]));
 				}, onBlur),
 				/** Creating an object so we can make key dynamic */
-				...Object.fromEntries([[/** Field value name */ valueName, /** Field Value */  fromForm ? fromForm(getValue(_name)) : getValue(_name)  ]]),
+				...Object.fromEntries([
+					[
+						/** Field value name */ valueName,
+						/** Field Value */ fromForm ? fromForm(getValue(_name)) : getValue(_name),
+					],
+				]),
 				..._props,
 		  }
 		: props;
@@ -422,7 +432,7 @@ export const useFormNameContext = () => useContext(FormNameContext);
 /**
  * Combines a previously set name context with the value provided
  * */
-const nameCombine = (a?: string, b?: string) => a && b ? a + '.' + b : a ? a : b ? b : '';
+const nameCombine = (a?: string, b?: string) => (a && b ? a + '.' + b : a ? a : b ? b : '');
 export const useFormNameContextCombine = (n?: string) => {
 	const nc = useFormNameContext();
 	return nameCombine(nc, n);
@@ -516,7 +526,14 @@ type MapProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
 };
 export interface FieldArrayProps<T> {
 	name: string;
-	children: (props: { arr: T[]; push:(v)=>void; insert:(i,v)=>void; remove:(i)=>void; clear:()=>void; Map: (props: MapProps) => any }) => any;
+	children: (props: {
+		arr: T[];
+		push: (v) => void;
+		insert: (i, v) => void;
+		remove: (i) => void;
+		clear: () => void;
+		Map: (props: MapProps) => any;
+	}) => any;
 }
 const Map =
 	(arr: any[], arr_name) =>
@@ -565,8 +582,11 @@ export const FieldArray = <T extends {}>({ name, children }: FieldArrayProps<T>)
 		}
 		touch();
 	};
-	const clear = () => {form.setValue(_name, []); touch();};
-	
+	const clear = () => {
+		form.setValue(_name, []);
+		touch();
+	};
+
 	return (
 		<FormNameProvider name={name}>
 			{children({

@@ -96,23 +96,23 @@ export const isLogin = (_token?: string) => {
 	return false;
 };
 
-export function useInterval(callback, {delay, onStart}) {
-  const savedCallback = useRef<any>();
+export function useInterval(callback, { delay, onStart }) {
+	const savedCallback = useRef<any>();
 
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
+	// Remember the latest callback.
+	useEffect(() => {
+		savedCallback.current = callback;
+	}, [callback]);
 
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback.current?.();
-    }
-    if (delay !== null) {
-			if(onStart)tick();
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
+	// Set up the interval.
+	useEffect(() => {
+		function tick() {
+			savedCallback.current?.();
+		}
+		if (delay !== null) {
+			if (onStart) tick();
+			let id = setInterval(tick, delay);
+			return () => clearInterval(id);
+		}
+	}, [delay]);
 }

@@ -41,12 +41,12 @@ export const columnsQuick = <D extends object = {}>(...cols: (string | Column<D>
 
 export interface TableSimpleProps<D extends object = {}> {
 	// children?: ReactNode | undefined;
-	options: TableOptions<D> & {[k:string]:any};
+	options: TableOptions<D> & { [k: string]: any };
 	tableProps?: any;
 	tableBodyProps?: any;
 	rowProps?: (v: Row) => any;
 	cellProps?: (v: Cell) => any;
-	plugins?: Array<PluginHook<D>>,
+	plugins?: Array<PluginHook<D>>;
 }
 
 export const TableSimple = <D extends object = {}>({
@@ -60,7 +60,10 @@ export const TableSimple = <D extends object = {}>({
 	...props
 }: TableSimpleProps<D> & React.HTMLAttributes<HTMLTableElement>) => {
 	// Use the state and functions returned from useTable to build your UI
-	const { getTableProps, getTableBodyProps, state, headerGroups, rows, prepareRow } = useTable<D>(options, ...(plugins ?? []));
+	const { getTableProps, getTableBodyProps, state, headerGroups, rows, prepareRow } = useTable<D>(
+		options,
+		...(plugins ?? [])
+	);
 
 	const theme = useTheme().name;
 	className = cnf(s, `comp`, theme, className);

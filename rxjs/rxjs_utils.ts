@@ -59,15 +59,15 @@ export const useObservable = <T, D = undefined>(observable: Observable<T>, defau
 
 /** Use this function to listen to an observables object with {key:string, value: obserable} in a React Component */
 export const useObservableObject = <T>(os: { [k: string]: Observable<T> } | undefined) => {
-	const [state, setState] = useState<{[k: string]: T}>({});
+	const [state, setState] = useState<{ [k: string]: T }>({});
 
 	useEffect(() => {
-		if(!os)return;
+		if (!os) return;
 		const sub = Object.entries(os).reduce((a, [k, v]) => {
 			a[k] = v.subscribe((vs) =>
 				setState((s) => {
 					s[k] = vs;
-					return {...s};
+					return { ...s };
 				})
 			);
 			return a;
@@ -79,8 +79,7 @@ export const useObservableObject = <T>(os: { [k: string]: Observable<T> } | unde
 	return state;
 };
 
-export const fetchEventsAll=new Subject<ResponseFetchAny>();
-
+export const fetchEventsAll = new Subject<ResponseFetchAny>();
 
 /**
  * You can use this function IF and only IF onEvent uses references/values that won't change
@@ -167,9 +166,7 @@ export const createAPIFetch = <T>({
 						return from(res.json()).pipe(
 							map((v) => ({
 								errors: true,
-								message: v
-									?  v?.message ?? v?.Message ?? JSON.stringify(v.errors)
-									: `Error ${res.status}`,
+								message: v ? v?.message ?? v?.Message ?? JSON.stringify(v.errors) : `Error ${res.status}`,
 							}))
 						);
 					case 'text/plain':
@@ -294,7 +291,12 @@ export function createAPIFetchEvent<
 		);
 	let result$ = chain$.pipe(switchMap(toFetch));
 	// Make any event trigger all events global Subject
-	result$ = result$.pipe(map(v => {fetchEventsAll.next(v);return v;}));
+	result$ = result$.pipe(
+		map((v) => {
+			fetchEventsAll.next(v);
+			return v;
+		})
+	);
 	// Replay the result
 	if (options?.shareReplay ?? true) result$ = result$.pipe(shareReplay(1));
 	// Bind to result
@@ -330,7 +332,12 @@ export function createAPIFetchChain<R, D = undefined, C extends unknown[] = [], 
 	// Map event to fetch
 	let result$ = chain$.pipe(switchMap(toFetch));
 	// Make any event trigger all events global Subject
-	result$ = result$.pipe(map(v => {fetchEventsAll.next(v);return v;}));
+	result$ = result$.pipe(
+		map((v) => {
+			fetchEventsAll.next(v);
+			return v;
+		})
+	);
 	// Replay the result
 	if (_shareReplay) result$ = result$.pipe(shareReplay(1));
 	// Bind to result
@@ -434,10 +441,10 @@ export const createAPIFetchHelperCombine = <R, A extends unknown[]>(
  * 		options: default fetch options {endpoint: "/example_endpoint"}
  * 		...transformations: (s[0]) => null, (s[1]) => {endpoint:'//'}
  * )
- * 
+ *
  * Note: Transformation objects will override previous transformations
  * Note: Undefined transformations will be used from input as is, so don't be scared to leave them empty
- * 
+ *
  * @param sources
  * @param transform
  */

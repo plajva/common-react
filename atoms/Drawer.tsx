@@ -139,7 +139,11 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 				transform: `translate(${!right ? '-100%' : '100%'},${floating ? '-50%' : '0'})`,
 				opacity: 0,
 		  };
-	const content_styles: CSSProperties = visible_always ? (open ? { marginLeft: widthOpen ?? 240 } : { marginLeft: widthClosed ?? 60 }) : {};
+	const content_styles: CSSProperties = visible_always
+		? open
+			? { marginLeft: widthOpen ?? 240 }
+			: { marginLeft: widthClosed ?? 60 }
+		: {};
 
 	// if(Object.entries(contentData.current).length)
 	console.log('Rendering drawer');

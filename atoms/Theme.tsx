@@ -73,7 +73,7 @@ const ThemeProvider: FunctionComponent<ThemeProviderProps & React.HTMLAttributes
 
 export const DivThemed = (props: React.HTMLAttributes<HTMLDivElement>) => {
 	const theme = useTheme();
-	return <div {...props} className={cnf(undefined, theme.name, props.className)}/>
-}
+	return <div {...props} className={cnf(undefined, theme.name, props.className)} />;
+};
 
 export default ThemeProvider;

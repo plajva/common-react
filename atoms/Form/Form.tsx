@@ -601,6 +601,12 @@ export const FieldArray = <T extends {}>({ name, children }: FieldArrayProps<T>)
 	);
 };
 
+/**
+ * Parses, initial state's default values defined on the validation schema
+ * @param initialState 
+ * @param schema 
+ * @returns 
+ */
 const getInitial = (initialState?: FormState, schema?: any) => {
 	let values = initialState?.values || {};
 	try {
@@ -615,7 +621,6 @@ const getInitial = (initialState?: FormState, schema?: any) => {
 	}
 
 	return {
-		// touched: [],
 		...initialState,
 		values,
 	};

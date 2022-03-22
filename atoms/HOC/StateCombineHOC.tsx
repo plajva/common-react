@@ -3,6 +3,36 @@ import { useStateCombine } from '../../utils';
 /**
  * StateCombineHOC is passed a component that needs a state, but this state is optionally controlled by another component higher up
  * It also optionally provides a context
+ * 
+ * This is a much more involved way of using useStateCombine
+ * 
+ * ------------------ EXAMPLE FOR COLLAPSIBLE ----------------
+ * 
+ * 
+ * (Define a state REQUIRED)
+ * 
+ * export interface CollapsibleState {
+ * 	open: boolean;
+ * }
+ * const initialState: CollapsibleState = { open: false };
+ * 
+ * (REQUIRED END)
+ * 
+ * (Context creation OPTIONAL)
+ * 
+ * export const CollapsibleContext = StateCombineContext<CollapsibleState>({
+ *  // Defines values if Context is used before anyone can define it
+ * 	state: initialState,
+ * 	setState: () => {},
+ * 	initialState,
+ * });
+ * export const useCollapsible = () => useContext(CollapsibleContext);
+ * 
+ * (OPTIONAL END)
+ * 
+ * (Define your component adding StateCombineProps<CollapsibleState> in prop type)
+ * 
+ * (Export StateCombineHOC(Collapsible, { initialState, context: CollapsibleContext, contextExtra: {} }) )
  */
 export interface StateCombineProps<T> {
 	state: T;

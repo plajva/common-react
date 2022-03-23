@@ -4,9 +4,8 @@ import { ResponseFetch } from './rxjs/rxjs_utils';
 import { combineEvent, deepMerge, jwtParse, RecursivePartial } from './utils';
 
 /** Merges two states, own/up states, upstate overrides ownstate */
-const getValidState = (ownState, upState) => typeof ownState === 'object'
-		? deepMerge(ownState, upState)
-		: upState ?? ownState;
+const getValidState = (ownState, upState) =>
+	typeof ownState === 'object' ? deepMerge(ownState, upState) : upState ?? ownState;
 
 /**
  * Combine incoming state into new state.
@@ -117,9 +116,6 @@ export function useInterval(callback, { delay, onStart }) {
 	}, [delay]);
 }
 
-
-export function typeGenericOptions(response?:ResponseFetch<TypeGeneric[]>){
-	return response?.data?.map((e) => (
-		React.createElement('option', {value:e.id,key:e.id,children:e.name})
-	))
+export function typeGenericOptions(response?: ResponseFetch<TypeGeneric[]>) {
+	return response?.data?.map((e) => React.createElement('option', { value: e.id, key: e.id, children: e.name }));
 }

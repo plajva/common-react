@@ -223,3 +223,6 @@ export var monthNames = [
 	'November',
 	'December',
 ];
+
+// Mueve cosas contantes afuera de los componentes
+export const years = Array.from(Array(2101 - 2021), (e, i) => i + 2021);

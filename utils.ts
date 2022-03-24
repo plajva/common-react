@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import moment from 'moment';
 
 export type Range = [number | undefined, number | undefined];
 export * from './utils_react';
@@ -226,3 +227,6 @@ export var monthNames = [
 
 // Mueve cosas contantes afuera de los componentes
 export const years = Array.from(Array(2101 - 2021), (e, i) => i + 2021);
+
+// Unified date format
+export const dateFormat = (v) => moment(v).format('YYYY/MM/DD');

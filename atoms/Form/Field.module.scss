@@ -33,7 +33,12 @@ $padding: 0.2em;
 		padding-top: $padding-top;
 		gap: get-space(2);
 		width: 100%;
+		&.textarea{
+			align-items: flex-start;
+			justify-content: flex-start;
+		}
 	}
+	
 	// .label-text,.label-text-persistent{
 	// 	&.touched{
 	// 		color:

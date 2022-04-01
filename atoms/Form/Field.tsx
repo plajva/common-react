@@ -6,7 +6,7 @@
  *
  * */
 import { Property } from 'csstype';
-import React, { createElement, ReactNode } from 'react';
+import React, { createElement, ReactNode, useMemo } from 'react';
 import { useState } from 'react';
 import { classNameFind, cnf, DistributiveOmit } from '../../utils';
 import { useTheme } from '../Theme';
@@ -123,7 +123,7 @@ export const Field = ({
 
 	const [allowEdit, setAllowEdit] = useState(false);
 
-	const el_type =
+	const el_type = useMemo(() =>
 		type === 'toggle'
 			? Toggle
 			: type === 'select'
@@ -134,11 +134,9 @@ export const Field = ({
 			? Radio
 			: type === 'file'
 			? InputFile
-			: select_or_textarea
-			? (eprops) => {
-					return FormFieldHOC(createElement(type || 'input', eprops));
-			  }
-			: Input;
+			: type === 'textarea'
+			? (eprops) => FormFieldHOC(createElement('textarea', {style:{maxWidth: '100%',...eprops.style},...eprops}))
+			: Input, [type]);
 
 	const labelPersistent = ['toggle', 'checkbox', 'radio'].includes(type || '');
 	let flexDirection: Property.FlexDirection = labelPersistent
@@ -181,7 +179,7 @@ export const Field = ({
 			<label
 				{...labelPropsRest}
 				htmlFor={props.id}
-				className={classNameFind(s, 'label-container', labelClass)}
+				className={classNameFind(s, 'label-container', type, labelClass)}
 				style={{ flexDirection, cursor: tog_sel_check_radio ? 'pointer' : undefined, ...labelStyle }}
 			>
 				{input}

@@ -6,12 +6,12 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 export interface PrivateElementProps {
-	assert: () => boolean;
+	assert: (() => boolean) | boolean;
 	onAssertFalse?: string | (React.ReactElement | null);
 }
 
 export const PrivateElement: React.FC<PrivateElementProps> = ({ assert, onAssertFalse, children }) => {
-	const valid = assert();
+	const valid = typeof assert === 'function' ? assert() : assert;
 
 	if (valid) {
 		return <>{children}</> ?? null;

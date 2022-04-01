@@ -1,6 +1,5 @@
 import { useTheme } from './Theme';
 import { classNameFind } from '../utils';
-import FocusTrap from 'focus-trap-react';
 import React, { PropsWithChildren, ReactNode, useEffect, useRef, useState } from 'react';
 import Backdrop from './Backdrop';
 import s from './Modal.module.scss';

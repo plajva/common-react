@@ -1,7 +1,5 @@
-import { TypeGeneric } from '@rootp/rxjs/observables';
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
-import { ResponseFetch } from './rxjs/rxjs_utils';
-import { combineEvent, deepMerge, jwtParse, RecursivePartial } from './utils';
+import { combineEvent, deepMerge, RecursivePartial } from './utils';
 
 /** Merges two states, own/up states, upstate overrides ownstate */
 const getValidState = (ownState, upState) =>
@@ -114,8 +112,4 @@ export function useInterval(callback, { delay, onStart }) {
 			return () => clearInterval(id);
 		}
 	}, [delay]);
-}
-
-export function typeGenericOptions(response?: ResponseFetch<TypeGeneric[]>) {
-	return response?.data?.map((e) => React.createElement('option', { value: e.id, key: e.id, children: e.name }));
 }

@@ -1,4 +1,4 @@
-import { clone, merge } from 'lodash';
+import { clone, cloneDeep, merge } from 'lodash';
 import React, { Context, createContext, Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { deepMerge, RecursivePartial } from '../../utils';
 /**
@@ -113,8 +113,8 @@ const StateCombineHOC = <LP extends {}, LS, CP>({ comp: CompHOC, options }: LCGP
 	// HOC Component creator execution, this scope is ran once for every component that exports an HOC
 
 	const StateCombine = (props: HCP<LP, LS>) => {
-		const initialState = useMemo(() => mergeState(clone(options.initialState), props.initialState), [props.initialState])
-		let [s, ss] = useState<LS>(() => mergeState(clone(initialState), props.state));
+		const initialState = useMemo(() => mergeState(cloneDeep(options.initialState), cloneDeep(props.initialState)), [props.initialState])
+		let [s, ss] = useState<LS>(() => mergeState(cloneDeep(initialState), cloneDeep(props.state)));
 		// If upSetState was provided, current state is ourState + upState, else, it's just ourState.
 		// If upSetState was provided, setState = upSetState, else setState = ourSetState
 		const [state, setState] = [mergeState(s, props.state), (props.setState ?? ss) as typeof ss];

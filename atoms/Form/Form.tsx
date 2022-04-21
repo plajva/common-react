@@ -7,9 +7,7 @@ import {
 	ReactElement,
 	ReactNode,
 	useContext,
-	useEffect,
-	useMemo,
-	useRef,
+	useEffect, useRef
 } from 'react';
 // import * as y from 'yup';
 // import * as z from 'zod';
@@ -67,7 +65,7 @@ interface FormContextExtra {
 export type FormContextI = SCP<FormState> & FormContextExtra;
 
 const FormContext = StateCombineContext<FormState, FormContextExtra>({
-	state: clone(FormStateInitial),
+	state: cloneDeep(FormStateInitial),
 	initialState: {values:{}},
 	setState: () => {},
 	setValue: () => {},
@@ -283,12 +281,12 @@ const FormComp = ({
 		},
 		getValid,
 		reset: (touched) => {
-			const rstate = { ...getInitial(resetState, schema), touched };
+			const rstate = { ...getInitial(cloneDeep(resetState), schema), touched };
 			setState(rstate);
 			onReset && onReset(rstate);
 		},
 		clear: () => {
-			setState(clone(FormStateInitial));
+			setState(cloneDeep(FormStateInitial));
 		},
 		submit: () => {
 			// To handle login info saving in the browser

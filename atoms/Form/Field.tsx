@@ -68,7 +68,7 @@ const InputFile = (props) => {
 	);
 };
 
-export interface _FieldProps {
+interface _FieldProps {
 	type?:
 		| 'checkbox'
 		| 'email'
@@ -98,7 +98,7 @@ export interface _FieldProps {
 
 export type FieldCommon = { name?: string; value?: any; onChange?: (v: any) => void } & UseFormFieldOptions;
 type InputComponentProps = ToggleProps | SelectProps | CheckboxProps | RadioProps;
-type FieldProps = _FieldProps & InputComponentProps & DistributiveOmit<InputPropsAll, 'value'>;
+export type FieldProps = _FieldProps & InputComponentProps & DistributiveOmit<InputPropsAll, 'value'>;
 
 export const Field = ({
 	children,

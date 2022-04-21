@@ -61,27 +61,28 @@ export function stringAppend(value?: string, ovalue?: string) {
  * Combines objects, last
  * @param mprops All props
  */
-export function deepMerge(target: any, ...sources: any[]): any {
-	if (!sources?.length) return target;
-	const source = sources.shift();
-	const isObject = (v: any) => {
-		return v && typeof v === 'object' && !Array.isArray(v);
-	};
+export const deepMerge = _.merge;
+// export function deepMerge(target: any, ...sources: any[]): any {
+// 	if (!sources?.length) return target;
+// 	const source = sources.shift();
+// 	const isObject = (v: any) => {
+// 		return v && typeof v === 'object' && !Array.isArray(v);
+// 	};
 
-	if (isObject(target) && isObject(source)) {
-		// So both of them must be objects at this point
-		for (const key in source) {
-			if (isObject(source[key])) {
-				// Create object in a if
-				if (!target[key]) Object.assign(target, { [key]: {} });
-				deepMerge(target[key], source[key]);
-			} else {
-				Object.assign(target, { [key]: source[key] });
-			}
-		}
-	}
-	return deepMerge(target, ...sources);
-}
+// 	if (isObject(target) && isObject(source)) {
+// 		// So both of them must be objects at this point
+// 		for (const key in source) {
+// 			if (isObject(source[key])) {
+// 				// Create object in a if
+// 				if (!target[key]) Object.assign(target, { [key]: {} });
+// 				deepMerge(target[key], source[key]);
+// 			} else {
+// 				Object.assign(target, { [key]: source[key] });
+// 			}
+// 		}
+// 	}
+// 	return deepMerge(target, ...sources);
+// }
 
 /**
  * If you want to set the default values for an object, same as {Object.assign(defaults, v)}
@@ -142,6 +143,8 @@ export const removeDuplicates = <T extends {}>(v: T[], criteria: string, any = f
 
 /**
  * Returns a function that sets up a timeout to call itself only when debounce done
+ * * Warning: If you create a timeout that gets called by different actions, they will override eachother, meaning the last debounce function called will be the only one executed after the timeout.
+ * 
  * @param callback
  * @param wait in ms
  * @returns
@@ -158,11 +161,21 @@ export const debounceCreatorCallback = <T extends (...args: any) => any>(callbac
 		}
 	};
 };
+/** 
+ * Createas a time-only debounce
+ */
 export const debounceCreator = (wait: number) => debounceCreatorCallback((f: () => void) => f(), wait);
 
+// export type RecursivePartial<T> = {
+// 	[P in keyof T]?: RecursivePartial<T[P]>;
+// };
 export type RecursivePartial<T> = {
-	[P in keyof T]?: RecursivePartial<T[P]>;
+  [P in keyof T]?:
+    T[P] extends (infer U)[] ? RecursivePartial<U>[] :
+    T[P] extends object ? RecursivePartial<T[P]> :
+    T[P];
 };
+
 
 export const toUpperCaseFirst = (s?: string) => {
 	if (typeof s === 'string') {

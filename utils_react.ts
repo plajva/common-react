@@ -2,36 +2,34 @@ import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { combineEvent, deepMerge, RecursivePartial } from './utils';
 
 /** Merges two states, own/up states, upstate overrides ownstate */
-const getValidState = (ownState, upState) =>
-	typeof ownState === 'object' ? deepMerge(ownState, upState) : upState ?? ownState;
+const mergeState = (a, b) =>
+	typeof a === 'object' ? deepMerge(a, b) : b ?? a;
 
 /**
- * Combine incoming state into new state.
- * This helper function takes in incoming state from
- * component props and tries to handle upwards state change
- * by modifyfing setState to upState if valid, or ownState
- * @param defaultState The default state if no incoming state
+ * Merges initialState & upstate -> to initialize state
+ * Continues merging state & upState on returned state
+ * @param initialState The default state if no incoming state
  */
 export const useStateCombine = <T>(
-	defaultState: T,
-	upState?: T,
+	initialState: T,
+	upState?: RecursivePartial<T>,
 	upSetState?: React.Dispatch<React.SetStateAction<T>>
 ): [T, React.Dispatch<React.SetStateAction<T>>] => {
 	// If state is object then deep merge object, else then either take upState or default state
-	let [s, ss] = useState(getValidState(defaultState, upState));
-	return [getValidState(s, upState), combineEvent(upSetState, upState ? undefined : ss)];
+	let [s, ss] = useState(mergeState(initialState, upState));
+	return [mergeState(s, upState), upSetState ?? ss];
 };
 
 // Like useState but will deepMerge (lodash) when setState called, if u need to use object states in function components
 export const useStateObject = <T extends object>(
 	d: T
-): [T, React.Dispatch<React.SetStateAction<RecursivePartial<T>>>] => {
-	const [state, _setState] = useState(d);
-	const setState = (sn: React.SetStateAction<RecursivePartial<T>>) =>
-		_setState((s) => {
-			return typeof sn === 'function' ? sn(s) : { ...deepMerge(s, sn) };
+): [T, React.Dispatch<React.SetStateAction<T>>, React.Dispatch<React.SetStateAction<RecursivePartial<T>>>] => {
+	const [state, setState] = useState(d);
+	const setStateMerge = (sn: React.SetStateAction<RecursivePartial<T>>) =>
+		setState((s) => {
+			return { ...deepMerge(s, typeof sn === 'function' ? sn(s) : sn) };
 		});
-	return [state, setState];
+	return [state, setState, setStateMerge];
 };
 
 /**

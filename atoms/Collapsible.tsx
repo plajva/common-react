@@ -1,38 +1,36 @@
-import React, { ReactNode, useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { BiRightArrow } from 'react-icons/bi';
 import { classNameFind, separateChildren } from '../utils';
 import s from './Collapsible.module.scss';
-import StateCombineHOC, { StateCombineContext, StateCombineProps } from './HOC/StateCombineHOC';
+import StateCombineHOC, { LCP, SCC } from './HOC/StateCombineHOC';
 import Icon from './Icon';
 import { useTheme } from './Theme';
 
 export interface CollapsibleState {
 	open: boolean;
 }
-export interface CollapsibleProps {
+export interface CollapsibleProps extends React.HTMLAttributes<HTMLDivElement>{
 	canCollapse?: boolean;
-	children?: ReactNode;
 }
 const initialState: CollapsibleState = { open: false };
-export const CollapsibleContext = StateCombineContext<CollapsibleState>({
+export const CollapsibleContext = SCC<CollapsibleState>({
+	initialState: initialState,
 	state: initialState,
-	setState: () => {},
-	initialState,
+	setState: () => undefined,
 });
 export const useCollapsible = () => useContext(CollapsibleContext);
 
 const Collapsible = ({
-	canCollapse,
 	className,
 	children,
 	state,
 	setState,
-	initialState,
+	canCollapse,
+	setStateMerge,
 	...props
-}: CollapsibleProps & StateCombineProps<CollapsibleState> & React.HTMLAttributes<HTMLDivElement>) => {
+}: LCP<CollapsibleState, CollapsibleProps>) => {
 	const theme = useTheme().name;
 	className = classNameFind(s, `comp`, theme, className);
-	canCollapse = canCollapse ?? true;
 
 	const content = useRef<HTMLDivElement>(null);
 
@@ -51,13 +49,15 @@ const Collapsible = ({
 	return (
 		<div className={className} {...props}>
 			<div
-				onClick={() => canCollapse && setState({ open: !state.open })}
+				onClick={() => {
+					(canCollapse ?? true) && setStateMerge({ open: !state.open })
+				}}
 				className={classNameFind(s, true ? 'collapsible' : '')}
 			>
 				{renderChild(child_first)}
 			</div>
 
-			{canCollapse && state.open && (
+			{(canCollapse ?? true) && state.open && (
 				<div ref={content} style={{}} className={classNameFind(s, 'content')}>
 					{renderChild(child_rest)}
 				</div>
@@ -81,4 +81,7 @@ export const CollapsibleToggleIcon = (props) => {
 	);
 };
 
-export default StateCombineHOC(Collapsible, { initialState, context: CollapsibleContext, contextExtra: {} });
+export default StateCombineHOC({
+	comp: Collapsible,
+	options: { initialState, context: CollapsibleContext, contextInitial: {} },
+});

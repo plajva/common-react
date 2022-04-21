@@ -1,3 +1,4 @@
+import { clone, cloneDeep, get, set } from 'lodash';
 import {
 	cloneElement,
 	createContext,
@@ -8,14 +9,12 @@ import {
 	useContext,
 	useEffect,
 	useMemo,
-	useState,
+	useRef,
 } from 'react';
 // import * as y from 'yup';
 // import * as z from 'zod';
 import { classNameFind, combineEvent } from '../../utils';
-import { cloneDeep, get, isEqual, set, setWith } from 'lodash';
-import StateCombineHOC, { StateCombineContext, StateCombineProps } from '../HOC/StateCombineHOC';
-import { useRef } from 'react';
+import StateCombineHOC, { LCP, SCP, StateCombineContext } from '../HOC/StateCombineHOC';
 import { useTheme } from '../Theme';
 
 const splitName = (name: string) => {
@@ -39,13 +38,14 @@ export type InputPropsAll =
 	| React.SelectHTMLAttributes<HTMLElement>
 	| React.TextareaHTMLAttributes<HTMLElement>;
 
-export interface FormState<T = any> {
-	values?: T;
+export interface FormState<T extends {}=object> {
+	values: T;
 	errors?: MyError;
 	touched?: any;
 }
+const FormStateInitial:FormState = {values:{}}
 
-const debugForm = false;
+const debugForm = true;
 
 interface FormContextExtra {
 	setValue: (name: string, value: any) => void;
@@ -61,13 +61,15 @@ interface FormContextExtra {
 	touchedShow?: boolean;
 	touched?: boolean;
 	errors?: boolean;
+	// initialState?: FormState;
+	// resetState?:FormState;
 }
-export type FormContextI = StateCombineProps<FormState> & FormContextExtra;
+export type FormContextI = SCP<FormState> & FormContextExtra;
 
 const FormContext = StateCombineContext<FormState, FormContextExtra>({
-	state: {},
+	state: clone(FormStateInitial),
+	initialState: {values:{}},
 	setState: () => {},
-	initialState: {},
 	setValue: () => {},
 	setTouched: () => {},
 	getValue: () => {},
@@ -84,6 +86,7 @@ export const useForm = () => useContext(FormContext);
 interface FormProps {
 	// initialState?: object;
 	/** Defaults to initialState, if reset, state will become this */
+	// initialState?: FormState;
 	resetState?: FormState;
 	/**Accepts a schema from zod/yup */
 	validationSchema?: any;
@@ -97,7 +100,14 @@ interface FormProps {
 	 * Values are filtered by wether they were touched or not
 	 **/
 	onSubmitChanges?: (v: any) => void;
+	/**
+	 * Executed when any changes are made to FormState, returns entire FormState, after validations (if any)
+	 */
 	onChange?: (v: FormState) => void;
+	/**
+	 * Executed when a single change is made to FormState, returns only changed fieldName and value, after validations (if any)
+	 */
+	onChanges?: (n: string, v: any) => void;
 	readonly?: boolean;
 	onReset?: (v: FormState) => void;
 	children?: ReactNode | ((context: FormContextI) => ReactElement);
@@ -110,29 +120,31 @@ const isYup = (s: any): boolean => (s?.validate ? true : false);
 const FormComp = ({
 	state,
 	setState,
-	initialState,
 	readonly,
-	resetState: _resetState,
+	initialState,
+	resetState,
 	validationSchema: schema,
 	validationStrip,
 	onSubmit,
 	onSubmitChanges,
 	onReset,
 	onChange,
+	onChanges,
 	useForm,
 	children,
 	touchedShow,
 	...props
-}: FormProps & StateCombineProps<FormState>) => {
+}: LCP<FormState, FormProps>) => {
 	// Will always re-render if schema & state=initialState bc we need to set default values from schema
 	// console.log('Form Getting', state)
 	// if (state === initialState && schema) {
 	//     setState((s) => getInitial(initialState, schema));
 	// }
-	const resetState = useMemo(() => cloneDeep(_resetState ?? initialState), [initialState, _resetState]);
+	// const initialState = useMemo(() => getInitial(cloneDeep(_initialState ?? {}), schema), [_initialState, schema]);
 	const formRef = useRef<HTMLFormElement>(null);
 	// This becomes true when we triggered a <form> submission from this component
 	const formSubmitting = useRef<boolean>(false);
+	const changes = useRef<string[]>([]);
 
 	// Happens on submission
 	const getValid = () => {
@@ -160,11 +172,14 @@ const FormComp = ({
 
 	useEffect(() => {
 		if (onChange) onChange(state);
+		if (onChanges) changes.current.forEach(n => onChanges(n, getForm(n, state.values)));
+		changes.current = [];
 	}, [state]);
 
 	const context: FormContextI = {
 		state,
 		initialState,
+		// resetState,
 		setState,
 		touched: Boolean(typeof state.touched === 'object' ? Object.keys(state.touched)?.length : state.touched),
 		errors: Boolean(typeof state.errors === 'object' ? Object.keys(state.errors)?.length : state.errors),
@@ -172,6 +187,7 @@ const FormComp = ({
 		setValue: (name, value) => {
 			if (debugForm) console.log(`FormSetValue: ${name}: ${value} <${typeof value}>`);
 			if (typeof name === 'undefined' || name === null) return;
+			changes.current.push(name);
 			setState((state) => {
 				// console.log("prev: ", JSON.stringify(state.values, undefined, 2))
 				let values = readonly ? state.values : replaceForm(name, value, state.values);
@@ -238,14 +254,13 @@ const FormComp = ({
 						}
 					}
 				}
-
+				
 				const newState = { ...state, values, errors };
 				if (debugForm) console.log(newState);
-
-				// console.log(JSON.stringify(newState.values, null, 2))
-
+				
 				return newState;
 			});
+			
 		},
 		setTouched: (name, value) => {
 			// Don't do anything if we're showing all errors
@@ -268,12 +283,12 @@ const FormComp = ({
 		},
 		getValid,
 		reset: (touched) => {
-			const rstate = typeof touched !== 'undefined' ? { ...resetState, touched } : resetState;
+			const rstate = { ...getInitial(resetState, schema), touched };
 			setState(rstate);
 			onReset && onReset(rstate);
 		},
 		clear: () => {
-			setState({});
+			setState(clone(FormStateInitial));
 		},
 		submit: () => {
 			// To handle login info saving in the browser
@@ -294,7 +309,7 @@ const FormComp = ({
 						Object.keys(valid_s)
 							.filter((key) => valid_s?.touched[key])
 							.reduce((obj, key) => {
-								obj[key] = valid_s?.values[key];
+								obj[key] = valid_s?.values?.[key];
 								return obj;
 							}, {})
 					);
@@ -608,7 +623,7 @@ export const FieldArray = <T extends {}>({ name, children }: FieldArrayProps<T>)
  * @returns
  */
 const getInitial = (initialState?: FormState, schema?: any) => {
-	let values = initialState?.values || {};
+	let values = initialState?.values ?? {};
 	try {
 		values =
 			(schema &&
@@ -625,7 +640,8 @@ const getInitial = (initialState?: FormState, schema?: any) => {
 		values,
 	};
 };
-const Form = StateCombineHOC(FormComp, (props) => ({
-	initialState: getInitial(props.initialState && cloneDeep(props.initialState), props.validationSchema),
-}));
+const Form = StateCombineHOC({
+	comp: FormComp,
+	options: { initialState: clone(FormStateInitial) },
+});
 export default Form;

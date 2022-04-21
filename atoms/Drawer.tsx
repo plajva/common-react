@@ -89,7 +89,7 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 	...props
 }) => {
 	// True if opening/open, False if closing/closed
-	const [open, setOpen] = useStateCombine(false, _open, _setOpen);
+	const [open, setOpen] = useStateCombine<boolean>(false, _open, _setOpen);
 	background = background ?? visible_always ? false : true;
 
 	// True when open, False if closed

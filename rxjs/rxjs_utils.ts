@@ -456,8 +456,9 @@ export const createAPIFetchHelperCall = <R, A extends unknown[]>(
 
 /**
  * Converts input array into an object, and executes toCall with that object
+ ** Would convert [{a:1},{b:2}] -> {a:1,b:2}
  * @param toCall function to call after input array converted to object
- * @returns (array) => toCall return type
+ * @returns d(array) => toCall return type
  */
 export const combineInputs =
 	<I extends any[], O = any>(toCall: (v: I[keyof I]) => O) =>

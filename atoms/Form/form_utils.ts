@@ -1,8 +1,6 @@
 import accounting from 'accounting';
 import { round } from 'lodash';
 import { toUpperCaseFirst } from '../../utils';
-import { _FieldProps } from './Field';
-import { UseFormFieldOptions } from './Form';
 
 /**
  * A string replacer, use {0}, {1} etc.. for replacement

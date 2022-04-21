@@ -40,7 +40,7 @@ const Stepper: FunctionComponent<StepperProps & React.HTMLAttributes<HTMLDivElem
 
 	let { className, step: _step, setStep: _setStep, steps, showSteps: _showSteps, animTime, ...others } = props;
 	// This is the wanted step
-	const [stepWanted, setStepWanted] = useStateCombine(0, stepToNumber(_step), _setStep);
+	const [stepWanted, setStepWanted] = useStateCombine<number>(0, stepToNumber(_step), _setStep);
 	// This is the step cache, doesn't change until animation is done
 	const [stepPrev, setStepLast] = useState<number>(stepToNumber(_step) || 0);
 

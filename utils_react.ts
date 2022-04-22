@@ -108,5 +108,6 @@ export function useInterval(callback, { delay, onStart }) {
 			let id = setInterval(tick, delay);
 			return () => clearInterval(id);
 		}
+		// eslint-disable-next-line
 	}, [delay]);
 }

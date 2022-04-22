@@ -1,3 +1,7 @@
+/**
+ * Use theme colors to style Svg's
+ * * Status: Unfinished
+ */
 import React from 'react';
 import css_globals from '../../styles/globals_export.module.scss';
 import { useTheme } from '../Theme';

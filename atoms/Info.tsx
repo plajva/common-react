@@ -1,9 +1,9 @@
-import { useTheme } from './Theme';
-import { classNameFind } from '../utils';
 import React, { FunctionComponent } from 'react';
 import { IconType } from 'react-icons/lib';
+import { classNameFind } from '../utils';
 import Icon from './Icon';
 import s from './Info.module.scss';
+import { useTheme } from './Theme';
 
 export interface InfoProps {
 	icon?: IconType;

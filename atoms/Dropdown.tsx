@@ -1,7 +1,7 @@
-import { useTheme } from './Theme';
-import { classNameFind, separateChildren } from '../utils';
 import React, { FunctionComponent, useState } from 'react';
+import { classNameFind, separateChildren } from '../utils';
 import s from './Dropdown.module.scss';
+import { useTheme } from './Theme';
 
 export interface DropdownProps {
 	/**Wether to use css hover or javascript, true for javascript*/

@@ -3,6 +3,7 @@ import moment from 'moment';
 
 export type Range = [number | undefined, number | undefined];
 export * from './utils_react';
+export { classNameFind as cnf };
 
 export interface AtomProps {
 	className?: string;
@@ -32,7 +33,6 @@ export function classNameFind(s?: object | undefined, ...classNames: (string | u
 				.join(' ')
 		: '';
 }
-export { classNameFind as cnf };
 
 export function combineEvent(...functions: any[]) {
 	return (...e: any[]) => {
@@ -144,7 +144,7 @@ export const removeDuplicates = <T extends {}>(v: T[], criteria: string, any = f
 /**
  * Returns a function that sets up a timeout to call itself only when debounce done
  * * Warning: If you create a timeout that gets called by different actions, they will override eachother, meaning the last debounce function called will be the only one executed after the timeout.
- * 
+ *
  * @param callback
  * @param wait in ms
  * @returns
@@ -161,7 +161,7 @@ export const debounceCreatorCallback = <T extends (...args: any) => any>(callbac
 		}
 	};
 };
-/** 
+/**
  * Createas a time-only debounce
  */
 export const debounceCreator = (wait: number) => debounceCreatorCallback((f: () => void) => f(), wait);
@@ -170,12 +170,12 @@ export const debounceCreator = (wait: number) => debounceCreatorCallback((f: () 
 // 	[P in keyof T]?: RecursivePartial<T[P]>;
 // };
 export type RecursivePartial<T> = {
-  [P in keyof T]?:
-    T[P] extends (infer U)[] ? RecursivePartial<U>[] :
-    T[P] extends object ? RecursivePartial<T[P]> :
-    T[P];
+	[P in keyof T]?: T[P] extends (infer U)[]
+		? RecursivePartial<U>[]
+		: T[P] extends object
+		? RecursivePartial<T[P]>
+		: T[P];
 };
-
 
 export const toUpperCaseFirst = (s?: string) => {
 	if (typeof s === 'string') {

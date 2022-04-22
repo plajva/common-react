@@ -7,7 +7,8 @@ import {
 	ReactElement,
 	ReactNode,
 	useContext,
-	useEffect, useRef
+	useEffect,
+	useRef,
 } from 'react';
 // import * as y from 'yup';
 // import * as z from 'zod';
@@ -36,12 +37,12 @@ export type InputPropsAll =
 	| React.SelectHTMLAttributes<HTMLElement>
 	| React.TextareaHTMLAttributes<HTMLElement>;
 
-export interface FormState<T extends {}=object> {
+export interface FormState<T extends {} = object> {
 	values: T;
 	errors?: MyError;
 	touched?: any;
 }
-const FormStateInitial:FormState = {values:{}}
+const FormStateInitial: FormState = { values: {} };
 
 const debugForm = true;
 
@@ -66,7 +67,7 @@ export type FormContextI = SCP<FormState> & FormContextExtra;
 
 const FormContext = StateCombineContext<FormState, FormContextExtra>({
 	state: cloneDeep(FormStateInitial),
-	initialState: {values:{}},
+	initialState: { values: {} },
 	setState: () => {},
 	setValue: () => {},
 	setTouched: () => {},
@@ -170,7 +171,7 @@ const FormComp = ({
 
 	useEffect(() => {
 		if (onChange) onChange(state);
-		if (onChanges) changes.current.forEach(n => onChanges(n, getForm(n, state.values)));
+		if (onChanges) changes.current.forEach((n) => onChanges(n, getForm(n, state.values)));
 		changes.current = [];
 	}, [state]);
 
@@ -252,13 +253,12 @@ const FormComp = ({
 						}
 					}
 				}
-				
+
 				const newState = { ...state, values, errors };
 				if (debugForm) console.log(newState);
-				
+
 				return newState;
 			});
-			
 		},
 		setTouched: (name, value) => {
 			// Don't do anything if we're showing all errors
@@ -437,7 +437,7 @@ export const useFormField = (
 // Combines onChange and onBlur and sets value if none provided
 export const FormFieldHOC = (element: ReactElement<InputPropsAll & UseFormFieldProps & UseFormFieldOptions>) => {
 	const newProps = useFormField(element.props);
-	newProps['data-value']=newProps.value||'';
+	newProps['data-value'] = newProps.value || '';
 	return element.props.name ? cloneElement(element, newProps) : element;
 };
 

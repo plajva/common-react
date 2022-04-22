@@ -28,7 +28,7 @@
 /// @example scss - Creates a single breakpoint with the label `phone`
 ///  $breakpoints: ('phone': 320px);
 ///
-@use "sass:math";
+@use 'sass:math';
 
 $breakpoints: (
 	'phone': 400px,

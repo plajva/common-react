@@ -1,7 +1,7 @@
 import { useTheme } from '@common/atoms/Theme';
 import { cnf } from '@common/utils';
 import React from 'react';
-import { Cell, Column, PluginHook, Row, TableOptions, useExpanded, UseExpandedHooks, useTable } from 'react-table';
+import { Cell, Column, PluginHook, Row, TableOptions, useTable } from 'react-table';
 import v from 'voca';
 import s from './TableSimple.module.scss';
 

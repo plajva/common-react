@@ -1,6 +1,6 @@
+import { ReactElement, ReactNode } from 'react';
 import { useTheme } from '../atoms/Theme';
 import { classNameFind } from '../utils';
-import { ReactElement, ReactNode } from 'react';
 import s from './Toolbar.module.scss';
 
 export interface ToolbarProps {

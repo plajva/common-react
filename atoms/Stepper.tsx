@@ -1,10 +1,10 @@
-import { useTheme } from './Theme';
-import { classNameFind } from '../utils';
 import React, { FunctionComponent, ReactNode, useEffect, useRef, useState } from 'react';
+import { classNameFind } from '../utils';
 import { useStateCombine } from '../utils_react';
 import Button from './Button';
 import Divider from './Divider';
 import s from './Stepper.module.scss';
+import { useTheme } from './Theme';
 
 /**
  * The stepper works by switching between two modes

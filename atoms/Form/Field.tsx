@@ -6,9 +6,10 @@
  *
  * */
 import { Property } from 'csstype';
-import React, { createElement, ReactNode, useMemo } from 'react';
-import { useState } from 'react';
+import React, { createElement, ReactNode, useMemo, useState } from 'react';
+import { MdCheck, MdEdit } from 'react-icons/md';
 import { classNameFind, cnf, DistributiveOmit } from '../../utils';
+import Button from '../Button';
 import { useTheme } from '../Theme';
 import Checkbox, { CheckboxProps } from './Checkbox';
 import s from './Field.module.scss';
@@ -26,8 +27,6 @@ import Input from './Input';
 import Radio, { RadioProps } from './Radio';
 import Select, { SelectProps } from './Select';
 import Toggle, { ToggleProps } from './Toggle';
-import Button from '../Button';
-import { MdCheck, MdEdit } from 'react-icons/md';
 
 const InputFile = (props) => {
 	const [state, setState] = useState({ files: null as FileList | null });
@@ -123,20 +122,24 @@ export const Field = ({
 
 	const [allowEdit, setAllowEdit] = useState(false);
 
-	const el_type = useMemo(() =>
-		type === 'toggle'
-			? Toggle
-			: type === 'select'
-			? Select
-			: type === 'checkbox'
-			? Checkbox
-			: type === 'radio'
-			? Radio
-			: type === 'file'
-			? InputFile
-			: type === 'textarea'
-			? (eprops) => FormFieldHOC(createElement('textarea', {style:{maxWidth: '100%',...eprops.style},...eprops}))
-			: Input, [type]);
+	const el_type = useMemo(
+		() =>
+			type === 'toggle'
+				? Toggle
+				: type === 'select'
+				? Select
+				: type === 'checkbox'
+				? Checkbox
+				: type === 'radio'
+				? Radio
+				: type === 'file'
+				? InputFile
+				: type === 'textarea'
+				? (eprops) =>
+						FormFieldHOC(createElement('textarea', { style: { maxWidth: '100%', ...eprops.style }, ...eprops }))
+				: Input,
+		[type]
+	);
 
 	const labelPersistent = ['toggle', 'checkbox', 'radio'].includes(type || '');
 	let flexDirection: Property.FlexDirection = labelPersistent

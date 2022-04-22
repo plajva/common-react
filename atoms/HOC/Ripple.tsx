@@ -1,6 +1,6 @@
 // import { useTheme } from './Theme';
-import { combineEvent } from '../../utils';
 import React, { ComponentType, FunctionComponent, MouseEvent } from 'react';
+import { combineEvent } from '../../utils';
 import s from './Ripple.module.scss';
 
 export interface RippleProps {

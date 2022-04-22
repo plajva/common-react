@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { FiUpload, FiMoreVertical } from 'react-icons/fi';
-import { RiDragDropLine } from 'react-icons/ri';
 import DropZone, { DropzoneOptions } from 'react-dropzone';
-
+import { FiMoreVertical, FiUpload } from 'react-icons/fi';
+import { RiDragDropLine } from 'react-icons/ri';
 import Icon from '../Icon';
 import s from './InputDropZone.module.scss';
 

@@ -1,7 +1,7 @@
-import { useTheme } from './Theme';
-import { classNameFind } from '../utils';
 import React, { FunctionComponent } from 'react';
+import { classNameFind } from '../utils';
 import s from './GroupClose.module.scss';
+import { useTheme } from './Theme';
 
 export interface GroupCloseProps {}
 

@@ -9,7 +9,7 @@ import { useTheme } from './Theme';
 export interface CollapsibleState {
 	open: boolean;
 }
-export interface CollapsibleProps extends React.HTMLAttributes<HTMLDivElement>{
+export interface CollapsibleProps extends React.HTMLAttributes<HTMLDivElement> {
 	canCollapse?: boolean;
 }
 const initialState: CollapsibleState = { open: false };
@@ -50,7 +50,7 @@ const Collapsible = ({
 		<div className={className} {...props}>
 			<div
 				onClick={() => {
-					(canCollapse ?? true) && setStateMerge({ open: !state.open })
+					(canCollapse ?? true) && setStateMerge({ open: !state.open });
 				}}
 				className={classNameFind(s, true ? 'collapsible' : '')}
 			>

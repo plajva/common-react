@@ -1,5 +1,5 @@
 // import { Location } from 'history';
-import router, { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 // import { capitalize } from 'voca';
 
 // export const UseMatchParamsLocation = <M extends {} = {}, P extends {} = {}, L extends {} = {}>({

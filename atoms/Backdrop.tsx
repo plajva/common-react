@@ -1,7 +1,7 @@
 import { forwardRef, HTMLAttributes, PropsWithChildren } from 'react';
-import { useTheme } from './Theme';
 import { classNameFind } from '../utils';
 import s from './Backdrop.module.scss';
+import { useTheme } from './Theme';
 
 export interface BackdropProp {
 	fixed?: boolean;

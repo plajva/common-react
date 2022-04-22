@@ -8,9 +8,9 @@
  * from: input.checked
  *
  */
-import { useTheme } from '../Theme';
-import { classNameFind as classFind, combineEvent } from '../../utils';
 import React, { forwardRef } from 'react';
+import { classNameFind as classFind } from '../../utils';
+import { useTheme } from '../Theme';
 import { FieldCommon } from './Field';
 import { useForm, useFormField, UseFormFieldProps } from './Form';
 import s from './Radio.module.scss';

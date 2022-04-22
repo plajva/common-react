@@ -1,5 +1,5 @@
-import { classNameFind } from '../../utils';
 import React, { ComponentType, FunctionComponent } from 'react';
+import { classNameFind } from '../../utils';
 
 const StyleModule = <T extends React.HTMLAttributes<HTMLElement>>(
 	Comp: ComponentType<T>,

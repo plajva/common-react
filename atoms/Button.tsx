@@ -1,9 +1,9 @@
-import { useTheme } from './Theme';
-import { classNameFind } from '../utils';
 import React, { FunctionComponent } from 'react';
+import { classNameFind } from '../utils';
 import s from './Button.module.scss';
 import Ripple from './HOC/Ripple';
 import Icon from './Icon';
+import { useTheme } from './Theme';
 
 export interface ButtonCompProps {
 	button_type?: 'normal' | 'icon';

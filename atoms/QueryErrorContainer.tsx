@@ -2,16 +2,14 @@
  * Component renders as a parent <div> and child X when response is loading|error|feedback,
  * or just renders as children when response is valid
  */
-import Loading from '@common/atoms/Loading';
-import LoaderReact from '@common/atoms/Loading';
+import { default as LoaderReact, default as Loading } from '@common/atoms/Loading';
 import { useTheme } from '@common/atoms/Theme';
 import { ResponseFetch, ResponseFetchValid, responseIsError, responseIsValid } from '@common/rxjs/rxjs_utils';
 import { cnf } from '@common/utils';
-import React from 'react';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import s from './QueryErrorContainer.module.scss';
 
-export interface QueryErrorContainerProps<T> {
+export interface QueryErrorContainerProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
 	response?: T;
 	/**
 	 * Exclude null/undefined and any of the status/loading properties from type
@@ -43,7 +41,7 @@ const QueryErrorContainer = <T extends ResponseFetch<any> | undefined | null>({
 	feedback,
 	childrenDefault,
 	...props
-}: QueryErrorContainerProps<T> & React.HTMLAttributes<HTMLDivElement>) => {
+}: QueryErrorContainerProps<T>) => {
 	const theme = useTheme().name;
 	// An idea to keep elements in DOM even when fetch loading
 	// const validResponse = useRef<ResponseFetchValid<T> | undefined>(undefined);
@@ -122,7 +120,7 @@ export const QueryErrorContainer2 = <T extends ResponseFetch<any> | undefined | 
 	);
 };
 
-export interface QueryLoadingContainerProps<T> extends React.HTMLAttributes<HTMLElement> {
+export interface QueryLoadingContainerProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
 	response?: T;
 	/**
 	 * Exclude null/undefined and any of the status/loading properties from type

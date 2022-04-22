@@ -75,7 +75,7 @@ import { deepMerge, RecursivePartial } from '../../utils';
  */
 
 export type StateCombineProps<T> = {
-	initialState: T,
+	initialState: T;
 	state: T;
 	setState: Dispatch<SetStateAction<T>>;
 };
@@ -89,8 +89,7 @@ type LCGP<LP extends {}, LS, CP> = {
 	options: LCGO<LS, CP>;
 };
 // Lower Component Props
-export type LCP<LS, LP extends {} = {}> = LP &
-	SCP<LS> & { setStateMerge: Dispatch<RecursivePartial<LS>> };
+export type LCP<LS, LP extends {} = {}> = LP & SCP<LS> & { setStateMerge: Dispatch<RecursivePartial<LS>> };
 // Higher Component Exposed Props (the most flexible of all)
 type HCP<LP extends {}, LS> = LP & Partial<SCP<RecursivePartial<LS>>>;
 
@@ -113,7 +112,10 @@ const StateCombineHOC = <LP extends {}, LS, CP>({ comp: CompHOC, options }: LCGP
 	// HOC Component creator execution, this scope is ran once for every component that exports an HOC
 
 	const StateCombine = (props: HCP<LP, LS>) => {
-		const initialState = useMemo(() => mergeState(cloneDeep(options.initialState), cloneDeep(props.initialState)), [props.initialState])
+		const initialState = useMemo(
+			() => mergeState(cloneDeep(options.initialState), cloneDeep(props.initialState)),
+			[props.initialState]
+		);
 		let [s, ss] = useState<LS>(() => mergeState(cloneDeep(initialState), cloneDeep(props.state)));
 		// If upSetState was provided, current state is ourState + upState, else, it's just ourState.
 		// If upSetState was provided, setState = upSetState, else setState = ourSetState
@@ -121,12 +123,20 @@ const StateCombineHOC = <LP extends {}, LS, CP>({ comp: CompHOC, options }: LCGP
 
 		// Define new component with redefined props
 		const comp = (
-			<CompHOC {...props} initialState={initialState} state={state} setState={setState} setStateMerge={(v) => setState(s => merge(clone(s), v))} />
+			<CompHOC
+				{...props}
+				initialState={initialState}
+				state={state}
+				setState={setState}
+				setStateMerge={(v) => setState((s) => merge(clone(s), v))}
+			/>
 		);
 
 		// Return either the component inside a context, or the component itself if the context invalid
 		return options.context && options.contextInitial ? (
-			<options.context.Provider value={{ state, setState, initialState, ...options.contextInitial }}>{comp}</options.context.Provider>
+			<options.context.Provider value={{ state, setState, initialState, ...options.contextInitial }}>
+				{comp}
+			</options.context.Provider>
 		) : (
 			comp
 		);

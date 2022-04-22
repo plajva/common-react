@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { createContext, useContext, useReducer, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import Notification, { NotificationProps } from './Notification';
 import s from './Notifications.module.scss';
 import Portal from './Portal';

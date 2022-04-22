@@ -1,9 +1,8 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
-import { combineEvent, deepMerge, RecursivePartial } from './utils';
+import { deepMerge, RecursivePartial } from './utils';
 
 /** Merges two states, own/up states, upstate overrides ownstate */
-const mergeState = (a, b) =>
-	typeof a === 'object' ? deepMerge(a, b) : b ?? a;
+const mergeState = (a, b) => (typeof a === 'object' ? deepMerge(a, b) : b ?? a);
 
 /**
  * Merges initialState & upstate -> to initialize state

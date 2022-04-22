@@ -1,6 +1,6 @@
-import { useTheme } from '../Theme';
-import { classNameFind as classFind } from '../../utils';
 import React, { forwardRef } from 'react';
+import { classNameFind as classFind } from '../../utils';
+import { useTheme } from '../Theme';
 import { FieldCommon } from './Field';
 import { useFormField } from './Form';
 import s from './Toggle.module.scss';

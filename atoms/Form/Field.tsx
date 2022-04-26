@@ -115,7 +115,7 @@ export const Field = ({
 	...props
 }: FieldProps) => {
 	const theme = useTheme().name;
-	className = classNameFind(s, `comp`, className, 'dup', theme);
+	className = classNameFind(s, `comp`, className, 'dup', theme, rootProps?.['className']);
 
 	const select_or_textarea = ['select', 'textarea'].includes(type || '');
 	const tog_sel_check_radio = ['toggle', 'select', 'checkbox', 'radio', 'file'].includes(type || '');

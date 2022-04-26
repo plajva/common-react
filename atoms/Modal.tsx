@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { classNameFind } from '../utils';
 import Backdrop from './Backdrop';
 import s from './Modal.module.scss';
@@ -6,7 +6,7 @@ import Portal from './Portal';
 import { useTheme } from './Theme';
 
 export interface ModalProps {
-	children: () => any;
+	children: (() => any) | ReactNode;
 }
 
 const Modal = ({ children, className, ...props }: ModalProps & React.HTMLAttributes<HTMLElement>) => {

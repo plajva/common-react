@@ -364,7 +364,7 @@ type FetchHelperOptions<T> = {
 	/** The query object to use => ? k=v & k=v */
 	query?: object;
 	/** The token to use for Authentication header, will be prefixed by 'Bearer ' */
-	token?: string;
+	token?: string | false;
 	/** The value of Authentication header, will replace 'token' option */
 	auth?: string;
 	/** The body, will be pruned of empty values and converted to JSON string if object */

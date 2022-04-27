@@ -136,7 +136,7 @@ export const Field = ({
 				? InputFile
 				: type === 'textarea'
 				? (eprops) =>
-						FormFieldHOC(createElement('textarea', { style: { maxWidth: '100%', ...eprops.style }, ...eprops }))
+						FormFieldHOC(createElement('textarea', { ...eprops,style: { maxWidth: '100%', ...eprops.style } }))
 				: Input,
 		[type]
 	);
@@ -174,6 +174,7 @@ export const Field = ({
 		className: classNameFind(s, 'input'),
 		name,
 		readOnly: editConfirm ? !allowEdit : undefined,
+		placeholder: el_type === Select ? ' ' : undefined,
 		...props,
 	});
 	const { className: labelClass, style: labelStyle, ...labelPropsRest } = labelProps ?? {};

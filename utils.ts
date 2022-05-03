@@ -3,7 +3,7 @@ import moment from 'moment';
 
 export type Range = [number | undefined, number | undefined];
 export * from './utils_react';
-export { classNameFind as cnf };
+export { classNameFind as cnf, classNameFindCreator as cnfc};
 
 export interface AtomProps {
 	className?: string;
@@ -11,14 +11,13 @@ export interface AtomProps {
 
 /**
  *
- * @param s The module stylesheet
+ * @param styleSheet The module stylesheet
  * @param classNames All the classnames to parse, pass 'dup' to toggle duplication, starts disabled false
  */
-export function classNameFind(s?: object | undefined, ...classNames: (string | undefined | boolean)[]) {
+export function classNameFind(styleSheet?: object, ...classNames: (string | undefined)[]) {
 	let dup = false;
-	// const filter = (c?:string) => c;
-	return classNames?.length
-		? classNames
+	if(!classNames?.length)return '';
+	return classNames
 				.filter((c) => c && typeof c === 'string')
 				.join(' ')
 				.split(' ')
@@ -27,12 +26,12 @@ export function classNameFind(s?: object | undefined, ...classNames: (string | u
 						dup = !dup;
 						return '';
 					}
-					return s && s[c] ? s[c] + (dup ? ' ' + c : '') : c;
+					return styleSheet?.[c] ? styleSheet[c] + (dup ? ' ' + c : '') : c;
 				})
-				.filter((c) => c)
+				.filter((c) => !!c)
 				.join(' ')
-		: '';
 }
+export const classNameFindCreator=(styleSheet?: object)=>{return (...classNames: (string | undefined )[]) => classNameFind(styleSheet, ...classNames)}
 
 export function combineEvent(...functions: any[]) {
 	return (...e: any[]) => {

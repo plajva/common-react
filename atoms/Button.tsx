@@ -22,11 +22,12 @@ const Button: FunctionComponent<ButtonProps> = ({ button_type, button_size, icon
 
 	className = classNameFind(
 		s,
-		`button`,
+
 		button_type === 'icon' ? 'circular icon' : '',
 		'padding-3 border-radius-2',
 		'dup',
 		theme,
+		`button`,
 		className
 	);
 

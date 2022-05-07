@@ -40,6 +40,11 @@ html {
 	}
 }
 
+.button{
+	position: relative;
+	transition: background .3s;
+}
+
 button {
 	padding: get-space(4);
 }

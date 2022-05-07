@@ -136,7 +136,7 @@ export const Field = ({
 				? InputFile
 				: type === 'textarea'
 				? (eprops) =>
-						FormFieldHOC(createElement('textarea', { ...eprops,style: { maxWidth: '100%', ...eprops.style } }))
+						FormFieldHOC(createElement('textarea', { ...eprops,style: { width: '100%', height:'100%', ...eprops.style } }))
 				: Input,
 		[type]
 	);

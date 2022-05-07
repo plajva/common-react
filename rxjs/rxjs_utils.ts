@@ -216,7 +216,7 @@ export const createAPIFetchStatic = <R, C extends unknown[], W extends unknown[]
 type FetchEventOptions<R, D, C extends unknown[], W extends unknown[]> = {
 	responseType?: R;
 	defaultValue?: D;
-	shareReplay?: boolean;
+	resultPipe?: (v:Observable<R>) => Observable<R>;
 	/**
 	 * Combine with other observables,
 	 * needs at least 1 value, will retrigger on any new value by any combine observable
@@ -253,6 +253,7 @@ export function createAPIFetchEvent<
 	// Subject will usually have queryString or
 	const subject$ = new Subject<I>();
 	const subjectO$ = options?.startWith ? subject$.pipe(startWith(options.startWith)) : subject$;
+	
 	const subjectOHot$ = subjectO$.pipe(shareReplay(1));
 	/** If v is function, will wait from value from */
 	const setValue = (v: InputUnion<I>) => {
@@ -297,7 +298,8 @@ export function createAPIFetchEvent<
 		})
 	);
 	// Replay the result
-	if (options?.shareReplay ?? true) result$ = result$.pipe(shareReplay(1));
+	if(options?.resultPipe)result$ = options.resultPipe(result$);
+	else result$=result$.pipe(shareReplay(1));
 	// Bind to result
 	const useResult = () => useObservable(result$, options?.defaultValue);
 	// Return
@@ -315,7 +317,7 @@ export function createAPIFetchChain<R, D = undefined, C extends unknown[] = [], 
 	toFetch: (val: [...C, ...W]) => Observable<R>,
 	options?: FetchEventOptions<R, D, C, W>
 ): [() => [...C, ...W] | undefined, () => R | D | undefined, Observable<R>] {
-	const _shareReplay = options?.shareReplay ?? true;
+	// const _shareReplay = options?.shareReplay ?? true;
 
 	const chain_$ = combineLatest<[...C]>([...combine$]);
 	const chain$ = (
@@ -338,7 +340,8 @@ export function createAPIFetchChain<R, D = undefined, C extends unknown[] = [], 
 		})
 	);
 	// Replay the result
-	if (_shareReplay) result$ = result$.pipe(shareReplay(1));
+	if(options?.resultPipe)result$ = options.resultPipe(result$);
+	else result$=result$.pipe(shareReplay(1));
 	// Bind to result
 	const useResult = () => useObservable(result$, options?.defaultValue);
 	// Return
@@ -369,6 +372,8 @@ type FetchHelperOptions<T> = {
 	auth?: string;
 	/** The body, will be pruned of empty values and converted to JSON string if object */
 	body?: BodyInit | object;
+	/** If false, body won't be pruned, overriten by bodyRaw */
+	bodyPrune?: boolean;
 	/** If true, body won't be pruned or converted, but will be passed to fetch exactly as is */
 	bodyRaw?: boolean;
 	/** 'json': will set method to POST and content type to json */
@@ -385,6 +390,7 @@ export const createAPIFetchHelper = <T>({
 	init: _init,
 	query,
 	token,
+	bodyPrune,
 	bodyRaw,
 	auth,
 	body,
@@ -404,7 +410,7 @@ export const createAPIFetchHelper = <T>({
 	if (body) {
 		init = {
 			...init,
-			body: typeof body === 'object' && !bodyRaw ? JSON.stringify(pruneEmpty(body)) : (body as BodyInit),
+			body: typeof body === 'object' && !bodyRaw ? JSON.stringify(!bodyPrune?body:pruneEmpty(body)) : (body as BodyInit),
 		};
 	}
 	if (auth || token) {

@@ -1,6 +1,5 @@
 @import 'globals';
 @import '~normalize.css/normalize.css';
-// @import '~react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
 html {
 	// scrollbar-width: thin;
@@ -40,9 +39,9 @@ html {
 	}
 }
 
-.button{
+.button {
 	position: relative;
-	transition: background .3s;
+	transition: background 0.3s;
 }
 
 button {
@@ -213,8 +212,8 @@ footer {
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .hide-scroll {
-	-ms-overflow-style: none;  /* IE and Edge */
-	scrollbar-width: none;  /* Firefox */
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
 }
 
 h1 {

@@ -1,6 +1,6 @@
 @use 'sass:color';
 @use 'sass:math';
-@import '../../styles/globals';
+@import '@rootp/cindex';
 @import './atom_common';
 
 $width: 3em;

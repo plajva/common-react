@@ -3,13 +3,13 @@
 
 @function get-color-material($color, $value: 500) {
 	// @if not(type-of($color) == string){@return $color;}
-	@if not map-has-key($material, $color){@return $color;}
-	$cmap: map-get($material,$color);
+	@if not map-has-key($material-palettes, $color){@return $color;}
+	$cmap: map-get($material-palettes,$color);
 	@if not map-has-key($cmap, $value){@return $color;}
 	@return map-get($cmap, $value);
 }
 
-$material: (
+$material-palettes: (
 	red: (
 		50: #ffebee,
 		100: #ffcdd2,

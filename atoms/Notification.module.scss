@@ -1,4 +1,4 @@
-@import '../styles/globals';
+@import '@rootp/cindex';
 
 $bw: 1px;
 @include use-theme('-') using ($ts) {

@@ -56,7 +56,7 @@ const Apply: FunctionComponent<ApplyProps & React.HTMLAttributes<HTMLDivElement>
 		);
 	};
 
-	return mapChildren(children);
+	return mapChildren(children) ?? null;
 };
 
 export default Apply;

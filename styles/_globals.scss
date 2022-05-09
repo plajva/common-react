@@ -77,7 +77,7 @@ $themes: (
 		),
 );
 // Apply overrides from local globals file
-@if $themes-override {
+@if variable-exists(themes-override) {
 	$themes: map-merge-deep($themes, $themes-override)
 }
 $theme-names: map-keys(

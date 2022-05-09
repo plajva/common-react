@@ -56,9 +56,9 @@ function usePortal(id: string): HTMLElement {
 			return function removeElement() {
 				if (rootElemRef.current) rootElemRef.current.remove();
 
-				if (!parentElem.childElementCount) {
-					parentElem.remove();
-				}
+				// if (!parentElem.childElementCount) {
+				// 	if(deleteParent)parentElem.remove();
+				// }
 			};
 		},
 		[id]

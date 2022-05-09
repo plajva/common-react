@@ -89,8 +89,9 @@ interface _FieldProps {
 	error?: string;
 	id?: string;
 	rel?: boolean;
-	rootProps?: object;
-	labelProps?: React.LabelHTMLAttributes<HTMLLabelElement>;
+	rootProps?: React.HTMLAttributes<HTMLElement>;
+	inputProps?: React.InputHTMLAttributes<HTMLElement>;
+	labelProps?: React.LabelHTMLAttributes<HTMLElement>;
 	labelBottom?: ((v: any) => any) | any;
 	touchedShow?: boolean;
 }
@@ -105,6 +106,7 @@ export const Field = ({
 	labelBottom,
 	labelProps,
 	rootProps,
+	inputProps,
 	className,
 	direction,
 	editConfirm,
@@ -169,13 +171,14 @@ export const Field = ({
 
 	//@ts-ignore
 	const input = createElement(el_type, {
-		children: select_or_textarea ? children : undefined,
-		type,
-		className: classNameFind(s, 'input'),
-		name,
 		readOnly: editConfirm ? !allowEdit : undefined,
 		placeholder: el_type === Select ? ' ' : undefined,
 		...props,
+		...inputProps,
+		className: classNameFind(s, 'input', inputProps?.className),
+		children: select_or_textarea ? children : undefined,
+		type,
+		name,
 	});
 	const { className: labelClass, style: labelStyle, ...labelPropsRest } = labelProps ?? {};
 	return (

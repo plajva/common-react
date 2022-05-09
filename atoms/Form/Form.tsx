@@ -102,7 +102,7 @@ interface FormProps {
 	/**
 	 * Executed when any changes are made to FormState, returns entire FormState, after validations (if any)
 	 */
-	onChange?: (v: FormState, context:FormContextI) => void;
+	onChange?: (v:FormContextI) => void;
 	/**
 	 * Executed when a single change is made to FormState, returns only changed fieldName and value, after validations (if any)
 	 */
@@ -314,7 +314,7 @@ const FormComp = ({
 	};
 	
 	useEffect(() => {
-		if (onChange) onChange(state, context);
+		onChange?.(context);
 		if (onChanges) changes.current.forEach((n) => onChanges(n, getForm(n, state.values), context));
 		changes.current = [];
 	}, [state]);

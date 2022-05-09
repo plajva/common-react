@@ -63,6 +63,20 @@ $sindex: 0;
 		margin-right: $space;
 	}
 	// --- Margin
+	// *** Top...
+	@include repeat_space('.top') using ($space) {
+		top: $space;
+	}
+	@include repeat_space('.bottom') using ($space) {
+		bottom: $space;
+	}
+	@include repeat_space('.left') using ($space) {
+		left: $space;
+	}
+	@include repeat_space('.right') using ($space) {
+		right: $space;
+	}
+	// --- Top...
 
 	// *** Padding
 	@include repeat_space('.padding') using ($space) {

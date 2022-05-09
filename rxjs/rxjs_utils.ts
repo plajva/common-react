@@ -1,8 +1,9 @@
 import { pruneEmpty } from '@common/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
 	catchError,
 	combineLatest,
+	filter,
 	from,
 	map,
 	Observable,
@@ -19,7 +20,7 @@ import {
 } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
 
-export interface ResponseFetch<T> {
+export interface ResponseFetch<T = any> {
 	errors?: boolean;
 	message?: string;
 	loading?: boolean;
@@ -103,6 +104,7 @@ function hasOwnProperty<X extends {}, Y extends PropertyKey>(obj: X, prop: Y): o
 	return obj.hasOwnProperty(prop);
 }
 // --------------
+export const responseIsValidFilter =  <R extends ResponseFetchAny> (v:Observable<R>) => v.pipe(filter(v => !!responseIsValid<R>(v)))
 /** Will only be true if response is valid && non-null  */
 export const responseIsValid = <T extends ResponseFetchAny>(v: T): ResponseFetchValid<T> | undefined =>
 	v && !v.errors && !v.loading && !v.message && hasOwnProperty(v, 'data') ? v : undefined;
@@ -110,7 +112,7 @@ export const responseIsValid = <T extends ResponseFetchAny>(v: T): ResponseFetch
 export const responseIsError = <T extends ResponseFetchAny>(v: T): ResponseFetchErrors<T> | undefined =>
 	v && hasOwnProperty(v, 'errors') ? v : undefined;
 
-type FetchOptions<T> = {
+type FetchOptions<T=any> = {
 	/** Init to use, will take precedence over all other options */
 	init?: RequestInit;
 	force?: 'text' | 'arrayBuffer' | 'formData' | 'json' | 'blob';
@@ -228,7 +230,7 @@ type FetchEventOptions<R, D, C extends unknown[], W extends unknown[]> = {
 	 */
 	withLatestFrom$?: [...ObservableInputTuple<W>];
 };
-const logFetch = false;
+const logFetch = !!process.env.DEBUG_FETCH;
 
 /** Fixing ->   Type 'T & Function' has no call signatures.  when setting value with a function*/
 type InputUnion<I> = I | ((v: I) => I);
@@ -356,7 +358,7 @@ export const queryString = (v?: any) => {
 		);
 	}
 };
-type FetchHelperOptions<T> = {
+export type FetchHelperOptions<T=any> = {
 	/** The endpoint string to use */
 	endpoint: string;
 	/** The baseUrl to be used for query URL generation, will be postfixed by 'endpoint' */
@@ -452,6 +454,12 @@ export const createAPIFetchHelperCall = <R, A extends unknown[]>(
 	options: FetchHelperOptions<R>,
 	...transform: [...HelperTransformTouple<A, R>]
 ) => createAPIFetchHelper<R>({ ...options, ...createAPIFetchHelperCombine(sources, ...transform) });
+
+// export const createAPIFetchHelperCallWithErrors = <R, A extends unknown[]>(
+// 	sources: [...HelperInputTouple<A>],
+// 	options: FetchHelperOptions<R>,
+// 	...transform: [...HelperTransformTouple<A, R>]
+// ) => createAPIFetchHelper<R>({ ...options, ...createAPIFetchHelperCombine(sources, ...transform) });
 
 /**
  * Converts input array into an object, and executes toCall with that object

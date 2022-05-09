@@ -4,8 +4,9 @@ import { cnf, combineEvent } from '../utils';
 export interface ThemeProviderProps {}
 
 const themesAvailable = ['default', 'dark'];
+const darkTheme = 'dark' as typeof themesAvailable[number];
 const getTimeTheme = () => {
-	const darkTheme = 'dark';
+	
 	if (themesAvailable.length > 1 && themesAvailable.includes(darkTheme)) {
 		let hr = new Date().getHours();
 		return 7 < hr && hr < 18 ? themesAvailable[0] : darkTheme;
@@ -16,11 +17,14 @@ const getTimeTheme = () => {
 
 export interface ThemeI {
 	name: string;
+	/** For use with scss module callback c() */
+	nameWithDup: string,
 	set: () => void;
 	next: () => void;
 }
 
-export const ThemeContext = React.createContext<ThemeI>({ name: getTimeTheme(), set: () => {}, next: () => {} });
+
+export const ThemeContext = React.createContext<ThemeI>({ name: getTimeTheme(), set: () => {}, next: () => {} , nameWithDup: 'dup ' + getTimeTheme()});
 
 export function useTheme() {
 	return useContext(ThemeContext);
@@ -65,7 +69,7 @@ const ThemeProvider: FunctionComponent<ThemeProviderProps & React.HTMLAttributes
 	};
 
 	return (
-		<ThemeContext.Provider value={{ name: theme, set: nextTheme, next: nextTheme }}>
+		<ThemeContext.Provider value={{ name: theme, nameWithDup: 'dup '+theme, set: nextTheme, next: nextTheme }}>
 			<div className={`${theme} root`}>{children}</div>
 		</ThemeContext.Provider>
 	);

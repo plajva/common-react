@@ -44,7 +44,7 @@ export interface FormState<T extends {} = object> {
 }
 const FormStateInitial: FormState = { values: {} };
 
-const debugForm = true;
+const debugForm = !!process.env.DEBUG_FORM;
 
 interface FormContextExtra {
 	setValue: (name: string, value: any) => void;

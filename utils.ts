@@ -242,3 +242,8 @@ export const years = Array.from(Array(2101 - 2021), (e, i) => i + 2021);
 
 // Unified date format
 export const dateFormat = (v) => moment(v).format('YYYY/MM/DD');
+
+export const assertData = <T,S,F>(v:T, asserts:[(v:T)=>any,string][],success:(v:T)=>S,fail:(m:string,v?:T)=>F) => {
+	asserts.forEach(([assert, message]) => {if(!assert(v))return fail(message,v)})
+	return success(v);
+}

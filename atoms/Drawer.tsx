@@ -145,8 +145,6 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 			: { marginLeft: widthClosed ?? 60 }
 		: {};
 
-	// if(Object.entries(contentData.current).length)
-	console.log('Rendering drawer');
 	return (
 		<DrawerContext.Provider value={{ open, setOpen, setContent }}>
 			{/* <div className={classNameFind(s, "parent")}> */}

@@ -37,7 +37,7 @@ export type InputPropsAll =
 	| React.SelectHTMLAttributes<HTMLElement>
 	| React.TextareaHTMLAttributes<HTMLElement>;
 
-export interface FormState<T extends {} = object> {
+export interface FormState<T extends {} = any> {
 	values: T;
 	errors?: MyError;
 	touched?: any;
@@ -102,11 +102,11 @@ interface FormProps {
 	/**
 	 * Executed when any changes are made to FormState, returns entire FormState, after validations (if any)
 	 */
-	onChange?: (v: FormState) => void;
+	onChange?: (v:FormContextI) => void;
 	/**
 	 * Executed when a single change is made to FormState, returns only changed fieldName and value, after validations (if any)
 	 */
-	onChanges?: (n: string, v: any) => void;
+	onChanges?: (n: string, v: any, context: FormContextI) => void;
 	readonly?: boolean;
 	onReset?: (v: FormState) => void;
 	children?: ReactNode | ((context: FormContextI) => ReactElement);
@@ -168,12 +168,6 @@ const FormComp = ({
 		});
 		return { values: valid, touched };
 	};
-
-	useEffect(() => {
-		if (onChange) onChange(state);
-		if (onChanges) changes.current.forEach((n) => onChanges(n, getForm(n, state.values)));
-		changes.current = [];
-	}, [state]);
 
 	const context: FormContextI = {
 		state,
@@ -318,6 +312,13 @@ const FormComp = ({
 			formSubmitting.current = false;
 		},
 	};
+	
+	useEffect(() => {
+		onChange?.(context);
+		if (onChanges) changes.current.forEach((n) => onChanges(n, getForm(n, state.values), context));
+		changes.current = [];
+	}, [state]);
+	
 	// console.log(state);
 	const childrenRender = typeof children === 'function' ? children(context) : children;
 	return (

@@ -103,7 +103,7 @@ export const QueryErrorContainer2 = <T extends ResponseFetch<any> | undefined | 
 	children,
 	response: r,
 	childrenDefault,
-}: QueryErrorContainerProps<T> & React.HTMLAttributes<HTMLDivElement>) => {
+}: QueryErrorContainerProps<T>) => {
 	const valid = responseIsValid(r);
 	return (
 		(valid ? (

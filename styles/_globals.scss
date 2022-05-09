@@ -5,6 +5,7 @@
 @use 'sass:list';
 @import 'type_check';
 @import 'utils';
+@import '@rootp/globals';
 
 $debug: true;
 
@@ -75,13 +76,17 @@ $themes: (
 			),
 		),
 );
+// Apply overrides from local globals file
+@if $themes-override {
+	$themes: map-merge-deep($themes, $themes-override)
+}
 $theme-names: map-keys(
 	$map: $themes,
 );
 $theme-names-with-empty: list.join('', $theme-names);
 
 // Apply all transformations to the themes defined
-@each $theme_name, $theme in $themes {
+@each $theme-name, $theme in $themes {
 	@each $field, $value in $theme {
 		// APPLY TRANSAFORMATIONS
 		@if $field == spaces {
@@ -105,12 +110,12 @@ $theme-names-with-empty: list.join('', $theme-names);
 	);
 
 	// Put missing fields from default in all others
-	@if $theme_name != $theme-default {
+	@if $theme-name != $theme-default {
 		$theme: map-merge-deep(map-get($themes, $theme-default), $theme);
 	}
 
 	//  Merge theme in themes
-	$themes: map-merge($themes, (#{$theme_name}: $theme));
+	$themes: map-merge($themes, (#{$theme-name}: $theme));
 }
 
 // ######## FONTS #############

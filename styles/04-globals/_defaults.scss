@@ -37,7 +37,7 @@ $sindex: 0;
 	clear: both;
 }
 
-@mixin repeat_class {
+@mixin repeat_media {
 	// *** Margin
 	@include repeat_space('.margin') using ($space) {
 		margin: $space;
@@ -63,6 +63,20 @@ $sindex: 0;
 		margin-right: $space;
 	}
 	// --- Margin
+	// *** Top...
+	@include repeat_space('.top') using ($space) {
+		top: $space;
+	}
+	@include repeat_space('.bottom') using ($space) {
+		bottom: $space;
+	}
+	@include repeat_space('.left') using ($space) {
+		left: $space;
+	}
+	@include repeat_space('.right') using ($space) {
+		right: $space;
+	}
+	// --- Top...
 
 	// *** Padding
 	@include repeat_space('.padding') using ($space) {
@@ -115,12 +129,15 @@ $sindex: 0;
 
 	// Define the columns
 	@for $i from 0 through 12 {
-		$n: '.col-#{$i}';
-		$n: if($m, #{$n}-#{$m}, $n);
-
-		#{$n} {
+		#{append-media('.col-#{$i}')} {
 			float: left;
 			width: math.div(100%, 12) * $i;
+		}
+	}
+	
+	@for $i from 0 through 10{
+		#{append-media('.z-#{$i}')} {
+			z-index: $i;
 		}
 	}
 
@@ -144,13 +161,15 @@ $sindex: 0;
 	}
 }
 
-@include repeat_class;
+
+
+@include repeat_media;
 @each $bp_name, $bp_value in $breakpoints {
 	$m: $bp_name;
 	// Loops from smallest to highest pixel size in media
 	// We start from smallest to highest in creating websites, create
 	@include media('>#{$bp_name}') {
-		@include repeat_class;
+		@include repeat_media;
 	}
 }
 

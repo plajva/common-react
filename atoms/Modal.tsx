@@ -5,11 +5,11 @@ import s from './Modal.module.scss';
 import Portal from './Portal';
 import { useTheme } from './Theme';
 
-export interface ModalProps {
+export interface ModalProps extends Omit<React.HTMLAttributes<HTMLElement>, "children">{
 	children: (() => any) | ReactNode;
 }
 
-const Modal = ({ children, className, ...props }: ModalProps & React.HTMLAttributes<HTMLElement>) => {
+const Modal = ({ children, className, ...props }: ModalProps) => {
 	const _className = classNameFind(s, `atom`, 'background-background-10 padding-4', className, useTheme().name);
 
 	return (

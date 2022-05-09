@@ -40,6 +40,11 @@ html {
 	}
 }
 
+.button{
+	position: relative;
+	transition: background .3s;
+}
+
 button {
 	padding: get-space(4);
 }
@@ -199,6 +204,17 @@ footer {
 	&:hover {
 		opacity: 1;
 	}
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scroll::-webkit-scrollbar {
+	display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scroll {
+	-ms-overflow-style: none;  /* IE and Edge */
+	scrollbar-width: none;  /* Firefox */
 }
 
 h1 {

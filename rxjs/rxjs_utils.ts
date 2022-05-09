@@ -9,6 +9,7 @@ import {
 	Observable,
 	ObservableInputTuple,
 	of,
+	share,
 	shareReplay,
 	startWith,
 	Subject,
@@ -218,7 +219,8 @@ export const createAPIFetchStatic = <R, C extends unknown[], W extends unknown[]
 type FetchEventOptions<R, D, C extends unknown[], W extends unknown[]> = {
 	responseType?: R;
 	defaultValue?: D;
-	resultPipe?: (v:Observable<R>) => Observable<R>;
+	/** Pipe result with operator, default 'shareReplay' */
+	resultPipe?: ((v:Observable<R>) => Observable<R>) | 'share' | 'shareReplay' | false;
 	/**
 	 * Combine with other observables,
 	 * needs at least 1 value, will retrigger on any new value by any combine observable
@@ -299,9 +301,13 @@ export function createAPIFetchEvent<
 			return v;
 		})
 	);
-	// Replay the result
-	if(options?.resultPipe)result$ = options.resultPipe(result$);
-	else result$=result$.pipe(shareReplay(1));
+	// Pipe the result
+	const resultPipe = options?.resultPipe ?? 'shareReplay';
+	if(resultPipe)result$=result$.pipe(
+		resultPipe === 'shareReplay' ? shareReplay(1):
+		resultPipe === 'share' ? share():
+		resultPipe
+	);
 	// Bind to result
 	const useResult = () => useObservable(result$, options?.defaultValue);
 	// Return
@@ -341,9 +347,14 @@ export function createAPIFetchChain<R, D = undefined, C extends unknown[] = [], 
 			return v;
 		})
 	);
-	// Replay the result
-	if(options?.resultPipe)result$ = options.resultPipe(result$);
-	else result$=result$.pipe(shareReplay(1));
+	
+	// Pipe the result
+	const resultPipe = options?.resultPipe ?? 'shareReplay';
+	if(resultPipe)result$=result$.pipe(
+		resultPipe === 'shareReplay' ? shareReplay(1):
+		resultPipe === 'share' ? share():
+		resultPipe
+	);
 	// Bind to result
 	const useResult = () => useObservable(result$, options?.defaultValue);
 	// Return

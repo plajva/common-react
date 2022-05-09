@@ -1,4 +1,4 @@
-@import './globals';
+@import 'globals';
 @import '~normalize.css/normalize.css';
 // @import '~react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 
@@ -244,4 +244,4 @@ img {
 table th {
 	font-weight: 600;
 }
-@import '@common/styles/04-globals/defaults';
+@import './04-globals/defaults';

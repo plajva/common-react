@@ -1,5 +1,6 @@
 @use 'sass:color';
 @import '../type_check';
+@import 'material-palette';
 @import 'color-contrast';
 
 @function get-color($color, $shade: false, $alpha: false) {

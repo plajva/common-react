@@ -1,7 +1,8 @@
 @import '../styles/globals';
+@import '@common/styles/include-media';
 
 $height: 72px;
-$space: get-space(4);
+$space: get-space(3);
 
 .toolbar {
 	height: $height;
@@ -20,6 +21,11 @@ $space: get-space(4);
 
 	& > * {
 		flex: 0 0 auto;
+	}
+	@include media('>tablet'){
+		$space: get-space(4);
+		padding: $space;
+		gap: $space;
 	}
 
 	& img {

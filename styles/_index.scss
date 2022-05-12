@@ -28,6 +28,7 @@ html {
 *:before,
 *:after {
 	box-sizing: inherit;
+	scrollbar-color: currentColor transparent;
 }
 
 .flex-vcenter {

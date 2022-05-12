@@ -12,7 +12,7 @@ export interface ToolbarProps {
 const Toolbar: (props: ToolbarProps) => ReactElement = ({ left, middle, right, ...props }) => {
 	const theme = useTheme().name;
 	// let {className,...others} = props;
-	let className = classNameFind(s, theme, `toolbar hide-scroll`);
+	let className = classNameFind(s, theme, `toolbar`);
 
 	return (
 		<div className={className}>

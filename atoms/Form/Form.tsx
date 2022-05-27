@@ -44,7 +44,7 @@ export interface FormState<T extends {} = any> {
 }
 const FormStateInitial: FormState = { values: {} };
 
-const debugForm = !!process.env.DEBUG_FORM;
+const debugForm = !!process.env.REACT_APP_DEBUG_FORM;
 
 interface FormContextExtra {
 	setValue: (name: string, value: any) => void;
@@ -83,10 +83,11 @@ const FormContext = StateCombineContext<FormState, FormContextExtra>({
 export const useForm = () => useContext(FormContext);
 
 interface FormProps {
-	// initialState?: object;
+	/** Implemented with the idea that if this changes, state will become {values: resetValuesAuto}, kind of like an automatic reset state, triggered when this value changes */
+	resetValuesAuto?: any,
 	/** Defaults to initialState, if reset, state will become this */
-	// initialState?: FormState;
 	resetState?: FormState;
+	
 	/**Accepts a schema from zod/yup */
 	validationSchema?: any;
 	validationStrip?: boolean;
@@ -102,7 +103,7 @@ interface FormProps {
 	/**
 	 * Executed when any changes are made to FormState, returns entire FormState, after validations (if any)
 	 */
-	onChange?: (v:FormContextI) => void;
+	onChange?: (v: FormContextI) => void;
 	/**
 	 * Executed when a single change is made to FormState, returns only changed fieldName and value, after validations (if any)
 	 */
@@ -111,6 +112,7 @@ interface FormProps {
 	onReset?: (v: FormState) => void;
 	children?: ReactNode | ((context: FormContextI) => ReactElement);
 	useForm?: boolean;
+	/** Do you want labels to change colors when Fields are touched? */
 	touchedShow?: boolean;
 }
 const isZod = (s: any): boolean => (s?.parse ? true : false);
@@ -197,8 +199,6 @@ const FormComp = ({
 
 						if (isZod(schema)) {
 							let e: any = _error; //as z.ZodError;
-							// const e = _error as Omit<z.ZodError, 'issues'> & {issues?:any};
-							// if(e.message)errors.push({path:'', message:e.message});
 							if (e?.errors?.length) {
 								errors.push(
 									...e.errors.map((issue) => {
@@ -212,18 +212,7 @@ const FormComp = ({
 										};
 									})
 								);
-								// Converts errors.issues into a deep issues object
-								// e.issues = Object.values<any>(e.issues).reduce<any>(
-								// 	(a, v) =>
-								// 		replaceForm(
-								// 			v.path.reduce((p, pv) => p + "." + String(typeof pv === "number" ? `[${pv}]` : pv), ""),
-								// 			v.message,
-								// 			a
-								// 		),
-								// 	{}
-								// );
 							}
-							// errors = _errors;
 						} else if (isYup(schema)) {
 							const e: any = _error; //as y.ValidationError;
 							values = e.value;
@@ -312,13 +301,13 @@ const FormComp = ({
 			formSubmitting.current = false;
 		},
 	};
-	
-	useEffect(() => {
+
+	if (changes.current.length) {
 		onChange?.(context);
 		if (onChanges) changes.current.forEach((n) => onChanges(n, getForm(n, state.values), context));
 		changes.current = [];
-	}, [state]);
-	
+	}
+
 	// console.log(state);
 	const childrenRender = typeof children === 'function' ? children(context) : children;
 	return (

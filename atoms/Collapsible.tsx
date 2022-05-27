@@ -23,6 +23,7 @@ export const useCollapsible = () => useContext(CollapsibleContext);
 const Collapsible = ({
 	className,
 	children,
+	initialState,
 	state,
 	setState,
 	canCollapse,

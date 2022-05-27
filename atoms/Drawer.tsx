@@ -12,8 +12,8 @@ import { classNameFind, combineEvent, useStateCombine } from '../utils';
 import s from './Drawer.module.scss';
 import { useTheme } from './Theme';
 
-export interface DrawerContentData {
-	[key: string]: { header?: ReactNode; content?: ReactNode };
+export interface DrawerContentData<T={}> {
+	[key: string]: { header?: ReactNode; content?: ReactNode } & T;
 }
 export interface DrawerContextItems {
 	open?: boolean;

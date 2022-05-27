@@ -39,11 +39,7 @@ $padding: 0.2em;
 		}
 	}
 
-	// .label-text,.label-text-persistent{
-	// 	&.touched{
-	// 		color:
-	// 	}
-	// }
+	
 	.label-text,
 	.label-text-bottom {
 		white-space: nowrap;
@@ -85,7 +81,7 @@ $padding: 0.2em;
 	}
 	// If value="jk" or defaultValue
 	.input[value]:not([value='']) + .label-text,
-	.input[data-value]:not([data-value='']) + .label-text,
+	.input[data-value]:not([data-value='']):not([data-value='0']) + .label-text,
 	.input[type='date'] + .label-text {
 		transform: translate($padding - 0.05em, 0) scale(strip-unit(math.div($label-top-size, $label-size)));
 		width: strip-unit(math.div($label-size, $label-top-size)) * 100%;
@@ -137,6 +133,11 @@ $padding: 0.2em;
 					border: 1px solid color-text(background);
 				}
 				border: 1px solid color.change(color-text(background), $alpha: if(is-dark(), 0.3, 0.4));
+			}
+			.label-text,.label-text-persistent{
+				&.touched {
+					color: get-color(secondary,5);
+				}
 			}
 		}
 		// @include use-color using ($cn, $c) {

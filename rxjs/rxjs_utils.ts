@@ -228,7 +228,7 @@ type FetchEventOptions<R, D, C extends unknown[], W extends unknown[], I=undefin
 	 */
 	withLatestFrom$?: [...ObservableInputTuple<W>];
 };
-const logFetch = !!process.env.DEBUG_FETCH;
+const logFetch = !!process.env.REACT_APP_DEBUG_FETCH;
 
 /** Fixing ->   Type 'T & Function' has no call signatures.  when setting value with a function*/
 type InputUnion<I> = I | ((v: I) => I);

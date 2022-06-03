@@ -162,7 +162,7 @@ export const createAPIFetch = <T>({
 						return from(res.json()).pipe(
 							map((v) => ({
 								errors: true,
-								message: v ? v?.message ?? v?.Message ?? JSON.stringify(v.errors) : `Error ${res.status}`,
+								message: v ? v?.message ?? v?.Message ?? JSON.stringify(v.errors) : `Error: ${res.status} - ${res.statusText}`,
 							}))
 						);
 					case 'text/plain':

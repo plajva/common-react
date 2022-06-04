@@ -39,7 +39,6 @@ $padding: 0.2em;
 		}
 	}
 
-	
 	.label-text,
 	.label-text-bottom {
 		white-space: nowrap;
@@ -134,9 +133,10 @@ $padding: 0.2em;
 				}
 				border: 1px solid color.change(color-text(background), $alpha: if(is-dark(), 0.3, 0.4));
 			}
-			.label-text,.label-text-persistent{
+			.label-text,
+			.label-text-persistent {
 				&.touched {
-					color: get-color(secondary,5);
+					color: get-color(secondary, 5);
 				}
 			}
 		}

@@ -12,7 +12,7 @@ import { classNameFind, combineEvent, useStateCombine } from '../utils';
 import s from './Drawer.module.scss';
 import { useTheme } from './Theme';
 
-export interface DrawerContentData<T={}> {
+export interface DrawerContentData<T = {}> {
 	[key: string]: { header?: ReactNode; content?: ReactNode } & T;
 }
 export interface DrawerContextItems {

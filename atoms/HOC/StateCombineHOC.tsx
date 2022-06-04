@@ -77,7 +77,7 @@ import { deepMerge, RecursivePartial } from '../../utils';
 export type StateCombineProps<T> = {
 	/**
 	 * Will be merged with Component's initialState and override it, and will only be used when Component is created
-	 * 
+	 *
 	 * Meaning if you want something, make sure it's there the first time Component is rendered
 	 */
 	initialState: T;
@@ -109,9 +109,9 @@ export const StateCombineContext = <LS, CP = {}>(initial: ContextProps<LS, CP>) 
 export const SCC = StateCombineContext;
 type ContextProps<LS, CP> = SCP<LS> & CP;
 interface LCGO<LS, CP> {
-	/** 
-	 * Component's initial state, will define default properties in case upInitialState doesn't provide them 
-	 * 
+	/**
+	 * Component's initial state, will define default properties in case upInitialState doesn't provide them
+	 *
 	 * This object makes sure Component Wrapped will always have a valid State
 	 * */
 	initialState: LS;

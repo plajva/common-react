@@ -84,10 +84,10 @@ export const useForm = () => useContext(FormContext);
 
 interface FormProps {
 	/** Implemented with the idea that if this changes, state will become {values: resetValuesAuto}, kind of like an automatic reset state, triggered when this value changes */
-	resetValuesAuto?: any,
+	resetValuesAuto?: any;
 	/** Defaults to initialState, if reset, state will become this */
 	resetState?: FormState;
-	
+
 	/**Accepts a schema from zod/yup */
 	validationSchema?: any;
 	validationStrip?: boolean;

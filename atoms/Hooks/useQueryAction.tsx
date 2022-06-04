@@ -7,8 +7,6 @@ import {
 } from '@common/rxjs/rxjs_utils';
 import { useEffect, useRef } from 'react';
 
-
-
 interface QueryActionOptions<T> {
 	/** On valid */
 	onValid?: (v: ResponseFetchValid<T>) => void;

@@ -3,7 +3,7 @@ import moment from 'moment';
 
 export type Range = [number | undefined, number | undefined];
 export * from './utils_react';
-export { classNameFind as cnf, classNameFindCreator as cnfc};
+export { classNameFind as cnf, classNameFindCreator as cnfc };
 
 export interface AtomProps {
 	className?: string;
@@ -16,22 +16,24 @@ export interface AtomProps {
  */
 export function classNameFind(styleSheet?: object, ...classNames: (string | undefined)[]) {
 	let dup = false;
-	if(!classNames?.length)return '';
+	if (!classNames?.length) return '';
 	return classNames
-				.filter((c) => c && typeof c === 'string')
-				.join(' ')
-				.split(' ')
-				.map((c) => {
-					if (c === 'dup') {
-						dup = !dup;
-						return '';
-					}
-					return styleSheet?.[c] ? styleSheet[c] + (dup ? ' ' + c : '') : c;
-				})
-				.filter((c) => !!c)
-				.join(' ')
+		.filter((c) => c && typeof c === 'string')
+		.join(' ')
+		.split(' ')
+		.map((c) => {
+			if (c === 'dup') {
+				dup = !dup;
+				return '';
+			}
+			return styleSheet?.[c] ? styleSheet[c] + (dup ? ' ' + c : '') : c;
+		})
+		.filter((c) => !!c)
+		.join(' ');
 }
-export const classNameFindCreator=(styleSheet?: object)=>{return (...classNames: (string | undefined )[]) => classNameFind(styleSheet, ...classNames)}
+export const classNameFindCreator = (styleSheet?: object) => {
+	return (...classNames: (string | undefined)[]) => classNameFind(styleSheet, ...classNames);
+};
 
 export function combineEvent(...functions: any[]) {
 	return (...e: any[]) => {
@@ -243,7 +245,14 @@ export const years = Array.from(Array(2101 - 2021), (e, i) => i + 2021);
 // Unified date format
 export const dateFormat = (v) => moment(v).format('YYYY/MM/DD');
 
-export const assertData = <T,S,F>(v:T, asserts:[(v:T)=>any,string][],success:(v:T)=>S,fail:(m:string,v?:T)=>F) => {
-	asserts.forEach(([assert, message]) => {if(!assert(v))return fail(message,v)})
+export const assertData = <T, S, F>(
+	v: T,
+	asserts: [(v: T) => any, string][],
+	success: (v: T) => S,
+	fail: (m: string, v?: T) => F
+) => {
+	asserts.forEach(([assert, message]) => {
+		if (!assert(v)) return fail(message, v);
+	});
 	return success(v);
-}
+};

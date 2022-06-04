@@ -8,7 +8,7 @@ import usePortal from './Hooks/usePortal';
  *   <p>Thinking with portals</p>
  * </Portal>
  */
-const Portal: FunctionComponent<{ id: string, children:ReactNode}> = ({ id, children}) => {
+const Portal: FunctionComponent<{ id: string; children: ReactNode }> = ({ id, children }) => {
 	const target = usePortal(id);
 	return createPortal(children, target);
 };

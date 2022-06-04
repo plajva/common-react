@@ -5,7 +5,7 @@ import s from './Modal.module.scss';
 import Portal from './Portal';
 import { useTheme } from './Theme';
 
-export interface ModalProps extends Omit<React.HTMLAttributes<HTMLElement>, "children">{
+export interface ModalProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
 	children: (() => any) | ReactNode;
 }
 

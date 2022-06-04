@@ -18,7 +18,7 @@ import {
 	switchMap,
 	take,
 	timeout,
-	withLatestFrom
+	withLatestFrom,
 } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
 
@@ -99,7 +99,8 @@ function hasOwnProperty<X extends {}, Y extends PropertyKey>(obj: X, prop: Y): o
 	return obj.hasOwnProperty(prop);
 }
 // --------------
-export const responseIsValidFilter =  <R extends ResponseFetchAny> (v:Observable<R>) => v.pipe(filter(v => !!responseIsValid<R>(v))) as Observable<ResponseFetchValid<R>>
+export const responseIsValidFilter = <R extends ResponseFetchAny>(v: Observable<R>) =>
+	v.pipe(filter((v) => !!responseIsValid<R>(v))) as Observable<ResponseFetchValid<R>>;
 /** Will only be true if response is valid && non-null  */
 export const responseIsValid = <T extends ResponseFetchAny>(v: T): ResponseFetchValid<T> | undefined =>
 	v && !v.errors && !v.loading && !v.message && hasOwnProperty(v, 'data') ? v : undefined;
@@ -107,7 +108,7 @@ export const responseIsValid = <T extends ResponseFetchAny>(v: T): ResponseFetch
 export const responseIsError = <T extends ResponseFetchAny>(v: T): ResponseFetchErrors<T> | undefined =>
 	v && hasOwnProperty(v, 'errors') ? v : undefined;
 
-type FetchOptions<T=any> = {
+type FetchOptions<T = any> = {
 	/** Init to use, will take precedence over all other options */
 	init?: RequestInit;
 	force?: 'text' | 'arrayBuffer' | 'formData' | 'json' | 'blob';
@@ -162,7 +163,9 @@ export const createAPIFetch = <T>({
 						return from(res.json()).pipe(
 							map((v) => ({
 								errors: true,
-								message: v ? v?.message ?? v?.Message ?? JSON.stringify(v.errors) : `Error: ${res.status} - ${res.statusText}`,
+								message: v
+									? v?.message ?? v?.Message ?? JSON.stringify(v.errors)
+									: `Error: ${res.status} - ${res.statusText}`,
 							}))
 						);
 					case 'text/plain':
@@ -210,13 +213,13 @@ export const createAPIFetchStatic = <R, C extends unknown[], W extends unknown[]
  *  createAPIFetchEventCombine
  *  createAPIFetchEvent
  */
-type FetchEventOptions<R, D, C extends unknown[], W extends unknown[], I=undefined> = {
+type FetchEventOptions<R, D, C extends unknown[], W extends unknown[], I = undefined> = {
 	responseType?: R;
 	defaultValue?: D;
 	/** Pipe input with operator, default 'undefined' */
-	inputPipe?: ((v:Observable<I>) => Observable<I>) | 'distinct';
+	inputPipe?: ((v: Observable<I>) => Observable<I>) | 'distinct';
 	/** Pipe result with operator, default 'shareReplay' */
-	responsePipe?: ((v:Observable<R>) => Observable<R>) | 'share' | 'shareReplay'| 'shareReplayRefcount' | false;
+	responsePipe?: ((v: Observable<R>) => Observable<R>) | 'share' | 'shareReplay' | 'shareReplayRefcount' | false;
 	/**
 	 * Combine with other observables,
 	 * needs at least 1 value, will retrigger on any new value by any combine observable
@@ -247,15 +250,15 @@ export function createAPIFetchEvent<
 	D = undefined
 >(
 	toFetch: (val: [I, ...C, ...W]) => Observable<R>,
-	options?: FetchEventOptions<R, D, C, W,I> & { startWith?: I; inputType?: I }
+	options?: FetchEventOptions<R, D, C, W, I> & { startWith?: I; inputType?: I }
 ): [(v: InputUnion<I>) => void, () => [I, ...C, ...W] | undefined, () => R | D | undefined, Observable<R>] {
 	// Making a subject, a new event creator per say
 	// Subject will usually have queryString or
 	let subject$ = new Subject<I>();
 	let subjectO$ = options?.startWith ? subject$.pipe(startWith(options.startWith)) : subject$;
 	const inputPipe = options?.inputPipe;
-	if(inputPipe)subjectO$=subjectO$.pipe(inputPipe === 'distinct' ? distinctUntilChanged() : inputPipe);
-	
+	if (inputPipe) subjectO$ = subjectO$.pipe(inputPipe === 'distinct' ? distinctUntilChanged() : inputPipe);
+
 	const subjectOHot$ = subjectO$.pipe(shareReplay(1));
 	/** If v is function, will wait from value from */
 	const setValue = (v: InputUnion<I>) => {
@@ -301,12 +304,16 @@ export function createAPIFetchEvent<
 	);
 	// Pipe the result
 	const resultPipe = options?.responsePipe ?? 'shareReplay';
-	if(resultPipe)result$=result$.pipe(
-		resultPipe === 'shareReplay' ? shareReplay(1):
-		resultPipe === 'shareReplayRefcount' ? shareReplay({bufferSize:1, refCount:true}):
-		resultPipe === 'share' ? share():
-		resultPipe
-	);
+	if (resultPipe)
+		result$ = result$.pipe(
+			resultPipe === 'shareReplay'
+				? shareReplay(1)
+				: resultPipe === 'shareReplayRefcount'
+				? shareReplay({ bufferSize: 1, refCount: true })
+				: resultPipe === 'share'
+				? share()
+				: resultPipe
+		);
 	// Bind to result
 	const useResult = () => useObservable(result$, options?.defaultValue);
 	// Return
@@ -346,15 +353,19 @@ export function createAPIFetchChain<R, D = undefined, C extends unknown[] = [], 
 			return v;
 		})
 	);
-	
+
 	// Pipe the result
 	const resultPipe = options?.responsePipe ?? 'shareReplay';
-	if(resultPipe)result$=result$.pipe(
-		resultPipe === 'shareReplay' ? shareReplay(1):
-		resultPipe === 'shareReplayRefcount' ? shareReplay({bufferSize:1, refCount:true}):
-		resultPipe === 'share' ? share():
-		resultPipe
-	);
+	if (resultPipe)
+		result$ = result$.pipe(
+			resultPipe === 'shareReplay'
+				? shareReplay(1)
+				: resultPipe === 'shareReplayRefcount'
+				? shareReplay({ bufferSize: 1, refCount: true })
+				: resultPipe === 'share'
+				? share()
+				: resultPipe
+		);
 	// Bind to result
 	const useResult = () => useObservable(result$, options?.defaultValue);
 	// Return
@@ -372,7 +383,7 @@ export const queryString = (v?: any) => {
 		);
 	}
 };
-export type FetchHelperOptions<T=any> = {
+export type FetchHelperOptions<T = any> = {
 	/** The endpoint string to use */
 	endpoint: string;
 	/** The baseUrl to be used for query URL generation, will be postfixed by 'endpoint' */
@@ -425,7 +436,10 @@ export const createAPIFetchHelper = <T>({
 	if (body) {
 		init = {
 			...init,
-			body: typeof body === 'object' && !bodyRaw ? JSON.stringify(!bodyPrune?body:pruneEmpty(body)) : (body as BodyInit),
+			body:
+				typeof body === 'object' && !bodyRaw
+					? JSON.stringify(!bodyPrune ? body : pruneEmpty(body))
+					: (body as BodyInit),
 		};
 	}
 	if (auth || token) {

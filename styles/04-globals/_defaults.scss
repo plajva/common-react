@@ -134,8 +134,8 @@ $sindex: 0;
 			width: math.div(100%, 12) * $i;
 		}
 	}
-	
-	@for $i from 0 through 10{
+
+	@for $i from 0 through 10 {
 		#{append-media('.z-#{$i}')} {
 			z-index: $i;
 		}
@@ -160,8 +160,6 @@ $sindex: 0;
 		display: none;
 	}
 }
-
-
 
 @include repeat_media;
 @each $bp_name, $bp_value in $breakpoints {

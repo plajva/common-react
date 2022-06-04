@@ -6,7 +6,6 @@ export interface ThemeProviderProps {}
 const themesAvailable = ['default', 'dark'];
 const darkTheme = 'dark' as typeof themesAvailable[number];
 const getTimeTheme = () => {
-	
 	if (themesAvailable.length > 1 && themesAvailable.includes(darkTheme)) {
 		let hr = new Date().getHours();
 		return 7 < hr && hr < 18 ? themesAvailable[0] : darkTheme;
@@ -18,13 +17,17 @@ const getTimeTheme = () => {
 export interface ThemeI {
 	name: string;
 	/** For use with scss module callback c() */
-	nameWithDup: string,
+	nameWithDup: string;
 	set: () => void;
 	next: () => void;
 }
 
-
-export const ThemeContext = React.createContext<ThemeI>({ name: getTimeTheme(), set: () => {}, next: () => {} , nameWithDup: 'dup ' + getTimeTheme()});
+export const ThemeContext = React.createContext<ThemeI>({
+	name: getTimeTheme(),
+	set: () => {},
+	next: () => {},
+	nameWithDup: 'dup ' + getTimeTheme(),
+});
 
 export function useTheme() {
 	return useContext(ThemeContext);
@@ -69,7 +72,7 @@ const ThemeProvider: FunctionComponent<ThemeProviderProps & React.HTMLAttributes
 	};
 
 	return (
-		<ThemeContext.Provider value={{ name: theme, nameWithDup: 'dup '+theme, set: nextTheme, next: nextTheme }}>
+		<ThemeContext.Provider value={{ name: theme, nameWithDup: 'dup ' + theme, set: nextTheme, next: nextTheme }}>
 			<div className={`${theme} root`}>{children}</div>
 		</ThemeContext.Provider>
 	);

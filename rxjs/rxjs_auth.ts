@@ -4,7 +4,8 @@ import { useObservable } from './rxjs_utils';
 
 // Object shouldn't change, should only be imported/exported
 export const token: any = {};
-const _token_login$ = of('');
+const _token_login$ = new Subject<string>();
+export const login = (v:string) => _token_login$.next(v);
 const _token_logout$ = new Subject<false>();
 export const logout = () => _token_logout$.next(false);
 // Observable wich will be false if user has logged out
@@ -44,9 +45,6 @@ export const isLoggedIn = () => _is_logged_in;
 let _is_logged_in = false;
 // Actions on login/logout
 token$.subscribe((_token) => {
-	for (const k in token) {
-		delete token[k];
-	}
 	if (_token) {
 		// User Logged in
 		_is_logged_in = true;
@@ -56,13 +54,15 @@ token$.subscribe((_token) => {
 		// User Logged out
 		_is_logged_in = false;
 		localStorage.removeItem('token');
+		for (const k in token) {
+			delete token[k];
+		}
 	}
 });
 
 export const useTokenChanged = () => useObservable(token$, undefined);
 export const tokenValid$ = token$.pipe(
 	filter((token) => !!token),
-	map((token) => ({ token })),
-	shareReplay(1)
+	map((token) => ({ token }))
 );
 export const tokenValidParsed$ = tokenValid$.pipe(map((v) => jwtParse(v.token)));

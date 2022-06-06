@@ -2,7 +2,7 @@
 /**
  * Deleted PrivateRoute, only is PrivateElement now, previous private route wasn't working with 'component' prop
  */
-import { isLocked, LockedProps } from '@rootpc/atoms/Locked';
+import { isLocked, LockedProps } from '@common/atoms/Locked';
 import React, { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 

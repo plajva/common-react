@@ -24,23 +24,24 @@ const Apply: FunctionComponent<ApplyProps & React.HTMLAttributes<HTMLDivElement>
 		if (to && child.type !== to) return p;
 		// if(typeof depth_max !== 'undefined')if(depth_max < depth)return p;
 
-		let a = Object();
-		const m = (k: any, b: any, a: any) => {
-			switch (k) {
-				case 'className':
-					return b + ' ' + a;
-				default:
-					switch (typeof b) {
-						case 'string':
-							return b + ' ' + a;
-						default:
-							console.error(`Can't handle key ${k}`);
-							return b;
-					}
-			}
-		};
-		Object.entries(props).forEach(([k, v]) => (a[k] = a[k] ? m(k, a[k], v) : v));
-		return a;
+		// let a = Object();
+		// const m = (k: any, b: any, a: any) => {
+		// 	switch (k) {
+		// 		case 'className':
+		// 			return b + ' ' + a;
+		// 		default:
+		// 			switch (typeof b) {
+		// 				case 'string':
+		// 					return b + ' ' + a;
+		// 				default:
+		// 					console.error(`Can't handle key ${k}`);
+		// 					return b;
+		// 			}
+		// 	}
+		// };
+		// // For each prop passed to Apply, 
+		// Object.entries(props).forEach(([k, v]) => (a[k] = a[k] ? m(k, a[k], v) : v));
+		return props;
 	};
 
 	const mapChildren = (c: any, depth = 0): any => {

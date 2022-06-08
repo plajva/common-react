@@ -99,8 +99,14 @@ function hasOwnProperty<X extends {}, Y extends PropertyKey>(obj: X, prop: Y): o
 	return obj.hasOwnProperty(prop);
 }
 // --------------
-export const responseIsValidFilter = <R extends ResponseFetchAny>(v: Observable<R>) =>
+export const toTrigger = (v: Observable<any>) =>
+	v.pipe(
+		map((v) => undefined),
+		startWith(undefined)
+	);
+export const toValid = <R extends ResponseFetchAny>(v: Observable<R>) =>
 	v.pipe(filter((v) => !!responseIsValid<R>(v))) as Observable<ResponseFetchValid<R>>;
+export const toValidTrigger = (v) => toTrigger(toValid(v))
 /** Will only be true if response is valid && non-null  */
 export const responseIsValid = <T extends ResponseFetchAny>(v: T): ResponseFetchValid<T> | undefined =>
 	v && !v.errors && !v.loading && !v.message && hasOwnProperty(v, 'data') ? v : undefined;

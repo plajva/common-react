@@ -1,9 +1,11 @@
 import _ from 'lodash';
 import moment from 'moment';
+import { Buffer } from 'buffer';
 
 export type Range = [number | undefined, number | undefined];
 export * from './utils_react';
 export { classNameFind as cnf, classNameFindCreator as cnfc };
+
 
 export interface AtomProps {
 	className?: string;

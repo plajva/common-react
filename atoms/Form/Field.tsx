@@ -14,13 +14,14 @@ import { useTheme } from '../Theme';
 import Checkbox, { CheckboxProps } from './Checkbox';
 import s from './Field.module.scss';
 import {
-	FormFieldHOC,
 	InputPropsAll,
 	useFieldError,
 	useFieldTouched,
 	useFieldValue,
 	useForm,
+	useFormField,
 	UseFormFieldOptions,
+	UseFormFieldProps,
 	useFormNameContextCombine,
 } from './Form';
 import Input from './Input';
@@ -66,6 +67,13 @@ const InputFile = (props) => {
 		</>
 	);
 };
+interface TextareaProps extends UseFormFieldProps{
+	heightauto?: true
+}
+const Textarea = ({heightauto, style,...props}: TextareaProps & React.TextareaHTMLAttributes<HTMLElement>) => {
+	const fprops = useFormField(props);
+	return <textarea data-value={(props.value??'') && 'true'} style={{width: '100%', height: (5+(String(fprops.value).match(/\n/g)||[])?.length) + 'em',...style}}  {...fprops}/>
+}
 
 interface _FieldProps {
 	type?:
@@ -98,7 +106,7 @@ interface _FieldProps {
 }
 
 export type FieldCommon = { name?: string; value?: any; onChange?: (v: any) => void } & UseFormFieldOptions;
-type InputComponentProps = ToggleProps | SelectProps | CheckboxProps | RadioProps;
+type InputComponentProps = ToggleProps | SelectProps | CheckboxProps | RadioProps | TextareaProps;
 export type FieldProps = _FieldProps & InputComponentProps & DistributiveOmit<InputPropsAll, 'value'>;
 
 export const Field = ({
@@ -138,10 +146,7 @@ export const Field = ({
 				: type === 'file'
 				? InputFile
 				: type === 'textarea'
-				? (eprops) =>
-						FormFieldHOC(
-							createElement('textarea', { ...eprops, style: { width: '100%', height: '100%', ...eprops.style } })
-						)
+				? Textarea
 				: Input,
 		[type]
 	);

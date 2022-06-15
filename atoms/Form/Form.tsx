@@ -425,11 +425,11 @@ export const useFormField = (
 };
 
 // Combines onChange and onBlur and sets value if none provided
-export const FormFieldHOC = (element: ReactElement<InputPropsAll & UseFormFieldProps & UseFormFieldOptions>) => {
-	const newProps = useFormField(element.props);
-	newProps['data-value'] = newProps.value || '';
-	return element.props.name ? cloneElement(element, newProps) : element;
-};
+// export const FormFieldHOC = (element: ReactElement<InputPropsAll & UseFormFieldProps & UseFormFieldOptions>) => {
+// 	const newProps = useFormField(element.props);
+// 	newProps['data-value'] = newProps.value || '';
+// 	return element.props.name ? cloneElement(element, newProps) : element;
+// };
 
 const FormNameContext = createContext('');
 export const useFormNameContext = () => useContext(FormNameContext);

@@ -83,10 +83,12 @@ const FormContext = StateCombineContext<FormState, FormContextExtra>({
 export const useForm = () => useContext(FormContext);
 
 interface FormProps {
-	/** Implemented with the idea that if this changes, state will become {values: resetValuesAuto}, kind of like an automatic reset state, triggered when this value changes */
+	/** Implemented with the idea that if this changes, state will become {values: resetValuesAuto}, kind of like an automatic reset state, triggered when this value changes, should probably */
 	resetValuesAuto?: any;
 	/** Defaults to initialState, if reset, state will become this */
 	resetState?: FormState;
+	/** Should we clear the form when submitting */
+	onSubmitReset?: boolean;
 
 	/**Accepts a schema from zod/yup */
 	validationSchema?: any;
@@ -128,6 +130,7 @@ const FormComp = ({
 	validationStrip,
 	onSubmit,
 	onSubmitChanges,
+	onSubmitReset,
 	onReset,
 	onChange,
 	onChanges,
@@ -170,7 +173,9 @@ const FormComp = ({
 		});
 		return { values: valid, touched };
 	};
-
+	const clear = () => {
+		setState(s=>cloneDeep(FormStateInitial));
+	};
 	const context: FormContextI = {
 		state,
 		initialState,
@@ -268,9 +273,7 @@ const FormComp = ({
 			setState(rstate);
 			onReset && onReset(rstate);
 		},
-		clear: () => {
-			setState(cloneDeep(FormStateInitial));
-		},
+		clear,
 		submit: () => {
 			// To handle login info saving in the browser
 			if (formRef.current && !formSubmitting.current) {
@@ -299,6 +302,7 @@ const FormComp = ({
 
 			// Reset the switch
 			formSubmitting.current = false;
+			if(!!onSubmitReset && valid_s)clear();
 		},
 	};
 

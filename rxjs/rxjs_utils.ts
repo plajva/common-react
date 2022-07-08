@@ -106,7 +106,7 @@ export const toTrigger = (v: Observable<any>) =>
 	);
 export const toValid = <R extends ResponseFetchAny>(v: Observable<R>) =>
 	v.pipe(filter((v) => !!responseIsValid<R>(v))) as Observable<ResponseFetchValid<R>>;
-export const toValidTrigger = (v) => toTrigger(toValid(v))
+export const toValidTrigger = (v) => toTrigger(toValid(v));
 /** Will only be true if response is valid && non-null  */
 export const responseIsValid = <T extends ResponseFetchAny>(v: T): ResponseFetchValid<T> | undefined =>
 	v && !v.errors && !v.loading && !v.message && hasOwnProperty(v, 'data') ? v : undefined;
@@ -410,7 +410,11 @@ export type FetchHelperOptions<T = any> = {
 	type?: 'json';
 } & FetchOptions<T>;
 
-export const baseURLApi = process.env.REACT_APP_API_URL;
+// Adding support for developer environment setting
+export const baseURLApi =
+	process.env.REACT_APP_STAGING && localStorage.getItem('developer_api')
+		? process.env.REACT_APP_API_URL_DEVELOPER
+		: process.env.REACT_APP_API_URL;
 /**
  * Another method of createAPIFetch
  * @param param0 Options to create query

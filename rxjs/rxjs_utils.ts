@@ -131,7 +131,7 @@ export const createAPIFetch = <T>({
 	let o = fromFetch(url, init).pipe(
 		switchMap((res) => {
 			// The .split is to handle content types like 'application/json; charset=utf-8'
-			let content_type = res.headers.get('Content-type')?.split(';')[0];
+			let content_type = res.headers.get('Content-type')?.split(';')[0] || "";
 
 			// let content_size = res.headers.get
 			if (res.ok) {
@@ -164,21 +164,18 @@ export const createAPIFetch = <T>({
 					  )
 					: r;
 			} else {
-				switch (content_type) {
-					case 'application/json':
-						return from(res.json()).pipe(
+				return content_type === 'application/json'
+					? from(res.json()).pipe(
 							map((v) => ({
 								errors: true,
 								message: v
 									? v?.message ?? v?.Message ?? JSON.stringify(v.errors)
 									: `Error: ${res.status} - ${res.statusText}`,
 							}))
-						);
-					case 'text/plain':
-						return from(res.text()).pipe(map((v) => ({ errors: true, message: String(v) || `Error ${res.status}` })));
-					default:
-						return of({ errors: true, message: `Error ${res.status}` });
-				}
+					  )
+					: content_type.includes('text/')
+					? from(res.text()).pipe(map((v) => ({ errors: true, message: String(v) || `Error ${res.status}` })))
+					: of({ errors: true, message: `Error ${res.status}` });
 			}
 		}),
 		catchError((err) => {

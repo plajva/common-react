@@ -77,33 +77,6 @@ export const scrollToElement = (
 	}
 };
 
-<<<<<<< HEAD
-export const isLogin = () => {
-    const token  = localStorage.getItem("token");
-    if(token){
-        const jwt = jwtParse(token);
-        if(jwt && jwt.exp){
-            const jwtExp = new Date(Number(jwt.exp)*1000);
-            const expired = new Date().getTime() > jwtExp.getTime();
-            return !expired;
-        }
-    }
-    return false;
-};
-=======
-// export const isLogin = (_token?: string) => {
-// 	const token = _token ?? localStorage.getItem('token');
-// 	if (token) {
-// 		const jwt = jwtParse(token);
-// 		if (jwt) {
-// 			const exp = new Date(Number(jwt.exp) * 1000);
-// 			const expired = new Date().getTime() > exp.getTime();
-// 			return !expired;
-// 		}
-// 	}
-// 	return false;
-// };
-
 export function useInterval(callback, { delay, onStart }) {
 	const savedCallback = useRef<any>();
 
@@ -125,4 +98,4 @@ export function useInterval(callback, { delay, onStart }) {
 		// eslint-disable-next-line
 	}, [delay]);
 }
->>>>>>> 7aa168acfebdf3af4351fc767f21d6aa5d08fd74
+

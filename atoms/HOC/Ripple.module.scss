@@ -1,33 +1,33 @@
-@import '../../styles/globals';
+@import '@rootp/cindex';
 
 @keyframes ripple {
-    from {
-        transform: scale(0);
-        opacity: 1;
-    }
-    to {
-        transform: scale(2);
-        opacity: 0;
-    }
+	from {
+		transform: scale(0);
+		opacity: 1;
+	}
+	to {
+		transform: scale(2);
+		opacity: 0;
+	}
 }
 
 span.ripple {
-    // My definitions by default
-    pointer-events: none;
-    position: absolute;
-    border-radius: 50%;
+	// My definitions by default
+	pointer-events: none;
+	position: absolute;
+	border-radius: 50%;
 
-    // You can define theme based classes in this loop
-    // This will loop through all themes
-    // $ts (Theme Selector)
-    @each $theme in $theme-names-with-empty {
-        $theme-current: $theme !global;
-        $ts: theme-selector();
+	// You can define theme based classes in this loop
+	// This will loop through all themes
+	// $ts (Theme Selector)
+	@each $theme in $theme-names-with-empty {
+		$theme-current: $theme !global;
+		$ts: theme-selector();
 
-        // My component on this theme
-        &#{$ts} {
-            background: rgba(if(is-dark(), #fff, #000), 0.5);
-        }
-    }
-    $theme-current: $theme-default;
+		// My component on this theme
+		&#{$ts} {
+			background: rgba(if(is-dark(), #fff, #000), 0.5);
+		}
+	}
+	$theme-current: $theme-default;
 }

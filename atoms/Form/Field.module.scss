@@ -1,12 +1,12 @@
 @use 'sass:color';
 @use 'sass:math';
-@import '../../styles/globals';
+@import '@rootp/cindex';
 @import '../../styles/include-media';
 
 @include media('<tablet') {
-    .comp {
-        width: 100%;
-    }
+	.comp {
+		width: 100%;
+	}
 }
 
 $label-top-size: 0.7em;
@@ -17,141 +17,152 @@ $padding-bottom: $label-error-size + 0.4 * $label-error-size;
 $line-height: 1.5;
 $padding: 0.2em;
 .comp {
-    display: inline-flex;
-    position: relative;
-    flex: 1 1 auto;
-    
-    text-align: left;
+	display: inline-flex;
+	position: relative;
+	flex: 1 1 auto;
 
-    .label-container {
-        display: flex;
-        // box-sizing: content-box;
-        flex-wrap: nowrap;
-        align-items: center;
-        position: relative;
-        padding-bottom: $padding-bottom;
-        padding-top: $padding-top;
-        gap: get-space(2);
-        width: 100%;
-    }
-    .label-text,
-    .label-text-bottom {
-        white-space: nowrap;
-        line-height: 1;
-        transition: all 0.4s;
-        position: absolute;
-        pointer-events: none;
-        box-sizing: border-box;
-        // We only have a reserved space under/over fields, label contents can't overflow
-        overflow: hidden;
-        max-width: 100%;
-    }
-    .label-text-bottom {
-        display: block;
-        padding: 0.2em;
-        width: 100%;
-        bottom: 0;
-        left: 0;
-        max-height: 1.4em;
-        transform-origin: bottom left;
-        font-size: $label-error-size;
-    }
-    .label-text-bottom.error {
-        color: get-color(error);
-    }
-    .label-text {
-        width: calc(100% - 2em);
-        transform: translate($padding, #{$padding-top + $padding});
-        opacity: 0.5;
-        line-height: $line-height;
-        transform-origin: top left;
-        
-        top: 0;
-        left: 0;
-    }
-    .label-text-persistent {
-        pointer-events: auto;
-        display: block;
-    }
-    // If value="jk" or defaultValue
-    .input[value]:not([value='']) + .label-text,
-    .input[data-value]:not([data-value='']) + .label-text,
-    .input[type='date'] + .label-text {
-        transform: translate($padding - 0.05em, 0) scale(strip-unit(math.div($label-top-size, $label-size)));
-        width: strip-unit(math.div($label-size,$label-top-size)) * 100%;
-        opacity: 1;
-        max-width: unset;
-    }
-    .input {
-        line-height: $line-height;
-        padding: $padding;
-        box-sizing: border-box;
-        // A neutral color as default, will get overriten in themed below..
-        border: 1px solid get-color(neutral, $alpha: 0.5);
-    }
-    &::after {
-        content: '';
-        border-bottom: 1px solid get-color(neutral);
-    }
-    .field-select {
-        padding: get-space(5) get-space(4);
-        background-position: calc(100% - 0.75rem) center !important;
-        -moz-appearance: none !important;
-        -webkit-appearance: none !important;
-        appearance: none !important;
+	text-align: left;
 
-        @include use-theme using ($ts) {
-            &#{$ts} {
-                $color: color-text(get-color(background));
-                background: rgba(0, 0, 0, 0.05)
-                    url("data:image/svg+xml,<svg height='10px' width='10px' viewBox='0 0 16 16' fill='#{$color}' xmlns='http://www.w3.org/2000/svg'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>")
-                    no-repeat;
+	.label-container {
+		display: flex;
+		// box-sizing: content-box;
+		flex-wrap: nowrap;
+		align-items: center;
+		position: relative;
+		padding-bottom: $padding-bottom;
+		padding-top: $padding-top;
+		gap: get-space(2);
+		width: 100%;
+		&.textarea {
+			align-items: flex-start;
+			justify-content: flex-start;
+		}
+	}
 
-                option {
-                    color: $color;
-                    background-color: get-color(background, 1, 1);
-                }
-            }
-        }
-    }
+	.label-text,
+	.label-text-bottom {
+		white-space: nowrap;
+		line-height: 1;
+		transition: all 0.4s;
+		position: absolute;
+		pointer-events: none;
+		box-sizing: border-box;
+		// We only have a reserved space under/over fields, label contents can't overflow
+		overflow: hidden;
+		max-width: 100%;
+	}
+	.label-text-bottom {
+		display: block;
+		padding: 0.2em;
+		width: 100%;
+		bottom: 0;
+		left: 0;
+		max-height: 1.4em;
+		transform-origin: bottom left;
+		font-size: $label-error-size;
+	}
+	.label-text-bottom.error {
+		color: get-color(error);
+	}
+	.label-text {
+		width: calc(100% - 2em);
+		transform: translate($padding, #{$padding-top + $padding});
+		opacity: 0.5;
+		line-height: $line-height;
+		transform-origin: top left;
 
-    @include use-theme using ($ts) {
-        // Theme Iterator
+		top: 0;
+		left: 0;
+	}
+	.label-text-persistent {
+		pointer-events: auto;
+		display: block;
+	}
+	// If value="jk" or defaultValue
+	.input[value]:not([value='']) + .label-text,
+	.input[data-value]:not([data-value='']):not([data-value='0']) + .label-text,
+	.input[type='date'] + .label-text {
+		transform: translate($padding - 0.05em, 0) scale(strip-unit(math.div($label-top-size, $label-size)));
+		width: strip-unit(math.div($label-size, $label-top-size)) * 100%;
+		opacity: 1;
+		max-width: unset;
+	}
+	.input {
+		line-height: $line-height;
+		padding: $padding;
+		box-sizing: border-box;
+		// A neutral color as default, will get overriten in themed below..
+		border: 1px solid get-color(neutral, $alpha: 0.5);
+	}
+	&::after {
+		content: '';
+		border-bottom: 1px solid get-color(neutral);
+	}
+	.field-select {
+		padding: get-space(5) get-space(4);
+		background-position: calc(100% - 0.75rem) center !important;
+		-moz-appearance: none !important;
+		-webkit-appearance: none !important;
+		appearance: none !important;
 
-        &#{$ts} {
-            .label-text-bottom.error {
-                @include background-color(error, 0, true, 0.3);
-            }
-            .input {
-                &:focus-visible {
-                    border: 1px solid color-text(background);
-                }
-                border: 1px solid color.change(color-text(background), $alpha: if(is-dark(), 0.3, 0.4));
-            }
-        }
-        // @include use-color using ($cn, $c) {
-        // 	// Color Iterator
-        // 	&#{$ts}.#{$cn} {
-        // 	}
-        // }
-    }
+		@include use-theme using ($ts) {
+			&#{$ts} {
+				$color: color-text(get-color(background));
+				background: rgba(0, 0, 0, 0.05)
+					url("data:image/svg+xml,<svg height='10px' width='10px' viewBox='0 0 16 16' fill='#{$color}' xmlns='http://www.w3.org/2000/svg'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>")
+					no-repeat;
+
+				option {
+					color: $color;
+					background-color: get-color(background, 1, 1);
+				}
+			}
+		}
+	}
+
+	@include use-theme using ($ts) {
+		// Theme Iterator
+
+		&#{$ts} {
+			.label-text-bottom.error {
+				@include background-color(error, 0, true, 0.3);
+			}
+			.input {
+				&:focus-visible {
+					border: 1px solid color-text(background);
+				}
+				border: 1px solid color.change(color-text(background), $alpha: if(is-dark(), 0.3, 0.4));
+			}
+			.label-text,
+			.label-text-persistent {
+				&.touched {
+					color: get-color(secondary, 5);
+				}
+			}
+		}
+		// @include use-color using ($cn, $c) {
+		// 	// Color Iterator
+		// 	&#{$ts}.#{$cn} {
+		// 	}
+		// }
+	}
 }
 
-.edit-confirm{
-    pointer-events: none;
-    display: flex;
-    justify-content: end;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    padding: inherit;
+.edit-confirm {
+	pointer-events: none;
+	display: flex;
+	justify-content: flex-end;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	padding: inherit;
 }
-.edit-button{
-    pointer-events: all;
-    opacity: .5;
-    &:hover{
-        opacity: 1;
-    }
+.edit-button {
+	pointer-events: all;
+	opacity: 0.5;
+	&:hover {
+		opacity: 1;
+	}
 }

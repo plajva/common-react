@@ -2,14 +2,14 @@
 @import '../type_check';
 
 @function get-font-size($name) {
-    $font-sizes: get-theme-field(font-sizes);
-    $font-size-defaults: get-theme-field(font-size-defaults);
+	$font-sizes: get-theme-field(font-sizes);
+	$font-size-defaults: get-theme-field(font-size-defaults);
 
-    @if (is-number($name) and unitless($name) and $name <= list.length($font-sizes)) {
-        @return get-font-size(list.nth($font-sizes, $name));
-    }
-    @if map-has-key($map: $font-size-defaults, $key: $name) {
-        @return get-font-size(map-get($map: $font-size-defaults, $key: $name));
-    }
-    @return $name;
+	@if (is-number($name) and unitless($name) and $name <= list.length($font-sizes)) {
+		@return get-font-size(list.nth($font-sizes, $name));
+	}
+	@if map-has-key($map: $font-size-defaults, $key: $name) {
+		@return get-font-size(map-get($map: $font-size-defaults, $key: $name));
+	}
+	@return $name;
 }

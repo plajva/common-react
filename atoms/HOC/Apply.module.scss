@@ -1,18 +1,18 @@
-@import '../../styles/globals';
+@import '@rootp/cindex';
 
 .comp {
-    // My definitions by default
+	// My definitions by default
 
-    // @include use-theme using ($ts){
-    // 	// Theme Iterator
-    //  &#{$ts}{
-    // 	background: get-color(background);
-    //  }
-    // 	@include use-color using ($cn, $c){
-    // 		// Color Iterator
-    // 		&#{$ts}.#{$cn}{
+	// @include use-theme using ($ts){
+	// 	// Theme Iterator
+	//  &#{$ts}{
+	// 	background: get-color(background);
+	//  }
+	// 	@include use-color using ($cn, $c){
+	// 		// Color Iterator
+	// 		&#{$ts}.#{$cn}{
 
-    // 		}
-    // 	}
-    // }
+	// 		}
+	// 	}
+	// }
 }

@@ -1,81 +1,81 @@
 @use 'sass:list';
-@import '../styles/globals';
+@import '@rootp/cindex';
 
 .button {
-    position: relative;
-    overflow: hidden;
-    transition: background 0.3s;
-    // padding: get-space(3);
-    // border-radius: get-space(2);
-    background: transparent;
+	// position: relative;
+	overflow: hidden;
+	// transition: background 0.3s;
+	// padding: get-space(3);
+	// border-radius: get-space(2);
+	background: transparent;
 
-    &:hover {
-        background: get-color(neutral, $alpha: 0.1);
-    }
-    &:focus-visible {
-        outline: 1px solid color-text(background);
-    }
+	&:hover {
+		background: get-color(neutral, $alpha: 0.1);
+	}
+	&:focus-visible {
+		outline: 1px solid color-text(background);
+	}
 
-    svg {
-        // display: block;
-        vertical-align: sub;
-    }
+	svg {
+		// display: block;
+		vertical-align: sub;
+	}
 
-    &.outline {
-        border: 1px solid get-color(neutral, $alpha: 0.7);
-    }
+	&.outline {
+		border: 1px solid get-color(neutral, $alpha: 0.7);
+	}
 
-    &.circular {
-        // padding: none;
-        border-radius: 9999px;
-        background: transparent;
-        // padding: get-space(3);
+	&.circular {
+		// padding: none;
+		border-radius: 9999px;
+		background: transparent;
+		// padding: get-space(3);
 
-        &:hover {
-            background: get-color(neutral, $alpha: 0.1);
-        }
-    }
-    &.icon {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        & > * {
-            flex: 0 1 auto;
-        }
-    }
+		&:hover {
+			background: get-color(neutral, $alpha: 0.1);
+		}
+	}
+	&.icon {
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		& > * {
+			flex: 0 1 auto;
+		}
+	}
 
-    @include use-theme using ($ts) {
-        &#{$ts} {
-            // @include background-color(get-color(neutral, $alpha: 0.05));
-            background: get-color(neutral, -4, $alpha: 0.05);
-            &:hover {
-                // @include background-color(get-color(neutral, $alpha: 0.1));
-                background: get-color(neutral, $alpha: 0.13);
-            }
-            &:focus-visible {
-                outline: 1px solid color-text(background);
-            }
-        }
-        &#{$ts}:disabled {
-            color: rgba(color-text(get-color(background)), 0.3);
-            cursor: not-allowed;
-        }
+	@include use-theme using ($ts) {
+		&#{$ts} {
+			// @include background-color(get-color(neutral, $alpha: 0.05));
+			background: get-color(neutral, -4, $alpha: 0.05);
+			&:hover {
+				// @include background-color(get-color(neutral, $alpha: 0.1));
+				background: get-color(neutral, $alpha: 0.13);
+			}
+			&:focus-visible {
+				outline: 1px solid color-text(background);
+			}
+		}
+		&#{$ts}:disabled {
+			color: rgba(color-text(get-color(background)), 0.3);
+			cursor: not-allowed;
+		}
 
-        @include use-color using ($cn, $c) {
-            &#{$ts}.#{$cn} {
-                @include backgound-active-color(rgba($c, 0.05), null, $c);
-                // @include active-color($c);
-                border: 2px solid get-color($cn, get-theme-field(shades, default));
-                &:hover {
-                    border: 2px solid get-color($cn, get-theme-field(shades, hover));
-                }
-                &:active {
-                    border: 2px solid get-color($cn, get-theme-field(shades, active));
-                }
-            }
-            &#{$ts}.#{$cn}-background {
-                @include backgound-active-color(rgba($c, 0.8));
-            }
-        }
-    }
+		@include use-color using ($cn, $c) {
+			&#{$ts}.#{$cn} {
+				@include backgound-active-color(rgba($c, 0.05), null, $c);
+				// @include active-color($c);
+				border: 2px solid get-color($cn, get-theme-field(shades, default));
+				&:hover {
+					border: 2px solid get-color($cn, get-theme-field(shades, hover));
+				}
+				&:active {
+					border: 2px solid get-color($cn, get-theme-field(shades, active));
+				}
+			}
+			&#{$ts}.#{$cn}-background {
+				@include backgound-active-color(rgba($c, 0.8));
+			}
+		}
+	}
 }

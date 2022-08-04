@@ -1,6 +1,6 @@
 @use 'sass:color';
 @use 'sass:math';
-@import '../../styles/globals';
+@import '@rootp/cindex';
 @import './atom_common';
 
 $width: 3em;
@@ -8,52 +8,52 @@ $width-o-2: math.div($width, 2);
 // * Some settings are in 'atom_common'
 
 .control {
-    transition: $transition;
-    width: $width;
-    height: $width-o-2;
-    box-sizing: content-box;
+	transition: $transition;
+	width: $width;
+	height: $width-o-2;
+	box-sizing: content-box;
 
-    border-radius: $width-o-2;
-    position: relative;
-    &:after {
-        background: currentColor;
-        box-sizing: border-box;
-        transition: $transition;
-        content: '';
-        width: $width-o-2 - $gutter * 2;
-        height: $width-o-2 - $gutter * 2;
-        display: block;
-        border-radius: 50%;
-        position: absolute;
-        top: 0 + $gutter;
-        left: 0.1em + $gutter;
-    }
+	border-radius: $width-o-2;
+	position: relative;
+	&:after {
+		background: currentColor;
+		box-sizing: border-box;
+		transition: $transition;
+		content: '';
+		width: $width-o-2 - $gutter * 2;
+		height: $width-o-2 - $gutter * 2;
+		display: block;
+		border-radius: 50%;
+		position: absolute;
+		top: 0 + $gutter;
+		left: 0.1em + $gutter;
+	}
 }
 
 .input:checked + .control:after {
-    left: $width-o-2 + $gutter;
+	left: $width-o-2 + $gutter;
 }
 
 @include use-theme using ($ts) {
-    // Theme Iterator
-    #{$ts}.input + .control {
-        border: 2px solid get-color(neutral, -2, 0.8);
-        background-color: get-color(neutral, 0, 0.7);
-        // &::after {
-        //     background: get-color(neutral, if(is-dark(), 2, -2));
-        // }
-    }
-    #{$ts}.input:checked + .control {
-        border-color: get-color(neutral, -3, 0.9);
-        background-color: get-color(primary, 0);
-    }
+	// Theme Iterator
+	#{$ts}.input + .control {
+		border: 2px solid get-color(neutral, -2, 0.8);
+		background-color: get-color(neutral, 0, 0.7);
+		// &::after {
+		//     background: get-color(neutral, if(is-dark(), 2, -2));
+		// }
+	}
+	#{$ts}.input:checked + .control {
+		border-color: get-color(neutral, -3, 0.9);
+		background-color: get-color(primary, 0);
+	}
 
-    @include use-color using ($cn, $c) {
-        // Color Iterator
-        #{$ts}.#{$cn}.input:checked + .control {
-            border-color: get-color(neutral, -3, 0.9);
-            background-color: get-color($cn, 0);
-        }
-    }
+	@include use-color using ($cn, $c) {
+		// Color Iterator
+		#{$ts}.#{$cn}.input:checked + .control {
+			border-color: get-color(neutral, -3, 0.9);
+			background-color: get-color($cn, 0);
+		}
+	}
 }
 // }

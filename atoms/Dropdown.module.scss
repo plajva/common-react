@@ -1,37 +1,37 @@
-@import '../styles/globals';
+@import '@rootp/cindex';
 
 .comp {
-    // My definitions by default
+	// My definitions by default
 
-    position: relative;
-    display: inline-block;
+	position: relative;
+	display: inline-block;
 
-    .dropbtn {
-    }
+	.dropbtn {
+	}
 
-    &:hover .dropdown-content-hover {
-        display: block;
-    }
-    .dropdown-content-hover {
-        display: none;
-    }
-    .dropdown-content {
-        position: absolute;
-        // background-color: #f1f1f1;
-        min-width: 100%;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        z-index: 10;
-    }
+	&:hover .dropdown-content-hover {
+		display: block;
+	}
+	.dropdown-content-hover {
+		display: none;
+	}
+	.dropdown-content {
+		position: absolute;
+		// background-color: #f1f1f1;
+		min-width: 100%;
+		box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+		z-index: 10;
+	}
 
-    .dropdown:hover .dropbtn {
-    }
+	.dropdown:hover .dropbtn {
+	}
 
-    // @include use-theme using ($ts){
-    // 	// Theme Iterator
-    //  &#{$ts}{}
-    // 	@include use-color using ($cn, $c){
-    // 		// Color Iterator
-    //		&#{$ts}.#{$cn}{}
-    // 	}
-    // }
+	// @include use-theme using ($ts){
+	// 	// Theme Iterator
+	//  &#{$ts}{}
+	// 	@include use-color using ($cn, $c){
+	// 		// Color Iterator
+	//		&#{$ts}.#{$cn}{}
+	// 	}
+	// }
 }

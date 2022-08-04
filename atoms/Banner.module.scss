@@ -1,14 +1,14 @@
-@import '../styles/globals';
+@import '@rootp/cindex';
 
 .banner {
-    padding: 1em 5%;
-    text-align: center;
+	padding: 1em 5%;
+	text-align: center;
 }
 
 @include use-theme using ($ts) {
-    @include use-color using ($cn, $c) {
-        #{$ts}.#{$cn}-background-active-text {
-            @include backgound-active-color(rgba($c, 0.3), $color-text: true);
-        }
-    }
+	@include use-color using ($cn, $c) {
+		#{$ts}.#{$cn}-background-active-text {
+			@include backgound-active-color(rgba($c, 0.3), $color-text: true);
+		}
+	}
 }

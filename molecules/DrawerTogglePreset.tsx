@@ -5,13 +5,13 @@ import { DrawerToggle } from '../atoms/Drawer';
 import Icon from '../atoms/Icon';
 
 const DrawerTogglePreset = ({ icon, ...props }: ButtonProps & { icon?: IconType }) => {
-    return (
-        <DrawerToggle>
-            <Button button_type='icon' {...props}>
-                <Icon icon={icon || BsJustify} />
-            </Button>
-        </DrawerToggle>
-    );
+	return (
+		<DrawerToggle>
+			<Button button_type='icon' {...props}>
+				<Icon icon={icon || BsJustify} />
+			</Button>
+		</DrawerToggle>
+	);
 };
 
 export default DrawerTogglePreset;

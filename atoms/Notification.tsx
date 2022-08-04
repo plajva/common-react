@@ -1,78 +1,86 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FaBomb, FaCheck, FaExclamation, FaTimes } from 'react-icons/fa';
 import { classNameFind, cnf } from '../utils';
+import Button from './Button';
 import Icon from './Icon';
 import s from './Notification.module.scss';
 import { useNotifications } from './Notifications';
 import { useTheme } from './Theme';
-import Button from './Button';
 
 const mapIcons = {
-    error: FaBomb,
-    warning: FaExclamation,
-    success: FaCheck,
+	error: FaBomb,
+	warning: FaExclamation,
+	success: FaCheck,
 };
 
 export interface NotificationProps {
-    id?: string;
-    icon?: boolean;
-    text: string;
-    type: 'error' | 'warning' | 'success';
-    sticky?: boolean;
+	id?: string;
+	icon?: boolean;
+	value?: string;
+	type?: 'error' | 'warning' | 'success';
+	timeout?: number;
+	action?: () => void;
 }
 
-const Notification = (props: NotificationProps) => {
-    const { icon, type, text, sticky } = props;
-    const { name: theme } = useTheme();
-    const [inNoty, setInNoty] = useState(false);
+const Notification = ({ icon, type, value, timeout, id, action }: NotificationProps) => {
+	const [inNoty, setInNoty] = useState(false);
 
-    const cls = classNameFind(
-        s,
-        'atom margin-2 padding-1',
-        icon ? 'atom-icon' : '',
-        inNoty ? 'in' : '',
-        type,
-        'dup',
-        theme
-    );
-    const contentCls = classNameFind(s, 'content padding-1', icon ? 'hasIcon' : '');
-    // const iconCls = classNameFind(s, 'close-icon');
+	timeout = timeout ?? (type === 'error' ? 20000 : type === 'warning' ? 10000 : 3000);
 
-    const { removeNotification } = useNotifications();
+	type = type ?? 'success';
 
-    const closeNotification = () => {
-        setInNoty(false);
-        setTimeout(() => {
-            removeNotification(props.id || '0');
-        }, 300);
-    };
+	const className = classNameFind(
+		s,
+		'atom margin-2 padding-1',
+		icon ? 'atom-icon' : '',
+		inNoty ? 'in' : '',
+		type,
+		'dup',
+		useTheme().name
+	);
 
-    useEffect(() => {
-        let timeout: any;
-        let timeoutIn: any;
-        if (!sticky) {
-            timeout = setTimeout(() => closeNotification(), type === 'error' ? 20000 : type === 'warning' ? 10000 : 3000);
-        }
+	const { remove: removeNotification } = useNotifications();
 
-        timeoutIn = setTimeout(() => {
-            setInNoty(true);
-        }, 10);
+	const remove = useCallback(() => {
+		setInNoty(false);
+		setTimeout(() => {
+			removeNotification(id || '0');
+		}, 300);
+	}, [removeNotification, id]);
 
-        return () => {
-            clearTimeout(timeout);
-            clearTimeout(timeoutIn);
-        };
-    }, []);
+	useEffect(() => {
+		let t: any;
+		let t_in: any;
+		if (timeout && timeout > 0) {
+			t = setTimeout(remove, timeout);
+		}
 
-    return (
-        <div className={cls}>
-            {icon && <Icon className={cnf(s, 'icon margin-h-1')} icon={mapIcons[type]} />}
-            <div className={contentCls}>{text}</div>
-            <Button button_type='icon' className={cnf(s, 'close')} onClick={closeNotification}>
-                <Icon icon={FaTimes} />
-            </Button>
-        </div>
-    );
+		t_in = setTimeout(() => {
+			setInNoty(true);
+		}, 10);
+
+		return () => {
+			clearTimeout(t);
+			clearTimeout(t_in);
+		};
+	}, [remove, removeNotification, timeout, type]);
+
+	return (
+		<div className={className}>
+			{icon && <Icon className={cnf(s, 'icon margin-h-1')} icon={mapIcons[type]} />}
+
+			<div className={cnf(s, 'content padding-1', icon ? 'hasIcon' : '')}>{value}</div>
+
+			{action && (
+				<Button button_type='icon' className={cnf(s, 'close')} onClick={action}>
+					<Icon icon={FaCheck} />
+				</Button>
+			)}
+			<Button button_type='icon' className={cnf(s, 'close')} onClick={remove}>
+				<Icon icon={FaTimes} />
+			</Button>
+		</div>
+	);
 };
 
 export default Notification;

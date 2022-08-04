@@ -523,13 +523,6 @@ export const useFieldTouched = (name?: string) => {
 	}
 	return touched;
 };
-// export const FieldValue = (props: { name: string }) => {
-// 	return useFieldValue(props.name);
-// };
-
-export const FieldError = (name) => {
-    
-}
 
 type MapProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
 	root_type?: any;

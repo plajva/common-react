@@ -412,6 +412,9 @@ export const baseURLApi =
 	process.env.REACT_APP_STAGING && localStorage.getItem('developer_api')
 		? process.env.REACT_APP_API_URL_DEVELOPER
 		: process.env.REACT_APP_API_URL;
+
+if(!baseURLApi)throw `baseURLApi not set: '${baseURLApi}'`
+
 /**
  * Another method of createAPIFetch
  * @param param0 Options to create query

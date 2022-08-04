@@ -1,5 +1,5 @@
 // import { useTheme } from './Theme';
-import React, { ComponentType, FunctionComponent, MouseEvent } from 'react';
+import React, { FunctionComponent, MouseEvent } from 'react';
 import { combineEvent } from '../../utils';
 import s from './Ripple.module.scss';
 
@@ -14,7 +14,7 @@ export interface RippleProps {
  * @param props
  */
 const Ripple = <T extends React.HTMLAttributes<HTMLElement>>(
-	Comp: ComponentType<T>,
+	Comp: FunctionComponent<T>,
 	props?: RippleProps
 ): FunctionComponent<T & RippleProps> => {
 	// Sets defaults

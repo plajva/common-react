@@ -104,7 +104,10 @@ export const QueryErrorContainer2 = <T extends ResponseFetch<any> | undefined | 
 	response: r,
 	childrenDefault,
 }: QueryErrorContainerProps<T>) => {
-	const valid = responseIsValid(r);
+	const valid = 
+	// false
+	responseIsValid(r)
+	;
 	return (
 		(valid ? (
 			typeof children === 'function' ? (
@@ -112,8 +115,11 @@ export const QueryErrorContainer2 = <T extends ResponseFetch<any> | undefined | 
 			) : (
 				children
 			)
-		) : r?.loading ? (
-			<Loading />
+		) : 
+		r?.loading 
+		// true
+		? (
+			<Loading/>
 		) : (
 			childrenDefault
 		)) ?? null

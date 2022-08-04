@@ -6,7 +6,6 @@ export type Range = [number | undefined, number | undefined];
 export * from './utils_react';
 export { classNameFind as cnf, classNameFindCreator as cnfc };
 
-
 export interface AtomProps {
 	className?: string;
 }
@@ -18,6 +17,7 @@ export interface AtomProps {
  */
 export function classNameFind(styleSheet?: object, ...classNames: (string | undefined)[]) {
 	let dup = false;
+	if (!styleSheet) return classNames.filter(Boolean).join(' ');
 	if (!classNames?.length) return '';
 	return classNames
 		.filter((c) => c && typeof c === 'string')
@@ -259,6 +259,5 @@ export const assertData = <T, S, F>(
 	return success(v);
 };
 
-
 const regex_uuid = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
-export const isUUID = (v:string) => regex_uuid.test(v);
+export const isUUID = (v: string) => regex_uuid.test(v);

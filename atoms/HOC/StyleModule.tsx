@@ -2,7 +2,7 @@ import React, { ComponentType, FunctionComponent } from 'react';
 import { classNameFind } from '../../utils';
 
 const StyleModule = <T extends React.HTMLAttributes<HTMLElement>>(
-	Comp: ComponentType<T>,
+	Comp: FunctionComponent<T>,
 	styleModule: object,
 	styles: string[]
 ): FunctionComponent<T> => {

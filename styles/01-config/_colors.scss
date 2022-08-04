@@ -78,13 +78,14 @@
 	color: color-text($c, $color-text);
 }
 
-@mixin backgound-active-color($color, $shade: false, $color-text: false) {
-	@include background-color($color, if($shade, $shade, get-theme-field-or-return(0, shades, default)), $color-text);
+@mixin backgound-active-color($color, $shade: false, $color-text: false, $alpha: false) {
+	@include background-color($color, if($shade, $shade, get-theme-field-or-return(0, shades, default)), $color-text, $alpha);
 	&:hover {
 		@include background-color(
 			$color,
 			if($shade, $shade - 1, get-theme-field-or-return(-1, shades, hover)),
-			$color-text
+			$color-text,
+			$alpha
 		);
 	}
 	&:disabled {

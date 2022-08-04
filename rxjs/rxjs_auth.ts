@@ -2,13 +2,14 @@ import { jwtParse } from '@common/utils';
 import { filter, map, merge, Observable, shareReplay, startWith, Subject, switchMap } from 'rxjs';
 import { useObservable } from './rxjs_utils';
 
-
 // Object shouldn't change, should only be imported/exported
 export const token: any = {};
+export const token_encoded = { string: '' };
 const _token_login$ = new Subject<string>();
-export const login = (v:string) => _token_login$.next(v);
+export const login = (v: string) => _token_login$.next(v);
 const _token_logout$ = new Subject<false>();
-export const logout = () => _token_logout$.next(false);
+export const logout = () =>
+	 _token_logout$.next(false);
 // Observable wich will be false if user has logged out
 const token$ = merge(_token_login$, _token_logout$).pipe(
 	startWith(localStorage.getItem('token') ?? (false as const)),
@@ -22,12 +23,12 @@ const token$ = merge(_token_login$, _token_logout$).pipe(
 					s.complete();
 					return;
 				};
-				if (!token) logout();
+				if (!token) return logout();
 				const jwt = jwtParse(token);
-				if (!jwt?.exp) logout();
+				if (!jwt?.exp) return logout();
 				const exp = Number(jwt.exp) * 1000;
 				const expired = Date.now() > exp;
-				if (expired) logout(exp);
+				if (expired) return logout(exp);
 				s.next(token);
 				const t = setTimeout(logout, exp - Date.now());
 				s.add(() => clearTimeout(t));
@@ -50,11 +51,13 @@ token$.subscribe((_token) => {
 		// User Logged in
 		_is_logged_in = true;
 		localStorage.setItem('token', _token);
+		token_encoded.string = _token;
 		Object.assign(token, jwtParse(_token));
 	} else {
 		// User Logged out
 		_is_logged_in = false;
 		localStorage.removeItem('token');
+		token_encoded.string = '';
 		for (const k in token) {
 			delete token[k];
 		}

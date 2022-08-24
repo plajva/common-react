@@ -1,36 +1,35 @@
-import { useTheme } from '@common/atoms/Theme';
-import { isLoggedIn, token} from '@common/rxjs/rxjs_auth';
+import { isLoggedIn, token } from '@common/rxjs/rxjs_auth';
 import React, { ReactElement } from 'react';
 
-export interface LockedProps  {
+export interface LockedProps {
 	assertClaims?: string;
 	assertRoles?: string;
 }
 
 /**
- * Locked if user logged out, or user claims 
- * @param 
- * @returns 
+ * Locked if user logged out, or user/claims doesn't contain assertClaims/assertRoles passed
+ * @returns boolean
  */
-export const isLocked = ({assertClaims,assertRoles}:LockedProps) => 
-	!((assertClaims
-		? assertClaims
-				.split(' ')
-				.map((x) => x.trim().toLowerCase())
-				.filter(x => !!x)
-				.every((c) => token.claims?.includes(c))
-		: true) &&
-	(assertRoles
-		? assertRoles
-				.split(' ')
-				.map((x) => x.trim().toLowerCase())
-				.filter(x => !!x)
-				.every((c) => token.roles?.includes(c))
-		: true)) || !isLoggedIn();
+export const isLocked = ({ assertClaims, assertRoles }: LockedProps) =>
+	!(
+		(assertClaims
+			? assertClaims
+					.split(' ')
+					.map((x) => x.trim().toLowerCase())
+					.filter((x) => !!x)
+					.every((c) => token.claims?.includes(c))
+			: true) &&
+		(assertRoles
+			? assertRoles
+					.split(' ')
+					.map((x) => x.trim().toLowerCase())
+					.filter((x) => !!x)
+					.every((c) => token.roles?.includes(c))
+			: true)
+	) || !isLoggedIn();
 
 /**
- *
- * @param assertClaims -
+ * Same as: isLocked({assertClaims,assertRoles}) ? null : (children ?? null)
  * @returns
  */
 const Locked = ({
@@ -39,12 +38,7 @@ const Locked = ({
 	assertRoles,
 	children,
 	...props
-}: LockedProps & React.HTMLAttributes<HTMLElement> & {children: ReactElement}) => {
-	const theme = useTheme().name;
-	
-	return isLocked({assertClaims,assertRoles}) ? null : children  ?? null;
-};
-
-
+}: LockedProps & React.HTMLAttributes<HTMLElement> & { children: ReactElement }) =>
+	isLocked({ assertClaims, assertRoles }) ? null : children ?? null;
 
 export default Locked;

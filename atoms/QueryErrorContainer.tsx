@@ -4,12 +4,12 @@
  */
 import { default as LoaderReact, default as Loading } from '@common/atoms/Loading';
 import { useTheme } from '@common/atoms/Theme';
-import { ResponseFetch, ResponseFetchValid, responseIsError, responseIsValid } from '@common/rxjs/rxjs_utils';
+import { ResponseFetch, ResponseFetchAny, ResponseFetchValid, responseIsError, responseIsValid } from '@common/rxjs/rxjs_utils';
 import { cnf } from '@common/utils';
 import React, { ReactNode } from 'react';
 import s from './QueryErrorContainer.module.scss';
 
-export interface QueryErrorContainerProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
+export interface QueryErrorContainerProps<T extends ResponseFetchAny> extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
 	response?: T;
 	/**
 	 * Exclude null/undefined and any of the status/loading properties from type

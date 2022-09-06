@@ -7,7 +7,7 @@ import {
 } from '@common/rxjs/rxjs_utils';
 import { useEffect, useRef } from 'react';
 
-interface QueryActionOptions<T> {
+interface QueryActionOptions<T extends ResponseFetchAny> {
 	/** On valid */
 	onValid?: (v: ResponseFetchValid<T>) => void;
 	/** On error */
@@ -30,6 +30,7 @@ export const useQueryAction = <T extends ResponseFetchAny>(response: T, options?
 			}
 			const error = responseIsError(response);
 			if (error) {
+				//@ts-ignore
 				options?.onError?.(error);
 				return;
 			}

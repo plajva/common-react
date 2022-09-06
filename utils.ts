@@ -190,7 +190,7 @@ export type ValuesOf<T extends any[]> = T[number];
 export type Entries<T> = {
 	[K in keyof T]: [K, T[K]];
 }[keyof T][];
-export function objectEntries<T>(obj: T): Entries<T> {
+export function objectEntries<T extends {}>(obj: T): Entries<T> {
 	return Object.entries(obj) as any;
 }
 

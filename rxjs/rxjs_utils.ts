@@ -247,7 +247,7 @@ type InputUnion<I> = I | ((v: I) => I);
  * */
 export function createAPIFetchEvent<
 	I extends Exclude<any, Function>,
-	R,
+	R extends ResponseFetchAny,
 	C extends unknown[],
 	W extends unknown[],
 	D = undefined
@@ -329,7 +329,7 @@ export function createAPIFetchEvent<
  * @type D: Default Value Type
  * @type C: Combine Type
  * */
-export function createAPIFetchChain<R, D = undefined, C extends unknown[] = [], W extends unknown[] = []>(
+export function createAPIFetchChain<R extends ResponseFetchAny, D = undefined, C extends unknown[] = [], W extends unknown[] = []>(
 	combine$: [...ObservableInputTuple<C>],
 	toFetch: (val: [...C, ...W]) => Observable<R>,
 	options?: FetchEventOptions<R, D, C, W>

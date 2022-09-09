@@ -131,7 +131,7 @@ export const createAPIFetch = <T>({
 	let o = fromFetch(url, init).pipe(
 		switchMap((res) => {
 			// The .split is to handle content types like 'application/json; charset=utf-8'
-			let content_type = res.headers.get('Content-type')?.split(';')[0] || "";
+			let content_type = res.headers.get('Content-type')?.split(';')[0] || '';
 
 			// let content_size = res.headers.get
 			if (res.ok) {
@@ -233,6 +233,8 @@ type FetchEventOptions<R, D, C extends unknown[], W extends unknown[], I = undef
 	 * needs at least 1 value, will NOT retrigger on any new value by these observables
 	 */
 	withLatestFrom$?: [...ObservableInputTuple<W>];
+	/** Token needs to be first value in combineLatest */
+	hasToken?: boolean;
 };
 const logFetch = !!process.env.REACT_APP_DEBUG_FETCH;
 
@@ -277,6 +279,7 @@ export function createAPIFetchEvent<
 			? combineLatest<[I, ...C]>([subjectO$, ...options?.combineLatest$])
 			: subjectO$.pipe(map((v): [I] => [v]))
 	) as Observable<[I, ...C]>;
+
 	// Binding the chain to withLatest from
 	let chain$ = (
 		options?.withLatestFrom$
@@ -310,7 +313,7 @@ export function createAPIFetchEvent<
 	if (resultPipe)
 		result$ = result$.pipe(
 			resultPipe === 'shareReplay'
-				? shareReplay(1)
+				? shareReplay({ bufferSize: 1, refCount: true })
 				: resultPipe === 'shareReplayRefcount'
 				? shareReplay({ bufferSize: 1, refCount: true })
 				: resultPipe === 'share'
@@ -329,7 +332,12 @@ export function createAPIFetchEvent<
  * @type D: Default Value Type
  * @type C: Combine Type
  * */
-export function createAPIFetchChain<R extends ResponseFetchAny, D = undefined, C extends unknown[] = [], W extends unknown[] = []>(
+export function createAPIFetchChain<
+	R extends ResponseFetchAny,
+	D = undefined,
+	C extends unknown[] = [],
+	W extends unknown[] = []
+>(
 	combine$: [...ObservableInputTuple<C>],
 	toFetch: (val: [...C, ...W]) => Observable<R>,
 	options?: FetchEventOptions<R, D, C, W>
@@ -411,7 +419,7 @@ export type FetchHelperOptions<T = any> = {
 export const baseURLApi =
 	(process.env.REACT_APP_STAGING && localStorage.getItem('developer_api')) || process.env.REACT_APP_API_URL;
 
-if(!baseURLApi)throw `baseURLApi not set: '${baseURLApi}'`
+if (!baseURLApi) throw `baseURLApi not set: '${baseURLApi}'`;
 
 /**
  * Another method of createAPIFetch

@@ -11,7 +11,7 @@ const _token_logout$ = new Subject<false>();
 export const logout = () =>
 	 _token_logout$.next(false);
 // Observable wich will be false if user has logged out
-const token$ = merge(_token_login$, _token_logout$).pipe(
+export const token$ = merge(_token_login$, _token_logout$).pipe(
 	startWith(localStorage.getItem('token') ?? (false as const)),
 	/** Expiration check */
 	switchMap(

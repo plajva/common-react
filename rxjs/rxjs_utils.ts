@@ -313,7 +313,7 @@ export function createAPIFetchEvent<
 	if (resultPipe)
 		result$ = result$.pipe(
 			resultPipe === 'shareReplay'
-				? shareReplay({ bufferSize: 1, refCount: true })
+				? shareReplay(1)
 				: resultPipe === 'shareReplayRefcount'
 				? shareReplay({ bufferSize: 1, refCount: true })
 				: resultPipe === 'share'

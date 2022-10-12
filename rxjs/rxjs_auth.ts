@@ -1,6 +1,6 @@
 import { jwtParse } from '@common/utils';
 import { filter, map, merge, Observable, shareReplay, startWith, Subject, switchMap } from 'rxjs';
-import { useObservable } from './rxjs_utils';
+import { useObservable } from './rxjs_react';
 
 // Object shouldn't change, should only be imported/exported
 export const token: any = {};

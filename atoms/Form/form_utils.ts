@@ -112,8 +112,8 @@ export const field_utils =
 			fromForm: (v) => (typeof v === 'number' ? `${v}` : v),
 		},
 		numberFunc: (precision?: number) => ({
-			toFormBlur: (e, v) => (typeof v === 'string' ? round(Number(v.replace(/[^\d.]+/g, '')), precision) : v),
-			fromForm: (v) => (typeof v === 'number' ? `${v}` : v),
+			toFormBlur: (e, v) => (typeof v === 'string' ? (v?round(Number(v.replace(/[^\d.]/g, '')), precision) : 0) : v),
+			fromForm: (v) => (typeof v === 'number' ? v.toFixed(precision) : v),
 		}),
 		percent: {
 			toFormBlur: (e, v) =>

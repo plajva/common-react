@@ -45,6 +45,7 @@ const QueryErrorContainer = <T extends ResponseFetch<any> | undefined | null>({
 	const theme = useTheme().name;
 	// An idea to keep elements in DOM even when fetch loading
 	// const validResponse = useRef<ResponseFetchValid<T> | undefined>(undefined);
+	if (childrenDefault === true )childrenDefault = children;
 
 	const render = ({ loading, error, children: vchildren, success }: { loading?; error?; children?; success? }) => {
 		// const containerStyles: CSSProperties = { textAlign: LOrE ? 'center' : undefined };
@@ -57,6 +58,7 @@ const QueryErrorContainer = <T extends ResponseFetch<any> | undefined | null>({
 			success ? 'success' : '',
 			inline ? 'inline' : ''
 		);
+		
 
 		return (
 			<>

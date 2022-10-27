@@ -169,6 +169,7 @@ export const Field = ({
 	error = error ?? fieldError;
 	const fieldValue = useFieldValue(_name);
 	const fieldTouched = useFieldTouched(_name);
+	
 
 	const form = useForm();
 	const touched = (touchedShow ?? form.touchedShow) && fieldTouched;

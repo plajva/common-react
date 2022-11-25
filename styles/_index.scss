@@ -243,5 +243,9 @@ img {
 }
 table th {
 	font-weight: 600;
+	padding: get-space(3);
+}
+table{
+	border-collapse: collapse;
 }
 @import './04-globals/defaults';

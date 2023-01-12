@@ -185,7 +185,7 @@ export const Field = ({
 		...props,
 		...inputProps,
 		className: classNameFind(s, 'input', inputProps?.className),
-		children: select_or_textarea ? children : undefined,
+		children: select_or_textarea || type === 'checkbox' ? children : undefined,
 		type,
 		name,
 	});

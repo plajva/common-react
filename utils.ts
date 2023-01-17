@@ -261,3 +261,12 @@ export const assertData = <T, S, F>(
 
 const regex_uuid = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
 export const isUUID = (v: string) => regex_uuid.test(v);
+
+const reISO = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$/;
+export function JSON_date_parser(key, value) {
+	if (typeof value === 'string') {
+		var a = reISO.exec(value);
+		if (a) return new Date(value);
+	}
+	return value;
+}

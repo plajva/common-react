@@ -1,5 +1,6 @@
 import accounting from 'accounting';
 import { round } from 'lodash';
+import {parseDate} from 'chrono-node';
 import { toUpperCaseFirst } from '../../utils';
 
 /**
@@ -120,4 +121,10 @@ export const field_utils =
 				typeof v === 'string' ? (v.length ? (/%$/.exec(v) ? Number(v) / 100 : Number(v)) : undefined) : v,
 			fromForm: (v) => (typeof v === 'number' ? v.toFixed(2) + '%' : v),
 		},
+		date_natural: {
+			// onlyOnBlur: true,
+			toFormBlur: (e, v) =>
+				typeof v === 'string' ? parseDate(v) : v,
+			fromForm: (v) => (typeof v === 'object' ? v.toLocaleString() : v),
+		}
 	};

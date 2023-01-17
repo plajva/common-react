@@ -375,6 +375,7 @@ export interface UseFormFieldOptions {
 	fromForm?: (v: any) => string;
 	/**to use another value as elements controlled value*/
 	// fromFormBlur?: (v: any) => string;
+	// onlyOnBlur?: boolean
 }
 /**
  * Returns the handlers for fields using the FormContext to set/get values
@@ -399,6 +400,7 @@ export const useFormField = (
 	return name
 		? {
 				onChange: combineEvent((e) => {
+					// if (onlyOnBlur)return;
 					const v = toForm ? toForm(e, value ?? e.target[valueName]) : value ?? e.target[valueName];
 					if (debugForm) console.log(`OnChange ${_name}: ${v} <${typeof v}>`);
 					form.setValue(_name, v);
@@ -415,7 +417,7 @@ export const useFormField = (
 				onFocus: combineEvent((e) => {
 					//   form.setTouched(name, true);
 					//   if(toFormBlur)form.setValue(name, toFormBlur(e,e.target[valueName]));
-				}, onBlur),
+				}),
 				/** Creating an object so we can make key dynamic */
 				...Object.fromEntries([
 					[

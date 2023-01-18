@@ -375,7 +375,7 @@ export interface UseFormFieldOptions {
 	fromForm?: (v: any) => string;
 	/**to use another value as elements controlled value*/
 	// fromFormBlur?: (v: any) => string;
-	// onlyOnBlur?: boolean
+	uncontrolled?: boolean
 }
 /**
  * Returns the handlers for fields using the FormContext to set/get values
@@ -386,11 +386,11 @@ export interface UseFormFieldOptions {
 export const useFormField = (
 	props: InputPropsAll & UseFormFieldProps & UseFormFieldOptions
 ): InputPropsAll & UseFormFieldProps => {
-	const { onBlur, onChange, valueName: _valueName, toForm, toFormBlur, fromForm, value, name, ..._props } = props;
+	const { onBlur, onChange, valueName: _valueName, toForm, toFormBlur, fromForm, value, uncontrolled, name, ..._props } = props;
 
 	const _name = useFormNameContextCombine(name);
 	const form = useForm();
-	const valueName = _valueName ?? 'value';
+	const valueName = _valueName ?? (uncontrolled ? 'defaultValue': 'value');
 
 	const getValue = (n) => {
 		let valueForm = form.getValue(n);
@@ -400,7 +400,7 @@ export const useFormField = (
 	return name
 		? {
 				onChange: combineEvent((e) => {
-					// if (onlyOnBlur)return;
+					if (uncontrolled)return; // Dont handle changes if the thing is uncontrolled
 					const v = toForm ? toForm(e, value ?? e.target[valueName]) : value ?? e.target[valueName];
 					if (debugForm) console.log(`OnChange ${_name}: ${v} <${typeof v}>`);
 					form.setValue(_name, v);

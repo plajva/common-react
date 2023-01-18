@@ -126,5 +126,9 @@ export const field_utils =
 			toFormBlur: (e, v) =>
 				typeof v === 'string' ? parseDate(v) : v,
 			fromForm: (v) => (typeof v === 'object' ? v.toLocaleString() : v),
-		}
+		},
+		// date_hour: {
+		// 	toForm: (v) => 
+		// 	fromForm: (v) => (typeof v === 'object' ? v.getHours() : '0')
+		// }
 	};

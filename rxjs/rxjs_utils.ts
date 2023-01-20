@@ -214,13 +214,16 @@ export function createAPIFetchEvent<
 	const inputPipe = options?.inputPipe
 	if (inputPipe) subjectO$ = subjectO$.pipe(inputPipe === 'distinct' ? distinctUntilChanged() : inputPipe)
 
-	const subjectOHot$ = subjectO$.pipe(shareReplay(1))
+	// Make a hot obversable that caches this value, so we can pull it later almost immediately.
+	const subjectOHot$ = subject$.pipe(shareReplay({ bufferSize: 1, refCount: false }))
 	/** If v is function, will wait from value from */
 	const setValue = (v: InputUnion<I>) => {
 		if (logFetch) console.log('Next started: ', v, ' observed: ', subject$.observed)
-		typeof v === 'function'
-			? subjectOHot$.pipe(take(1), timeout(1000)).subscribe((p) => subject$.next((v as Function)(p)))
-			: subject$.next(v)
+
+		if (typeof v === 'function') {
+			subjectOHot$.pipe(take(1), timeout({ first: 100, with: () => of({}) })).subscribe((v) => console.log("Got: ", v))
+			subjectOHot$.pipe(take(1), timeout({ first: 100, with: () => of({}) })).subscribe((p) => { console.log("Last was ", p); subject$.next((v as Function)(p)) })
+		} else subject$.next(v)
 	}
 
 	// Binding an obserable to events/obserables
@@ -339,7 +342,8 @@ export const queryString = (v?: any) => {
 	else {
 		return (
 			'?' +
-			Object.entries(pruneEmpty(v))
+			Object.entries(v)
+				.filter(([k, v]) => !['undefined', 'null'].includes(typeof v) && !Number.isNaN(v))
 				.map(([k, v]) => `${k}=${v}`)
 				.join('&')
 		)

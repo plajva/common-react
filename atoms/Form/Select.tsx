@@ -7,8 +7,9 @@ import s from './Select.module.scss';
 export interface SelectProps extends UseFormFieldProps {
 	children?: ReactNode;
 	placeholderProps?: React.OptionHTMLAttributes<HTMLElement>;
+	placeholder?: string | false;
 }
-type SelectPropsF = SelectProps & React.SelectHTMLAttributes<HTMLElement>;
+type SelectPropsF = SelectProps & Omit<React.SelectHTMLAttributes<HTMLElement>, 'placeholder'>;
 const Select = ({ className, placeholder, placeholderProps, children, ..._props }: SelectPropsF, ref) => {
 	const theme = useTheme().name;
 	className = classFind(s, `comp`, className, 'dup', theme);
@@ -22,14 +23,13 @@ const Select = ({ className, placeholder, placeholderProps, children, ..._props 
 	};
 	return (
 		<select
-			data-value={value || ''}
+			data-value={value ?? ''}
 			className={className}
 			value={value}
 			{...props}
 			ref={typeof ref === 'object' && !Object.keys(ref).length ? null : ref}
 		>
-			{placeholder !== undefined && (
-				// Removed  || ''   so that value will be undefined if unset.
+			{typeof placeholder === 'string' && !!placeholder && (
 				<option {...placeProps} value={placeholderProps?.value}>
 					{placeholder}
 				</option>

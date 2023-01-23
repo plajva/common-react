@@ -181,7 +181,7 @@ export const Field = ({
 	//@ts-ignore
 	const input = createElement(el_type, {
 		readOnly: editConfirm ? !allowEdit : undefined,
-		placeholder: el_type === Select ? '' : undefined,
+		placeholder: el_type === Select ? ' ' : undefined,
 		...props,
 		...inputProps,
 		className: classNameFind(s, 'input', inputProps?.className),

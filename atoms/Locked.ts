@@ -2,10 +2,29 @@ import { isLoggedIn, token } from '@common/rxjs/rxjs_auth';
 import React, { ReactElement } from 'react';
 
 export interface LockedProps {
+	/** 
+	 * A rule, in which spaces ' ' mean logical AND, and '|' mean logical OR 
+	 * 
+	 * AND takes precedence over > OR
+	 * 
+	 * ex: 'admin agent|user' -> admin AND (agent OR user)
+	*/
 	assertClaims?: string;
+	/** 
+	 * A rule, in which spaces ' ' mean logical AND, and '|' mean logical OR 
+	 * 
+	 * AND takes precedence over > OR
+	 * 
+	 * ex: 'admin agent|user' -> admin AND (agent OR user)
+	*/
 	assertRoles?: string;
 }
-
+/**
+ * 
+ * @param rule The rule specifies 
+ * @param array 
+ * @returns 
+ */
 const toAssertion = (rule: string | undefined, array: string[] | undefined) =>
 	rule
 		? rule

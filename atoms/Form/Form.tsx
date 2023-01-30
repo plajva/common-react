@@ -271,7 +271,7 @@ const FormComp = ({
 		reset: (touched) => {
 			const rstate = { ...getInitial(cloneDeep(resetState), schema), touched };
 			setState(rstate);
-			if(onReset) onReset(rstate);else setTimeout(() => onChange?.(context), 15);
+			if(onReset) onReset(rstate);else setTimeout(() => onChange?.({...context, state: rstate}), 15);
 		},
 		clear,
 		submit: () => {

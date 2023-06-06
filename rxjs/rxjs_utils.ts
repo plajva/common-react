@@ -52,7 +52,7 @@ function hasOwnProperty<X extends {}, Y extends PropertyKey>(obj: X, prop: Y): o
 export const toTrigger = (v: Observable<any>) =>
 	v.pipe(
 		map((v) => undefined),
-		startWith(undefined)
+		// startWith(undefined)
 	)
 export const toValid = <R extends ResponseFetchAny>(v: Observable<R>) =>
 	v.pipe(filter((v) => !!responseIsValid<R>(v))) as Observable<ResponseFetchValid<R>>

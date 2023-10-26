@@ -67,7 +67,17 @@ token$.subscribe((_token) => {
 	}
 })
 
+export const _token_marketing_redirect = new Subject<string>();
+const _token_marketing_redirect$ = _token_marketing_redirect.pipe(
+	startWith(localStorage.getItem('marketing_redirect_token') || ""),
+	shareReplay(1)
+)
+_token_marketing_redirect$.subscribe((_token) => {
+	localStorage.setItem("marketing_redirect_token", _token ?? "")
+})
+
 export const useTokenChanged = () => useObservable(token$, undefined)
+export const useTokenMarketingRedirectChanged = () => useObservable(_token_marketing_redirect$, undefined)
 export const tokenValid$ = token$.pipe(
 	filter((token) => !!token),
 	map((token) => ({ token }))

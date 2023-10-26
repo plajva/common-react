@@ -10,7 +10,7 @@ export interface ModalProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
 }
 
 const Modal = ({ children, className, ...props }: ModalProps) => {
-	const _className = classNameFind(s, `atom`, 'background-background-10 padding-4', className, useTheme().name);
+	const _className = classNameFind(s, `atom`, 'background-background-10 padding-3', className, useTheme().name);
 
 	return (
 		<Portal id='modals'>

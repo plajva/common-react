@@ -442,7 +442,7 @@ export const useFormNameContext = () => useContext(FormNameContext);
 /**
  * Combines a previously set name context with the value provided
  * */
-const nameCombine = (a?: string, b?: string) => (a && b ? a + '.' + b : a ? a : b ? b : '');
+export const nameCombine = (a?: string, b?: string) => (a && b ? a + '.' + b : a ? a : b ? b : '');
 export const useFormNameContextCombine = (n?: string) => {
 	const nc = useFormNameContext();
 	return nameCombine(nc, n);

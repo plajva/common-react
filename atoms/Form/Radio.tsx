@@ -12,7 +12,7 @@ import React, { forwardRef } from 'react';
 import { classNameFind as classFind } from '../../utils';
 import { useTheme } from '../Theme';
 import { FieldCommon } from './Field';
-import { useForm, useFormField, UseFormFieldProps } from './Form';
+import { nameCombine, useForm, useFormField, UseFormFieldProps, useFormNameContext } from './Form';
 import s from './Radio.module.scss';
 
 export interface RadioProps extends FieldCommon, UseFormFieldProps {
@@ -28,7 +28,8 @@ const Radio = forwardRef<HTMLInputElement, RadioProps & React.InputHTMLAttribute
 		const theme = useTheme().name;
 		className = classFind(s, `input`, className, 'dup', theme);
 
-		const valueForm = useForm().getValue(props.name ?? '');
+		const nameContext = useFormNameContext();
+		const valueForm = useForm().getValue(nameCombine(nameContext, props.name));
 
 		const isChecked = checked ?? (typeof valueForm !== 'undefined' ? valueForm === props.value : false);
 		return (

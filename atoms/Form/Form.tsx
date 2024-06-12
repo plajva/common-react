@@ -174,7 +174,7 @@ const FormComp = ({
 		return { values: valid, touched };
 	};
 	const clear = () => {
-		setState(s=>cloneDeep(FormStateInitial));
+		setState(s=>cloneDeep(resetState || initialState || FormStateInitial));
 	};
 	const context: FormContextI = {
 		state,
@@ -269,7 +269,7 @@ const FormComp = ({
 		},
 		getValid,
 		reset: (touched) => {
-			const rstate = { ...getInitial(cloneDeep(resetState), schema), touched };
+			const rstate = { ...getInitial(cloneDeep(resetState || initialState || FormStateInitial), schema), touched };
 			setState(rstate);
 			if(onReset) onReset(rstate);else setTimeout(() => onChange?.({...context, state: rstate}), 15);
 		},

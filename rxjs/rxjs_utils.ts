@@ -221,10 +221,12 @@ export function createAPIFetchEvent<
 	if (inputPipe) subjectO$ = subjectO$.pipe(inputPipe === 'distinct' ? distinctUntilChanged() : inputPipe)
 
 	// Make a hot obversable that caches this value, so we can pull it later almost immediately.
-	const subjectOHot$ = subject$.pipe(shareReplay({ bufferSize: 1, refCount: false }))
+	const subjectOHot$ = subject$.pipe(shareReplay(1))
+	// Do a first subscription to make it hot work
+	subjectOHot$.pipe(take(1)).subscribe(v=>{})
 	/** If v is function, will wait from value from */
 	const setValue = (v: InputUnion<I>) => {
-		if (logFetch) console.log('Next started: ', v, ' observed: ', subject$.observed)
+		if (logFetch) console.log('Next started: ', v, ' observed: ', subject$.observed)			
 
 		if (typeof v === 'function') {
 			subjectOHot$.pipe(take(1), timeout({ first: 100, with: () => of({}) })).subscribe((v) => console.log("Got: ", v))

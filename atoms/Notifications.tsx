@@ -5,8 +5,8 @@ import s from './Notifications.module.scss';
 import Portal from './Portal';
 
 export const contextInitial = {
-	add: (n: NotificationProps) => {},
-	remove: (id: string) => {},
+	add: (n: NotificationProps) => { },
+	remove: (id: string) => { },
 };
 export type NotificationContext = typeof contextInitial;
 const context = createContext(contextInitial);
@@ -17,7 +17,10 @@ const Notifications = (props: any) => {
 	return (
 		<context.Provider
 			value={{
-				add: (n: NotificationProps) => setState((s) => [{ ...n, id: nanoid(4) }, ...s]),
+				add: (n: NotificationProps) => setState((s) =>
+					// Only create a new notificate if the id doesn't already exist
+					n.id && s.some(v => v.id === n.id) ? s : [{ ...n, id: n.id ?? nanoid(4) }, ...s]
+				),
 				remove: (id: string) => setState((s) => s.filter((n) => n.id !== id)),
 			}}
 		>

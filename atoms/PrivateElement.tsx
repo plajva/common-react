@@ -28,7 +28,7 @@ export const PrivateElement: React.FC<PrivateElementProps> = ({ assert, onAssert
 		(Object.values(locked).some((v) => !!v) ? !islocked : true);
 
 	if (valid) {
-		return <>{children}</> ?? null;
+		return <>{children}</>;
 	}
 
 	return typeof onAssertFalse === 'string' ? (

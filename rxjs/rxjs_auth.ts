@@ -3,7 +3,9 @@ import { filter, map, merge, Observable, shareReplay, startWith, Subject, switch
 import { useObservable } from './rxjs_react'
 
 // Object shouldn't change, should only be imported/exported
+// For use in components that need immediate use of token claims
 export const token: any = {}
+// For use in components that need immediate use of the encoded token
 export const token_encoded = { string: '' }
 const _token_login$ = new Subject<string>()
 export const login = (v: string) => _token_login$.next(v)
@@ -55,12 +57,14 @@ token$.subscribe((_token) => {
 		_is_logged_in = true
 		localStorage.setItem('token', _token)
 		token_encoded.string = _token
+		console.log("Set token_encoded", token_encoded);
 		Object.assign(token, jwtParse(_token))
 	} else {
 		// User Logged out
 		_is_logged_in = false
 		localStorage.removeItem('token')
 		token_encoded.string = ''
+		console.log("Removed token_encoded", token_encoded);
 		for (const k in token) {
 			delete token[k]
 		}

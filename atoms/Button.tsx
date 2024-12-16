@@ -16,7 +16,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & Button
 
 const Button: FunctionComponent<ButtonProps> = ({ button_type, button_size, icon, ...props }) => {
 	const theme = useTheme().name;
-	let { className, ...others } = props;
+	let { className, style, ...others } = props;
 	// Set default button type as icon if icon prop is passed
 	if (icon) button_type = button_type ?? 'icon';
 
@@ -38,7 +38,7 @@ const Button: FunctionComponent<ButtonProps> = ({ button_type, button_size, icon
 			style={{
 				width: button_size ? button_size : undefined,
 				height: button_size ? button_size : undefined,
-				...props.style,
+				...style,
 			}}
 			{...others}
 		>

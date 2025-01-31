@@ -73,6 +73,7 @@ export const CollapsibleToggleIcon = (props) => {
 		<Icon
 			{...props}
 			icon={BiRightArrow}
+			size={10}
 			style={{
 				transition: 'all .5s',
 				transform: `rotate(${collapsible.state.open ? '90deg' : '0'})`,

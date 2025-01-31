@@ -7,8 +7,8 @@ import { ThemeToggle } from '../atoms/Theme';
 const ThemeTogglePreset = (props: { icon?: IconType }) => {
 	return (
 		<ThemeToggle>
-			<Button button_type='icon'>
-				<Icon icon={props.icon || FiSun} />
+			<Button >
+				<Icon icon={props.icon || FiSun} /> Toggle Theme
 			</Button>
 		</ThemeToggle>
 	);

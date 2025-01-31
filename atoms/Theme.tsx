@@ -6,12 +6,13 @@ export interface ThemeProviderProps {}
 const themesAvailable = ['default', 'dark'];
 const darkTheme = 'dark' as typeof themesAvailable[number];
 const getTimeTheme = () => {
-	if (themesAvailable.length > 1 && themesAvailable.includes(darkTheme)) {
-		let hr = new Date().getHours();
-		return 7 < hr && hr < 18 ? themesAvailable[0] : darkTheme;
-	} else {
-		return themesAvailable[0];
-	}
+	// if (themesAvailable.length > 1 && themesAvailable.includes(darkTheme)) {
+	// 	let hr = new Date().getHours();
+	// 	return 7 < hr && hr < 18 ? themesAvailable[0] : darkTheme;
+	// } else {
+	// 	return themesAvailable[0];
+	// }
+	return themesAvailable[0];
 };
 
 export interface ThemeI {

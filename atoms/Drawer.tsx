@@ -12,7 +12,7 @@ import { classNameFind, combineEvent, useStateCombine } from '../utils';
 import s from './Drawer.module.scss';
 import { useTheme } from './Theme';
 
-type T = {test:number} & ({j:string} | boolean)
+type T = { test: number } & ({ j: string } | boolean)
 
 export interface DrawerContentData<T = {}> {
 	[key: string]: ({ header?: ReactNode; content?: ReactNode } & T) | false;
@@ -116,7 +116,7 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 			setContentData({});
 			console.log('Cleared drawer');
 		}
-		return () => {};
+		return () => { };
 	}, [children]);
 	const setContent = (o: DrawerContentData) => {
 		const cdk = Object.keys(getContentData());
@@ -133,18 +133,17 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 			? { maxWidth: widthOpen ?? 240 }
 			: { maxWidth: widthClosed ?? 60 }
 		: open
-		? {
+			? {
 				transform: `translate(${!right ? '0' : '0'},${floating ? '-50%' : '0'})`,
 				opacity: 1,
-		  }
-		: {
+			}
+			: {
 				transform: `translate(${!right ? '-100%' : '100%'},${floating ? '-50%' : '0'})`,
 				opacity: 0,
-		  };
+			};
 	const content_styles: CSSProperties = visible_always
-		? open
-			? { marginLeft: widthOpen ?? 240 }
-			: { marginLeft: widthClosed ?? 60 }
+		?
+		{ marginLeft: (open ? (widthOpen ?? 240) : widthClosed ?? 60) - 24 }
 		: {};
 
 	return (

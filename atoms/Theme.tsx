@@ -6,12 +6,14 @@ export interface ThemeProviderProps {}
 const themesAvailable = ['default', 'dark'];
 const darkTheme = 'dark' as typeof themesAvailable[number];
 const getTimeTheme = () => {
-	// if (themesAvailable.length > 1 && themesAvailable.includes(darkTheme)) {
-	// 	let hr = new Date().getHours();
-	// 	return 7 < hr && hr < 18 ? themesAvailable[0] : darkTheme;
-	// } else {
-	// 	return themesAvailable[0];
-	// }
+	// Comment this out if you wanna disable the default dark mode after 6pm feature VVVV
+	if (themesAvailable.length > 1 && themesAvailable.includes(darkTheme)) {
+		let hr = new Date().getHours();
+		return 7 < hr && hr < 18 ? themesAvailable[0] : darkTheme;
+	} else {
+		return themesAvailable[0];
+	}
+	// end ^^^^
 	return themesAvailable[0];
 };
 

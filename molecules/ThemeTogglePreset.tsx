@@ -4,10 +4,10 @@ import Button from '../atoms/Button';
 import Icon from '../atoms/Icon';
 import { ThemeToggle } from '../atoms/Theme';
 
-const ThemeTogglePreset = (props: { icon?: IconType }) => {
+const ThemeTogglePreset = (props: { icon?: IconType , buttonProps?}) => {
 	return (
 		<ThemeToggle>
-			<Button >
+			<Button {...props.buttonProps}>
 				<Icon icon={props.icon || FiSun} /> Toggle Theme
 			</Button>
 		</ThemeToggle>

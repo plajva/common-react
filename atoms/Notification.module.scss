@@ -31,7 +31,8 @@ $bw: 1px;
 .atom {
 	min-width: 15em;
 	max-width: 40vw;
-	border-radius: get-space(2);
+	border-radius: get-space(5);
+	padding-inline: get-space(3);
 	position: relative;
 
 	@include use-theme('') using ($ts) {

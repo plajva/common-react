@@ -16,8 +16,10 @@ const mapIcons = {
 export interface NotificationProps {
 	id?: string;
 	icon?: boolean;
+	// The text the notitification has
 	value?: string;
 	type?: 'error' | 'warning' | 'success';
+	// In ms
 	timeout?: number;
 	action?: () => void;
 }
@@ -25,13 +27,13 @@ export interface NotificationProps {
 const Notification = ({ icon, type, value, timeout, id, action }: NotificationProps) => {
 	const [inNoty, setInNoty] = useState(false);
 
-	timeout = timeout ?? (type === 'error' ? 20000 : type === 'warning' ? 10000 : 3000);
+	timeout = timeout ?? (type === 'error' ? 20000 : type === 'warning' ? 10000 : 5000);
 
 	type = type ?? 'success';
 
 	const className = classNameFind(
 		s,
-		'atom margin-2 padding-1',
+		'atom margin-2',
 		icon ? 'atom-icon' : '',
 		inNoty ? 'in' : '',
 		type,

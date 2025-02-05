@@ -16,6 +16,10 @@ const getTimeTheme = () => {
 	// end ^^^^
 	return themesAvailable[0];
 };
+const getPreferenceTheme = () => {
+	return (typeof window !== 'undefined' && typeof window.matchMedia !== 'undefined') ? 
+	(window.matchMedia('(prefers-color-scheme: dark)').matches ? darkTheme : themesAvailable[0] ) : undefined;
+}
 
 export interface ThemeI {
 	name: string;
@@ -56,16 +60,16 @@ const ThemeProvider: FunctionComponent<ThemeProviderProps & React.HTMLAttributes
 	children,
 	...props
 }) => {
-	const [theme, setTheme] = useState(getTimeTheme());
+	const [theme, setTheme] = useState(getPreferenceTheme() ?? getTimeTheme());
 
-	useEffect(() => {
-		const int = setInterval(() => {
-			setTheme(getTimeTheme());
-		}, 10 ** 3 * 60 * 60 /*1 Hour*/);
-		return () => {
-			clearInterval(int);
-		};
-	}, [theme]);
+	// useEffect(() => {
+	// 	const int = setInterval(() => {
+	// 		setTheme(getTimeTheme());
+	// 	}, 10 ** 3 * 60 * 60 /*1 Hour*/);
+	// 	return () => {
+	// 		clearInterval(int);
+	// 	};
+	// }, [theme]);
 
 	const nextTheme = () => {
 		let p = themesAvailable.indexOf(theme);

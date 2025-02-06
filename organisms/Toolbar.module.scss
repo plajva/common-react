@@ -38,7 +38,7 @@ $space: get-space(3);
 	}
 
 	@include use-theme using ($ts) {
-		$background: get-color(background, -3);
+		$background: get-color(background, -1);
 		&#{$ts} {
 			@include background-color($background);
 			// @include background-blur(get-color($background, -1, if(is-dark(), 0.8, 0.7)));

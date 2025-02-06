@@ -71,8 +71,12 @@ $padding: 0.2em;
 		line-height: $line-height;
 		transform-origin: top left;
 
-		top: 0;
+		top: 1px;
 		left: 0;
+	}
+	&.rounded .label-text{
+		top: 1px;
+		left: 6px;
 	}
 	.label-text-persistent {
 		pointer-events: auto;

@@ -32,7 +32,7 @@ $bw: 1px;
 	min-width: 15em;
 	max-width: 40vw;
 	border-radius: get-space(5);
-	padding-inline: get-space(3);
+	padding: get-space(2) get-space(3);
 	position: relative;
 
 	@include use-theme('') using ($ts) {

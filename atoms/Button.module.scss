@@ -7,11 +7,14 @@
 	// transition: background 0.3s;
 	// padding: get-space(3);
 	// border-radius: get-space(2);
+	padding: get-space(3);
+	padding-inline: get-space(4);
 	background: transparent;
 
 	&:hover {
 		background: get-color(neutral, $alpha: 0.1);
 	}
+
 	&:focus-visible {
 		outline: 1px solid color-text(background);
 	}
@@ -35,11 +38,14 @@
 			background: get-color(neutral, $alpha: 0.1);
 		}
 	}
+
 	&.icon {
+		padding: 4px;
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
-		& > * {
+
+		&>* {
 			flex: 0 1 auto;
 		}
 	}
@@ -48,14 +54,17 @@
 		&#{$ts} {
 			// @include background-color(get-color(neutral, $alpha: 0.05));
 			background: get-color(neutral, -4, $alpha: 0.05);
+
 			&:hover {
 				// @include background-color(get-color(neutral, $alpha: 0.1));
 				background: get-color(neutral, $alpha: 0.13);
 			}
+
 			&:focus-visible {
 				outline: 1px solid color-text(background);
 			}
 		}
+
 		&#{$ts}:disabled {
 			color: rgba(color-text(get-color(background)), 0.3);
 			cursor: not-allowed;
@@ -66,13 +75,16 @@
 				@include backgound-active-color(rgba($c, 0.05), null, $c);
 				// @include active-color($c);
 				border: 2px solid get-color($cn, get-theme-field(shades, default));
+
 				&:hover {
 					border: 2px solid get-color($cn, get-theme-field(shades, hover));
 				}
+
 				&:active {
 					border: 2px solid get-color($cn, get-theme-field(shades, active));
 				}
 			}
+
 			&#{$ts}.#{$cn}-background {
 				@include backgound-active-color(rgba($c, 0.8));
 			}

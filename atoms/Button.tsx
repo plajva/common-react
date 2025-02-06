@@ -24,7 +24,7 @@ const Button: FunctionComponent<ButtonProps> = ({ button_type, button_size, icon
 		s,
 
 		button_type === 'icon' ? 'circular icon' : '',
-		'padding-3 padding-h-4 border-radius-5',
+		' border-radius-5',
 		'dup',
 		theme,
 		`button`,

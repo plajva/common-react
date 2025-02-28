@@ -122,12 +122,25 @@ export const createAPIFetch = <T>({
 			} else {
 				return content_type === 'application/json'
 					? from(res.json()).pipe(
-						map((v) => ({
-							errors: true,
-							message: v
-								? v?.message ?? v?.Message ?? JSON.stringify(v.errors)
-								: `Error: ${res.status} - ${res.statusText}`,
-						}))
+						map((v) => {
+							let message:any = undefined;
+							if (v) {
+								message = v?.message ?? v?.Message /** Handle either */ ??
+								JSON.stringify(v?.errors) /** Handle errors object or otherwise */;
+								if (!message && Object.keys(v).some(v => v.startsWith("Password"))) {
+									message = Object.values(v)?.[0]?.[0];
+								}
+								
+							}
+							
+							// Finally the default error message
+							message = message ?? `Error: ${res.status} - ${res.statusText}`;
+
+							return {
+								errors: true,
+								message
+							}
+						})
 					)
 					: content_type.includes('text/')
 						? from(res.text()).pipe(map((v) => ({ errors: true, message: String(v) || `Error ${res.status}` })))
@@ -223,10 +236,10 @@ export function createAPIFetchEvent<
 	// Make a hot obversable that caches this value, so we can pull it later almost immediately.
 	const subjectOHot$ = subject$.pipe(shareReplay(1))
 	// Do a first subscription to make it hot work
-	subjectOHot$.pipe(take(1)).subscribe(v=>{})
+	subjectOHot$.pipe(take(1)).subscribe(v => { })
 	/** If v is function, will wait from value from */
 	const setValue = (v: InputUnion<I>) => {
-		if (logFetch) console.log('Next started: ', v, ' observed: ', subject$.observed)			
+		if (logFetch) console.log('Next started: ', v, ' observed: ', subject$.observed)
 
 		if (typeof v === 'function') {
 			subjectOHot$.pipe(take(1), timeout({ first: 100, with: () => of({}) })).subscribe((v) => console.log("Got: ", v))

@@ -16,7 +16,7 @@ const mapIcons = {
 export interface NotificationProps {
 	id?: string;
 	icon?: boolean;
-	created_date: Date,
+	created_date?: Date,
 	// The text the notitification has
 	value?: string;
 	type?: 'error' | 'warning' | 'success';

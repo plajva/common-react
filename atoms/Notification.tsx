@@ -16,6 +16,7 @@ const mapIcons = {
 export interface NotificationProps {
 	id?: string;
 	icon?: boolean;
+	created_date: Date,
 	// The text the notitification has
 	value?: string;
 	type?: 'error' | 'warning' | 'success';
@@ -24,7 +25,7 @@ export interface NotificationProps {
 	action?: () => void;
 }
 
-const Notification = ({ icon, type, value, timeout, id, action }: NotificationProps) => {
+const Notification = ({ icon, type, value, timeout, id, created_date, action }: NotificationProps) => {
 	const [inNoty, setInNoty] = useState(false);
 
 	timeout = timeout ?? (type === 'error' ? 20000 : type === 'warning' ? 10000 : 5000);

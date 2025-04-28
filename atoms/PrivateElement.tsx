@@ -32,7 +32,7 @@ export const PrivateElement: React.FC<PrivateElementProps> = ({ assert, onAssert
 	}
 
 	return typeof onAssertFalse === 'string' ? (
-		<Navigate to={onAssertFalse ?? '/login'} />
+		<Navigate to={onAssertFalse ?? '/login'} replace />
 	) : (
 		onAssertFalse ?? null
 	);

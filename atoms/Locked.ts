@@ -45,8 +45,8 @@ export const isLocked = ({ assertClaims, assertRoles }: LockedProps) =>
 	!(toAssertion(assertClaims, token.claims) && toAssertion(assertRoles, token.roles)) || !isLoggedIn();
 
 /**
+ * 
  * Same as: isLocked({assertClaims,assertRoles}) ? null : (children ?? null)
- * @returns
  */
 const Locked = ({
 	className,

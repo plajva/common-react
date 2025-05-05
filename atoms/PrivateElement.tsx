@@ -11,6 +11,8 @@ export interface PrivateElementProps extends LockedProps {
 }
 
 /**
+ * Basically a <Locked> but with an added optional <Navigate> in case user isn't allowed in.
+ * 
  * @example
  * <Route element={
  * 	<PrivateElement assertRoles="admin user">

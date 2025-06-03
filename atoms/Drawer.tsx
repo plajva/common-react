@@ -114,7 +114,7 @@ const Drawer: (props: DrawerProps & React.HTMLAttributes<HTMLDivElement>) => Rea
 		// Clear right after rendering on every child change
 		if (Object.entries(getContentData()).length) {
 			setContentData({});
-			console.log('Cleared drawer');
+			// console.log('Cleared drawer');
 		}
 		return () => { };
 	}, [children]);

@@ -2,6 +2,8 @@ import { jwtParse } from '@common/utils'
 import { filter, map, merge, Observable, shareReplay, startWith, Subject, switchMap } from 'rxjs'
 import { useObservable } from './rxjs_react'
 
+const DEBUG = process.env.NODE_ENV === 'development'
+
 // Object shouldn't change, should only be imported/exported
 // For use in components that need immediate use of token claims
 export const token: any = {}
@@ -11,7 +13,7 @@ const _token_login$ = new Subject<string>()
 export const login = (v: string) => _token_login$.next(v)
 const _token_logout$ = new Subject<false>()
 export const logout = () => {
-	console.log("Logout f triggered!")
+	if (DEBUG) console.log("Logout function triggered!");
 	_token_logout$.next(false)
 }
 // Observable wich will be false if user has logged out
@@ -21,9 +23,9 @@ export const token$ = merge(_token_login$, _token_logout$).pipe(
 	switchMap(
 		(token) =>
 			new Observable<string | false>((s) => {
-				console.log("Got token: ", token)
+				if (DEBUG) console.log("Got token: ", token);
 				const logout = (exp?) => {
-					console.log(`Logging user out${exp ? `, token expired ${exp}` : ''}`)
+					if (DEBUG) console.log(`Logging user out${exp ? `, token expired ${exp}` : ''}`);
 					s.next(false)
 					s.complete()
 					return
@@ -57,14 +59,14 @@ token$.subscribe((_token) => {
 		_is_logged_in = true
 		localStorage.setItem('token', _token)
 		token_encoded.string = _token
-		console.log("Set token_encoded", token_encoded);
+		if (DEBUG) console.log("Set token_encoded", token_encoded);
 		Object.assign(token, jwtParse(_token))
 	} else {
 		// User Logged out
 		_is_logged_in = false
 		localStorage.removeItem('token')
 		token_encoded.string = ''
-		console.log("Removed token_encoded", token_encoded);
+		if (DEBUG) console.log("Removed token_encoded", token_encoded);
 		for (const k in token) {
 			delete token[k]
 		}

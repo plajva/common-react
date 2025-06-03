@@ -7,6 +7,7 @@ import Portal from './Portal';
 export const contextInitial = {
 	add: (n: NotificationProps) => { },
 	remove: (id: string) => { },
+	remove_all: () => { },
 };
 export type NotificationContext = typeof contextInitial;
 const context = createContext(contextInitial);
@@ -22,6 +23,7 @@ const Notifications = (props: any) => {
 					n.id && s.some(v => v.id === n.id) ? s : [{ ...n, id: n.id ?? nanoid(4), created_date: new Date() }, ...s]
 				),
 				remove: (id: string) => setState((s) => s.filter((n) => n.id !== id)),
+				remove_all: () => setState([])
 			}}
 		>
 			{props.children}

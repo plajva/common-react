@@ -86,7 +86,7 @@ textarea {
 	&:hover {
 		background: rgba($background, 0.08);
 	}
-	&:read-only {
+	&[readonly] {
 		background: rgba($background, 0.1);
 		&:hover {
 			background: rgba($background, 0.16);
